@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!README.md
+!docker-compose.yml
+!traefik
+!traefik.toml
+!lets-encrypt-important-notice.png
+!hosts
+!.env_firefly_iii.demo
