@@ -62,6 +62,19 @@ services:
     #     - "traefik.enable=true"
     #     - "traefik.port=9000"
 
+    etiketten:
+      container_name: etiketten_nginx
+      image: nginx
+      restart: always
+      volumes:
+        - ./etiketten:/usr/share/nginx/html
+      labels:
+        - "traefik.backend=etiketten"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:etiketten.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+
     redis:
       image: redis:alpine
       restart: always
