@@ -77,8 +77,7 @@ services:
 
     rainloop:
       container_name: "rainloop"
-      #image: solidnerd/rainloop:1.10.5.192
-      image: hardware/rainloop
+      image: solidnerd/rainloop:1.10.5.192
       volumes:
         - ./rainloop:/var/www/rainloop/data
       labels:
