@@ -62,6 +62,18 @@ services:
     #     - "traefik.enable=true"
     #     - "traefik.port=9000"
 
+    librespeed:
+      image: adolfintel/speedtest
+      restart: always
+      environment: 
+          - MODE=standalone
+      labels:
+        - "traefik.backend=speedtest"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:speedtest.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+
     etiketten:
       container_name: etiketten_nginx
       image: nginx
