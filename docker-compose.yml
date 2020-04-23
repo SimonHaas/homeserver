@@ -87,6 +87,18 @@ services:
         - "traefik.enable=true"
         - "traefik.port=80"
 
+    rainloop:
+      container_name: "rainloop"
+      image: solidnerd/rainloop:1.10.5.192
+      volumes:
+        - ./rainloop:/var/www/rainloop/data
+      labels:
+        - "traefik.backend=rainloop"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:rainloop.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+
     redis:
       image: redis:alpine
       restart: always
