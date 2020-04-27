@@ -87,6 +87,25 @@ services:
         - "traefik.enable=true"
         - "traefik.port=80"
 
+    hledger:
+      image: dastapov/hledger
+      container_name: hledger
+      restart: always
+      user: "1000"
+      volumes: 
+        - ./hledger:/data
+      environment: 
+        - HLEDGER_JOURNAL_FILE=/data/current.journal
+        - HLEDGER_BASE_URL=https://hledger.simon-haas.eu
+      ports: 
+        - 5000:5000
+      labels:
+        - "traefik.backend=hledger"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:hledger.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=5000"
+
     rainloop:
       container_name: "rainloop"
       image: solidnerd/rainloop:1.10.5.192
