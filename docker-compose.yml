@@ -260,7 +260,7 @@ services:
 
     clarkson-mariadb:
       image: linuxserver/mariadb
-      container_name: mariadb
+      container_name: clarkson-mariadb
       environment:
         - PUID=1000
         - PGID=1000
