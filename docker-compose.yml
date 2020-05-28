@@ -87,20 +87,6 @@ services:
         - "traefik.enable=true"
         - "traefik.port=80"
 
-    minetest:
-      image: linuxserver/minetest
-      container_name: minetest
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-        - CLI_ARGS="--gameid minetest" #optional
-      volumes:
-        - path to data:/config/.minetest
-      ports:
-        - 30000:30000/udp
-      restart: unless-stopped
-
     rainloop:
       container_name: "rainloop"
       image: solidnerd/rainloop:1.10.5.192
@@ -165,6 +151,9 @@ services:
         # to keep backwards compatibility with ip:port
           - "3000:3000"
           - "10022:22"
+        environment:
+          - PUID=1000
+          - PGID=1000
         volumes:
           - ./gogs:/data
         labels:
