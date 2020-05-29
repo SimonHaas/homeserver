@@ -69,9 +69,10 @@ services:
         - PUID=1000
         - PGID=1000
         - TZ=Europe/London
-        - CLI_ARGS="--server --worldname MyWorld --gameid minetest" #optional
+        - CLI_ARGS="--server --config /config/minetest.conf --gameid minetest" #optional
       volumes:
-        - ./minetest:/config/.minetest
+        - ./minetest/config:/config/.minetest
+        - ./minetest/minetest.conf:/config/minetest.conf
       ports:
         - 30000:30000/udp
       restart: unless-stopped
