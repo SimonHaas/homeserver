@@ -69,7 +69,7 @@ services:
         - PUID=1000
         - PGID=1000
         - TZ=Europe/London
-        - CLI_ARGS="--gameid minetest" #optional
+        - CLI_ARGS="--server --gameid minetest" #optional
       volumes:
         - ./minetest:/config/.minetest
       ports:
