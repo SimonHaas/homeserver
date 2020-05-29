@@ -62,6 +62,20 @@ services:
     #     - "traefik.enable=true"
     #     - "traefik.port=9000"
 
+    minetest:
+      image: linuxserver/minetest
+      container_name: minetest
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=Europe/London
+        - CLI_ARGS="--gameid minetest" #optional
+      volumes:
+        - ./minetest:/config/.minetest
+      ports:
+        - 30000:30000/udp
+      restart: unless-stopped
+
     librespeed:
       image: adolfintel/speedtest
       restart: always
