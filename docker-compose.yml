@@ -262,9 +262,9 @@ services:
       environment:
         - PUID=1000
         - PGID=1000
-        - MYSQL_HOST=clarkson-mariadb
-        - MYSQL_USERNAME=clarkson
-        - MYSQL_PASSWORD=clarkson
+        - MYSQL_HOST=mariadb
+        - MYSQL_USERNAME=clarkson_user
+        - MYSQL_PASSWORD=supersecretpassword
         - ENABLE_REGISTRATIONS=true
         - TZ=Europe/London
       restart: unless-stopped
@@ -275,20 +275,20 @@ services:
         - "traefik.enable=true"
         - "traefik.port=3000"
 
-    clarkson-mariadb:
-      image: linuxserver/mariadb
-      container_name: clarkson-mariadb
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - MYSQL_ROOT_PASSWORD=root
-        - TZ=Europe/London
-        - MYSQL_DATABASE=clarkson
-        - MYSQL_USER=clarkson
-        - MYSQL_PASSWORD=clarkson
-      volumes:
-        - ./path_to_data:/config
-      restart: unless-stopped
+    # clarkson-mariadb:
+    #   image: linuxserver/mariadb
+    #   container_name: clarkson-mariadb
+    #   environment:
+    #     - PUID=1000
+    #     - PGID=1000
+    #     - MYSQL_ROOT_PASSWORD=root
+    #     - TZ=Europe/London
+    #     - MYSQL_DATABASE=clarkson
+    #     - MYSQL_USER=clarkson
+    #     - MYSQL_PASSWORD=clarkson
+    #   volumes:
+    #     - ./path_to_data:/config
+    #   restart: unless-stopped
 
     adminer:
       image: adminer
