@@ -195,16 +195,27 @@ services:
          - MYSQL_DATABASE=nextcloud
          - MYSQL_USER=nextcloud
 
+    # openvpn:
+    #   cap_add:
+    #   - NET_ADMIN
+    #   build: ./images/docker-openvpn
+    #   container_name: openvpn
+    #   ports:
+    #   - "1194:1194/udp"
+    #   restart: always
+    #   volumes:
+    #   - ./docker-vpn/openvpn-data/conf:/etc/openvpn
+
     openvpn:
       cap_add:
-      - NET_ADMIN
-      build: ./images/docker-openvpn
+        - NET_ADMIN
+      image: kylemanna/openvpn
       container_name: openvpn
       ports:
-      - "1194:1194/udp"
+        - "1194:1194/udp"
       restart: always
       volumes:
-      - ./docker-vpn/openvpn-data/conf:/etc/openvpn
+        - ./openvpn-data/conf:/etc/openvpn
 
     airsonic:
       image: linuxserver/airsonic
