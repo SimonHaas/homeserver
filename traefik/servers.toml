@@ -6,7 +6,7 @@ loglevel = "DEBUG"
             url = "http://192.168.153.204:9981"
 [backends.tvheadend]
         [backends.motioneyeos.servers.motioneyeos]
-            url = "http://192.168.153.211"
+            url = "http://192.168.153.211:80"
 
 [frontends]
         [frontends.domain]
