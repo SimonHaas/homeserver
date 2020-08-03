@@ -24,7 +24,7 @@ defaultEntryPoints = ["https", "http"]
 
 [file]
   watch = true
-  filename = "/etc/traefik/rules.toml"
+  filename = "servers.toml"
 
 # Let's encrypt configuration
 # [acme]
