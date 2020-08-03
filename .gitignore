@@ -7,6 +7,7 @@
 !docker-compose.yml
 !traefik
 !traefik.toml
+!servers.toml
 !lets-encrypt-important-notice.png
 !hosts
 !.env_firefly_iii.demo
