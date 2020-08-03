@@ -43,7 +43,7 @@ services:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
         - ./traefik/traefik.toml:/etc/traefik/traefik.toml
-        - ./traefik/servers.toml:/servers.toml
+        - ./traefik/servers.toml:/etc/traefik/servers.toml
         - ./shared:/shared
         - ./fullchain.pem:/cert.pem
         - ./privkey.pem:/privkey.pem
