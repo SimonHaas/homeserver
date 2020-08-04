@@ -9,11 +9,11 @@ loglevel = "DEBUG"
             url = "http://192.168.153.211:80"
 
 [frontends]
-    [frontends.domain]
+    [frontends.tvheadend]
         backend = "tvheadend"
     [frontends.tvheadend.routes.tvheadend]
         rule = "Host:tvheadend.simon-haas.eu"
-    [frontends.domain]
+    [frontends.motioneyeos]
         backend = "motioneyeos"
     [frontends.motioneyeos.routes.motioneyeos]
         rule = "Host:motioneyeos.simon-haas.eu"
