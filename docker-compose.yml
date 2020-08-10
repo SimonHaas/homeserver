@@ -290,12 +290,11 @@ services:
     fireflyiii:
       image: jc5x/firefly-iii:latest
       volumes:
+        # owner must be www-data, maybe change it manually
         - ./firefly-iii/export:/var/www/firefly-iii/storage/export
         - ./firefly-iii/upload:/var/www/firefly-iii/storage/upload
         - ./firefly-iii/logs:/var/www/firefly-iii/storage/logs
       env_file: .env_firefly_iii
-      # ports:
-      #   - 80:8080
       links:
         - mariadb
       labels:
@@ -304,16 +303,6 @@ services:
         - "traefik.frontend.rule=Host:firefly.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=8080"
-
-    # fireflyiiidb:
-    #   image: yobasystems/alpine-mariadb:latest
-    #   environment:
-    #     - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    #     - MYSQL_USER=firefly
-    #     - MYSQL_PASSWORD=secret_firefly_password
-    #     - MYSQL_DATABASE=firefly
-    #   volumes:
-    #     - firefly_iii_db:/var/lib/mysql
 
     adminer:
       image: adminer
