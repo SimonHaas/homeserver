@@ -298,7 +298,6 @@ services:
       #   - 80:8080
       links:
         - mariadb
-      user: 1000:1000
       labels:
         - "traefik.backend=firefly"
         - "traefik.docker.network=web"

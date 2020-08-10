@@ -11,4 +11,4 @@
 !lets-encrypt-important-notice.png
 !hosts
 !minetest/minetest.conf
-!firefly-iii/.env
+!.env_firefly_iii
