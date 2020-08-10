@@ -290,9 +290,9 @@ services:
     fireflyiii:
       image: jc5x/firefly-iii:latest
       volumes:
-        # - firefly_iii_export:/var/www/firefly-iii/storage/export
-        # - firefly_iii_upload:/var/www/firefly-iii/storage/upload
-        - ./firefly-iii:/var/www/firefly-iii/storage
+        - ./firefly-iii/export:/var/www/firefly-iii/storage/export
+        - ./firefly-iii/upload:/var/www/firefly-iii/storage/upload
+        - ./firefly-iii/logs:/var/www/firefly-iii/storage/logs
       env_file: .env_firefly_iii
       # ports:
       #   - 80:8080
