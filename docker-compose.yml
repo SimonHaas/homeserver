@@ -160,8 +160,8 @@ services:
         container_name: gogs
         restart: always
         image: gogs/gogs
-        links:
-            - mariadb
+        # links:
+        #     - mariadb
         ports:
         # to keep backwards compatibility with ip:port
           - "3000:3000"
@@ -287,20 +287,33 @@ services:
         - "traefik.enable=true"
         - "traefik.port=3000"
 
-    # clarkson-mariadb:
-    #   image: linuxserver/mariadb
-    #   container_name: clarkson-mariadb
+    fireflyiii:
+      image: jc5x/firefly-iii:latest
+      volumes:
+        # - firefly_iii_export:/var/www/firefly-iii/storage/export
+        # - firefly_iii_upload:/var/www/firefly-iii/storage/upload
+        - ./firefly-iii:/var/www/firefly-iii/storage
+      env_file: ./firefly-iii/.env
+      # ports:
+      #   - 80:8080
+      links:
+        - mariadb
+      labels:
+        - "traefik.backend=firefly"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:firefly.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+
+    # fireflyiiidb:
+    #   image: yobasystems/alpine-mariadb:latest
     #   environment:
-    #     - PUID=1000
-    #     - PGID=1000
-    #     - MYSQL_ROOT_PASSWORD=root
-    #     - TZ=Europe/London
-    #     - MYSQL_DATABASE=clarkson
-    #     - MYSQL_USER=clarkson
-    #     - MYSQL_PASSWORD=clarkson
+    #     - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    #     - MYSQL_USER=firefly
+    #     - MYSQL_PASSWORD=secret_firefly_password
+    #     - MYSQL_DATABASE=firefly
     #   volumes:
-    #     - ./path_to_data:/config
-    #   restart: unless-stopped
+    #     - firefly_iii_db:/var/lib/mysql
 
     adminer:
       image: adminer
