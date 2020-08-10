@@ -293,7 +293,7 @@ services:
         # - firefly_iii_export:/var/www/firefly-iii/storage/export
         # - firefly_iii_upload:/var/www/firefly-iii/storage/upload
         - ./firefly-iii:/var/www/firefly-iii/storage
-      env_file: ./firefly-iii/.env
+      env_file: .env_firefly_iii
       # ports:
       #   - 80:8080
       links:
