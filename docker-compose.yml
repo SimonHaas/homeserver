@@ -298,9 +298,7 @@ services:
       #   - 80:8080
       links:
         - mariadb
-      environment:
-        - PUID=1000
-        - PGID=1000
+      user: 1000:1000
       labels:
         - "traefik.backend=firefly"
         - "traefik.docker.network=web"
