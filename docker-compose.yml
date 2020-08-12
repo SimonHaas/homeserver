@@ -300,7 +300,7 @@ services:
       labels:
         - "traefik.backend=firefly"
         - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:firefly.simon-haas.eu"
+        - "traefik.frontend.rule=Host:fireflyiii.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=8080"
 
