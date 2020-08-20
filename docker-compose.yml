@@ -102,6 +102,17 @@ services:
         - "traefik.enable=true"
         - "traefik.port=8080"
 
+    wger:
+      container_name: wger
+      image: wger/apache
+      restart: always
+      labels:
+        - "traefik.backend=wger"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:wger.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+
     etiketten:
       container_name: etiketten_nginx
       image: nginx
