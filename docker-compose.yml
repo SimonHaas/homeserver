@@ -102,6 +102,23 @@ services:
         - "traefik.enable=true"
         - "traefik.port=8080"
 
+    heimdall:
+      image: linuxserver/heimdall
+      container_name: heimdall
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=Europe/London
+      volumes:
+        - ./heimdall:/config
+      restart: unless-stopped
+      labels:
+        - "traefik.backend=heimdall"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:heimdall.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=443"
+
     wger:
       container_name: wger
       image: wger/apache
