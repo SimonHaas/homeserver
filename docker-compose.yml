@@ -176,8 +176,8 @@ services:
         container_name: gogs
         restart: always
         image: gogs/gogs
-        links:
-            - mariadb
+        # links:
+        #     - mariadb
         ports:
         # to keep backwards compatibility with ip:port
           - "3000:3000"
@@ -303,20 +303,22 @@ services:
         - "traefik.enable=true"
         - "traefik.port=3000"
 
-    # clarkson-mariadb:
-    #   image: linuxserver/mariadb
-    #   container_name: clarkson-mariadb
-    #   environment:
-    #     - PUID=1000
-    #     - PGID=1000
-    #     - MYSQL_ROOT_PASSWORD=root
-    #     - TZ=Europe/London
-    #     - MYSQL_DATABASE=clarkson
-    #     - MYSQL_USER=clarkson
-    #     - MYSQL_PASSWORD=clarkson
-    #   volumes:
-    #     - ./path_to_data:/config
-    #   restart: unless-stopped
+    fireflyiii:
+      image: jc5x/firefly-iii:latest
+      volumes:
+        # owner must be www-data, maybe change it manually
+        - ./firefly-iii/export:/var/www/firefly-iii/storage/export
+        - ./firefly-iii/upload:/var/www/firefly-iii/storage/upload
+        - ./firefly-iii/logs:/var/www/firefly-iii/storage/logs
+      env_file: .env_firefly_iii
+      links:
+        - mariadb
+      labels:
+        - "traefik.backend=firefly"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:fireflyiii.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
 
     adminer:
       image: adminer
