@@ -12,3 +12,4 @@
 !hosts
 !minetest/minetest.conf
 !.env_firefly_iii
+!homer/config.yml
