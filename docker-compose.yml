@@ -117,7 +117,7 @@ services:
         - "traefik.docker.network=web"
         - "traefik.frontend.rule=Host:heimdall.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=443"
+        - "traefik.port=80"
 
     wger:
       container_name: wger
