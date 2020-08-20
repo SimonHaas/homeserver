@@ -89,6 +89,22 @@ services:
         - "traefik.enable=true"
         - "traefik.port=80"
 
+    homer:
+      container_name: homer
+      image: b4bz/homer:latest
+      restart: always
+      volumes:
+        - ./homer:/www/assets
+      environment:
+        - PUID=1000
+        - PGID=1000
+      labels:
+        - "traefik.backend=homer"
+        - "traefik.docker.network=web"
+        - "traefik.frontend.rule=Host:homer.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+
     etiketten:
       container_name: etiketten_nginx
       image: nginx
