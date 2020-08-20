@@ -95,9 +95,6 @@ services:
       restart: always
       volumes:
         - ./homer:/www/assets
-      environment:
-        - PUID=1000
-        - PGID=1000
       labels:
         - "traefik.backend=homer"
         - "traefik.docker.network=web"
