@@ -3,10 +3,6 @@ services:
     ddclient:
       image: linuxserver/ddclient
       container_name: ddclient
-#      environment:
-#        - PUID=1000
-#        - PGID=1000
-#        - TZ=Europe/London
       volumes:
         - ./ddclient/config:/config
       restart: unless-stopped
@@ -85,36 +81,6 @@ services:
         - "traefik.backend=speedtest"
         - "traefik.docker.network=web"
         - "traefik.frontend.rule=Host:speedtest.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=80"
-
-    homer:
-      container_name: homer
-      image: b4bz/homer:latest
-      restart: always
-      volumes:
-        - ./homer:/www/assets
-      labels:
-        - "traefik.backend=homer"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:homer.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=8080"
-
-    heimdall:
-      image: linuxserver/heimdall
-      container_name: heimdall
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-      volumes:
-        - ./heimdall:/config
-      restart: unless-stopped
-      labels:
-        - "traefik.backend=heimdall"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:heimdall.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=80"
 
@@ -200,8 +166,6 @@ services:
         container_name: gogs
         restart: always
         image: gogs/gogs
-        # links:
-        #     - mariadb
         ports:
         # to keep backwards compatibility with ip:port
           - "3000:3000"
@@ -236,17 +200,6 @@ services:
          - MYSQL_DATABASE=nextcloud
          - MYSQL_USER=nextcloud
 
-    # openvpn:
-    #   cap_add:
-    #   - NET_ADMIN
-    #   build: ./images/docker-openvpn
-    #   container_name: openvpn
-    #   ports:
-    #   - "1194:1194/udp"
-    #   restart: always
-    #   volumes:
-    #   - ./docker-vpn/openvpn-data/conf:/etc/openvpn
-
     openvpn:
       cap_add:
         - NET_ADMIN
@@ -266,8 +219,6 @@ services:
         - PUID=1000
         - PGID=1000
         - TZ=Europe/London
-#        - CONTEXT_PATH=<URL_BASE> #optional
-#        - JAVA_OPTS=<options> #optional
       volumes:
         - ./airsonic/config:/config
         - ./airsonic/music:/music
@@ -275,8 +226,6 @@ services:
         - ./airsonic/podcasts:/podcasts
         - ./airsonic/media:/media #optional
         - ./airsonic/audiobooks:/audiobooks
-#      ports:
-#        - 4040:4040
       restart: unless-stopped
       labels:
         - "traefik.backend=airsonic"
@@ -284,29 +233,6 @@ services:
         - "traefik.frontend.rule=Host:airsonic.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=4040"
-
-#    airsonic-music:
-#      image: linuxserver/airsonic
-#      container_name: airsonic-music
-#      environment:
-#        - JAVA_OPTS=-Dserver.use-forward-headers=true
-#        - PUID=1000
-#        - PGID=1000
-#        - TZ=Europe/London
-#      volumes:
-#        - ./airsonic-music/config:/config
-#        - ./airsonic-music/music:/music
-#        - ./airsonic-music/playlists:/playlists
-#        - ./airsonic-music/podcasts:/podcasts
-#        - ./airsonic-music/media:/media
-#        - ./airsonic-music/audiobooks:/audiobooks
-#      restart: unless-stopped
-#      labels:
-#        - "traefik.backend=airsonic-music"
-#        - "traefik.docker.network=web"
-#        - "traefik.frontend.rule=Host:airsonic-music.simon-haas.eu"
-#        - "traefik.enable=true"
-#        - "traefik.port=4040"
 
     clarkson:
       image: linuxserver/clarkson
