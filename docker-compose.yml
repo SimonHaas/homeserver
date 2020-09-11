@@ -165,7 +165,7 @@ services:
     gogs:
         container_name: gogs
         restart: always
-        image: gogs/gogs
+        image: gogs/gogs@sha256:6130c146f032f6d9bdc366a90590658f17d489e78db59feeaa82c0b7047beb91
         ports:
         # to keep backwards compatibility with ip:port
           - "3000:3000"
