@@ -2,6 +2,20 @@
 
 This is all located on an encrypted external hard drive.
 
+## Server-Umzug
+
+### Nextcloud
+
+``` shell
+sudo chown -R www-data:www-data nextcloud
+```
+
+### Fireflyiii
+
+``` shell
+sudo chown -R www-data:www-data fireflyiii
+```
+
 ## Let's Encrypt
 
 To renew the wildcard-certificate simply run:
