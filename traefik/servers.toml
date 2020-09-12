@@ -7,9 +7,6 @@ loglevel = "DEBUG"
     [backends.motioneyeos]
         [backends.motioneyeos.servers.motioneyeos]
             url = "http://192.168.153.211:80"
-    [backends.gitlab]
-        [backends.gitlab.servers.gitlab]
-            url = "http://192.168.153.212:8929"
 
 [frontends]
     [frontends.tvheadend]
@@ -20,7 +17,4 @@ loglevel = "DEBUG"
         backend = "motioneyeos"
     [frontends.motioneyeos.routes.motioneyeos]
         rule = "Host:motioneyeos.simon-haas.eu"
-    [frontends.gitlab]
-        backend = "gitlab"
-    [frontends.gitlab.routes.gitlab]
-        rule = "Host:gitlab.simon-haas.eu"
+
