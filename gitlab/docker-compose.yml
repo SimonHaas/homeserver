@@ -1,0 +1,19 @@
+version: "3.6"
+
+services:
+ web:
+  image: 'gitlab/gitlab-ce:13.2.9-ce.0'
+  container_name: gitlab
+  restart: always
+  hostname: 'gitlab.simon-haas.eu'
+  environment:
+    GITLAB_OMNIBUS_CONFIG: |
+      external_url 'http://gitlab.simon-haas.eu:8929'
+      gitlab_rails['gitlab_shell_ssh_port'] = 2224
+  ports:
+    - '8929:8929'
+    - '2224:22'
+  volumes:
+    - './data/config:/etc/gitlab'
+    - './data/logs:/var/log/gitlab'
+    - './data/data:/var/opt/gitlab'
