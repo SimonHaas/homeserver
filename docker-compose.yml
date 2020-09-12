@@ -303,7 +303,7 @@ services:
         - './gitlab/logs:/var/log/gitlab'
         - './gitlab/data:/var/opt/gitlab'
       labels:
-        - "traefik.backend=gitlab.simon-haas.eu"
+        - "traefik.backend=gitlab"
         - "traefik.frontend.rule=Host:gitlab.simon-haas.eu"
         - "traefik.port=443"
         - "traefik.docker.network=web"
