@@ -46,6 +46,23 @@ services:
       volumes:
         - ./redis:/data
 
+    postgres:
+      container_name: postgres
+      restart: always
+      image: postgres:alpine
+      #environment:
+      #  - POSTGRES_USER=gitlab
+      #  - POSTGRES_PASSWORD=password
+      #  - POSTGRES_DB=gitlabhq_prod
+      volumes:
+        - '/postgresql/lib:/var/lib/postgresql'
+        - '/postgresql/data:/etc/postgresql'
+        - '/postgresql/log:/var/log/postgresql'
+      networks:
+        - traefik_proxy
+      #labels:
+      #  - "traefik.enable=false"
+
     portainer:
       image: portainer/portainer
       container_name: portainer
