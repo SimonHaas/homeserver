@@ -40,6 +40,9 @@ services:
     redis:
       image: redis:alpine
       restart: always
+      container_name: redis
+      networks:
+        - traefik_proxy
       volumes:
         - ./redis:/data
 
