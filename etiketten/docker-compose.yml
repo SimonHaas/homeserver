@@ -7,7 +7,7 @@ services:
         networks:
             - traefik_proxy
         volumes:
-            - ./etiketten:/usr/share/nginx/html
+            - ./data:/usr/share/nginx/html
         labels:
             - "traefik.backend=etiketten"
             - "traefik.frontend.rule=Host:etiketten.simon-haas.eu"
