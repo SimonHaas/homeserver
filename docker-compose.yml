@@ -110,29 +110,6 @@ services:
       volumes:
         - ./openvpn-data/conf:/etc/openvpn
 
-    airsonic:
-      image: linuxserver/airsonic
-      container_name: airsonic
-      environment:
-        - JAVA_OPTS=-Dserver.use-forward-headers=true
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-      volumes:
-        - ./airsonic/config:/config
-        - ./airsonic/music:/music
-        - ./airsonic/playlists:/playlists
-        - ./airsonic/podcasts:/podcasts
-        - ./airsonic/media:/media #optional
-        - ./airsonic/audiobooks:/audiobooks
-      restart: unless-stopped
-      labels:
-        - "traefik.backend=airsonic"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:airsonic.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=4040"
-
     clarkson:
       image: linuxserver/clarkson
       container_name: clarkson
