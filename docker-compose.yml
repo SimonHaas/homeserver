@@ -72,6 +72,10 @@ services:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - ./portainer:/data
+      environment:
+        - POSTGRES_USER=gitlab
+        - POSTGRES_PASSWORD=gitlab
+        - POSTGRES_DB=gitlab
       labels:
         - "traefik.backend=portainer"
         - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
