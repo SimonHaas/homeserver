@@ -9,15 +9,15 @@ services:
             - traefik_proxy
         environment:
             GITLAB_OMNIBUS_CONFIG: |
-            external_url 'https://gitlab.simon-haas.eu'
-            gitlab_rails['gitlab_shell_ssh_port'] = 2224
-            nginx['listen_port'] = 443
-            nginx['listen_https'] = false
-            nginx['proxy_set_headers'] = {
-                'X-Forwarded-Proto' => 'https',
-                'X-Forwarded-Ssl' => 'on',
-                'Host' => 'gitlab.simon-haas.eu'
-            }
+                external_url 'https://gitlab.simon-haas.eu'
+                gitlab_rails['gitlab_shell_ssh_port'] = 2224
+                nginx['listen_port'] = 443
+                nginx['listen_https'] = false
+                nginx['proxy_set_headers'] = {
+                    'X-Forwarded-Proto' => 'https',
+                    'X-Forwarded-Ssl' => 'on',
+                    'Host' => 'gitlab.simon-haas.eu'
+                }
         ports:
             - '2224:22'
         volumes:
