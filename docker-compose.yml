@@ -83,19 +83,6 @@ services:
         - "traefik.enable=true"
         - "traefik.port=80"
 
-    etiketten:
-      container_name: etiketten_nginx
-      image: nginx
-      restart: always
-      volumes:
-        - ./etiketten:/usr/share/nginx/html
-      labels:
-        - "traefik.backend=etiketten"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:etiketten.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=80"
-
     rainloop:
       container_name: "rainloop"
       image: solidnerd/rainloop:1.10.5.192
