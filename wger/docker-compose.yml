@@ -6,6 +6,7 @@ services:
     restart: always
     networks:
       - traefik_proxy
+TODO volumes und DB !!!!!
     labels:
       - "traefik.backend=wger"
       - "traefik.frontend.rule=Host:wger.simon-haas.eu"

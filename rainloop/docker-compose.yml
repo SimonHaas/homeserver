@@ -1,0 +1,21 @@
+version: "3.6"
+services:
+    rainloop:
+        container_name: "rainloop"
+        image: solidnerd/rainloop:1.10.5.192
+        networks:
+            - traefik_proxy
+        volumes:
+            - ./data:/var/www/rainloop/data
+        labels:
+            - "traefik.backend=rainloop"
+            - "traefik.frontend.rule=Host:rainloop.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
