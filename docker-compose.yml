@@ -46,26 +46,6 @@ services:
       volumes:
         - ./redis:/data
 
-    nextcloud:
-      container_name: nextcloud
-      restart: always
-      image: nextcloud:18
-      networks:
-        - traefik_proxy
-      links:
-        #- mariadb
-        - redis
-      environment:
-        - REDIS_HOST=redis
-      volumes:
-        - ./nextcloud:/var/www/html
-      labels:
-        - "traefik.backend=nextcloud"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=80"
-
     gogs:
         container_name: gogs
         restart: always
@@ -118,11 +98,11 @@ services:
         - ./openvpn-data/conf:/etc/openvpn
 
     adminer:
+      container_name: adminer
       image: adminer
       restart: always
       labels:
         - "traefik.backend=adminer"
-        - "traefik.docker.network=web"
         - "traefik.frontend.rule=Host:adminer.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=8080"

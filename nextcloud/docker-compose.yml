@@ -1,0 +1,27 @@
+version: "3.6"
+services:
+    nextcloud:
+        container_name: nextcloud
+        restart: always
+        image: nextcloud:18
+        networks:
+            - traefik_proxy
+        #links:
+            #- mariadb
+            #- redis
+        environment:
+            - REDIS_HOST=redis
+        volumes:
+            - ./data:/var/www/html
+        labels:
+            - "traefik.backend=nextcloud"
+            - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
