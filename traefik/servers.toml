@@ -7,9 +7,6 @@ loglevel = "DEBUG"
     [backends.motioneyeos]
         [backends.motioneyeos.servers.motioneyeos]
             url = "http://192.168.153.211:80"
-    [backends.proxmox]
-        [backends.proxmox.servers.proxmox]
-            url = "http://192.168.153.210:8006"
 
 [frontends]
     [frontends.tvheadend]
@@ -20,7 +17,3 @@ loglevel = "DEBUG"
         backend = "motioneyeos"
     [frontends.motioneyeos.routes.motioneyeos]
         rule = "Host:motioneyeos.simon-haas.eu"
-    [frontends.proxmox]
-        backend = "proxmox"
-    [frontends.proxmox.routes.proxmox]
-        rule = "Host:proxmox.simon-haas.eu"
