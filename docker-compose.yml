@@ -85,6 +85,8 @@ services:
        image: mariadb
        container_name: "mariadb"
        hostname: mariadb
+       networks:
+        - traefik_proxy
        volumes:
            - ./mariadb:/var/lib/mysql
        ports:
