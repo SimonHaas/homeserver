@@ -47,8 +47,10 @@ services:
       container_name: nextcloud
       restart: always
       image: nextcloud:18
+      networks:
+        - traefik_proxy
       links:
-        - mariadb
+        #- mariadb
         - redis
       environment:
         - REDIS_HOST=redis
@@ -114,14 +116,16 @@ services:
 
     fireflyiii:
       image: jc5x/firefly-iii:latest
+      networks:
+        - traefik_proxy
       volumes:
         # owner must be www-data, maybe change it manually
         - ./firefly-iii/export:/var/www/firefly-iii/storage/export
         - ./firefly-iii/upload:/var/www/firefly-iii/storage/upload
         - ./firefly-iii/logs:/var/www/firefly-iii/storage/logs
       env_file: .env_firefly_iii
-      links:
-        - mariadb
+      #links:
+      #  - mariadb
       labels:
         - "traefik.backend=firefly"
         - "traefik.docker.network=web"
