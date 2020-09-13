@@ -1,12 +1,5 @@
 version: "3.6"
 services:
-    ddclient:
-      image: linuxserver/ddclient
-      container_name: ddclient
-      volumes:
-        - ./ddclient/config:/config
-      restart: unless-stopped
-
     traefik:
       hostname: traefik
       image: traefik:v1.7.16
