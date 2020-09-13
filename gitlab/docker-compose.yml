@@ -29,9 +29,6 @@ services:
                     'X-Forwarded-Ssl' => 'on',
                     'Host' => 'gitlab.simon-haas.eu'
                 }
-        depends_on:
-            - redis
-            - postgres
         ports:
             - '2224:22'
         volumes:
