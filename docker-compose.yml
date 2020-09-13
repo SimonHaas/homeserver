@@ -50,10 +50,10 @@ services:
       container_name: postgres
       restart: always
       image: postgres:13-alpine
-      #environment:
-      #  - POSTGRES_USER=gitlab
-      #  - POSTGRES_PASSWORD=password
-      #  - POSTGRES_DB=gitlabhq_prod
+      environment:
+       - POSTGRES_USER=gitlab
+       - POSTGRES_PASSWORD=gitlab
+       - POSTGRES_DB=gitlab
       volumes:
         - '/postgresql/lib:/var/lib/postgresql'
         - '/postgresql/data:/etc/postgresql'
@@ -72,10 +72,6 @@ services:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - ./portainer:/data
-      environment:
-        - POSTGRES_USER=gitlab
-        - POSTGRES_PASSWORD=gitlab
-        - POSTGRES_DB=gitlab
       labels:
         - "traefik.backend=portainer"
         - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
