@@ -110,25 +110,6 @@ services:
       volumes:
         - ./openvpn-data/conf:/etc/openvpn
 
-    clarkson:
-      image: linuxserver/clarkson
-      container_name: clarkson
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - MYSQL_HOST=mariadb
-        - MYSQL_USERNAME=clarkson_user
-        - MYSQL_PASSWORD=supersecretpassword
-        - ENABLE_REGISTRATIONS=true
-        - TZ=Europe/London
-      restart: unless-stopped
-      labels:
-        - "traefik.backend=clarkson"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:clarkson.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=3000"
-
     fireflyiii:
       image: jc5x/firefly-iii:latest
       volumes:
