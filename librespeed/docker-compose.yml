@@ -10,7 +10,7 @@ services:
           - MODE=standalone
       labels:
         - "traefik.backend=speedtest"
-        #- "traefik.docker.network=web"
+        - "traefik.docker.network=web"
         - "traefik.frontend.rule=Host:speedtest.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=80"
