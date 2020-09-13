@@ -44,45 +44,33 @@ services:
         - ./fullchain.pem:/cert.pem
         - ./privkey.pem:/privkey.pem
 
-    portainer:
-      image: portainer/portainer
-      container_name: portainer
-      restart: always
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - ./portainer:/data
-      labels:
-        - "traefik.backend=portainer"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=9000"
+    # portainer:
+    #   image: portainer/portainer
+    #   container_name: portainer
+    #   restart: always
+    #   volumes:
+    #     - /var/run/docker.sock:/var/run/docker.sock
+    #     - ./portainer:/data
+    #   labels:
+    #     - "traefik.backend=portainer"
+    #     - "traefik.docker.network=web"
+    #     - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
+    #     - "traefik.enable=true"
+    #     - "traefik.port=9000"
 
-    minetest:
-      image: linuxserver/minetest
-      container_name: minetest
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-        - CLI_ARGS="--server --worldname MyWorld --gameid minetest" #optional
-      volumes:
-        - ./minetest:/config/.minetest
-      ports:
-        - 30000:30000/udp
-      restart: unless-stopped
-
-    librespeed:
-      image: adolfintel/speedtest
-      restart: always
-      environment: 
-          - MODE=standalone
-      labels:
-        - "traefik.backend=speedtest"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:speedtest.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=80"
+    # minetest:
+    #   image: linuxserver/minetest
+    #   container_name: minetest
+    #   environment:
+    #     - PUID=1000
+    #     - PGID=1000
+    #     - TZ=Europe/London
+    #     - CLI_ARGS="--server --worldname MyWorld --gameid minetest" #optional
+    #   volumes:
+    #     - ./minetest:/config/.minetest
+    #   ports:
+    #     - 30000:30000/udp
+    #   restart: unless-stopped
 
     wger:
       container_name: wger
