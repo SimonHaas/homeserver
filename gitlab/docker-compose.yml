@@ -10,6 +10,17 @@ services:
         environment:
             GITLAB_OMNIBUS_CONFIG: |
                 external_url 'https://gitlab.simon-haas.eu'
+                postgresql['enable'] = false
+                gitlab_rails['db_username'] = "gitlab"
+                gitlab_rails['db_password'] = "gitlab"
+                gitlab_rails['db_host'] = 'postgres'
+                gitlab_rails['db_port'] = "5432"
+                gitlab_rails['db_database'] = "gitlab"
+                gitlab_rails['db_adapter'] = "postgresql"
+                gitlab_rails['db_encoding'] = 'utf8'
+                redis['enable'] = false
+                gitlab_rails['redis_host'] = 'redis'
+                gitlab_rails['redis_port'] = '6379'
                 gitlab_rails['gitlab_shell_ssh_port'] = 2224
                 nginx['listen_port'] = 443
                 nginx['listen_https'] = false
@@ -18,6 +29,9 @@ services:
                     'X-Forwarded-Ssl' => 'on',
                     'Host' => 'gitlab.simon-haas.eu'
                 }
+        depends_on:
+            - redis
+            - postgres
         ports:
             - '2224:22'
         volumes:
