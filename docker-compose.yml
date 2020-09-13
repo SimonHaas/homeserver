@@ -46,6 +46,21 @@ services:
       volumes:
         - ./redis:/data
 
+    portainer:
+      image: portainer/portainer
+      container_name: portainer
+      restart: always
+      networks:
+        - traefik_proxy
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - ./portainer:/data
+      labels:
+        - "traefik.backend=portainer"
+        - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=9000"
+
 
     # DEPRECATED use GITLAB!!!
     gogs:
