@@ -1,0 +1,25 @@
+version: "3.6"
+services:
+    fireflyiii:
+        image: jc5x/firefly-iii:latest
+        container_name: fireflyiii
+        networks:
+            - traefik_proxy
+        volumes:
+            # owner must be www-data, maybe change it manually
+            - ./data/export:/var/www/firefly-iii/storage/export
+            - ./data/upload:/var/www/firefly-iii/storage/upload
+            - ./data/logs:/var/www/firefly-iii/storage/logs
+        env_file: .env
+        labels:
+            - "traefik.backend=firefly"
+            - "traefik.frontend.rule=Host:fireflyiii.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=8080"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

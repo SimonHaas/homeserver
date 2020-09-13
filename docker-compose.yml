@@ -117,25 +117,6 @@ services:
       volumes:
         - ./openvpn-data/conf:/etc/openvpn
 
-    fireflyiii:
-      image: jc5x/firefly-iii:latest
-      networks:
-        - traefik_proxy
-      volumes:
-        # owner must be www-data, maybe change it manually
-        - ./firefly-iii/export:/var/www/firefly-iii/storage/export
-        - ./firefly-iii/upload:/var/www/firefly-iii/storage/upload
-        - ./firefly-iii/logs:/var/www/firefly-iii/storage/logs
-      env_file: .env_firefly_iii
-      #links:
-      #  - mariadb
-      labels:
-        - "traefik.backend=firefly"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:fireflyiii.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=8080"
-
     adminer:
       image: adminer
       restart: always
