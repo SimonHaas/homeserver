@@ -4,6 +4,8 @@ services:
       image: adolfintel/speedtest
       container_name: librespeed
       restart: always
+      networks: 
+        - traefik_proxy
       environment: 
           - MODE=standalone
       labels:
