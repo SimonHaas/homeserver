@@ -48,6 +48,7 @@ services:
 
     postgres:
       container_name: postgres
+      hostname: postgres
       restart: always
       image: postgres:13-alpine
       environment:
