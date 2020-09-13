@@ -46,6 +46,8 @@ services:
       volumes:
         - ./redis:/data
 
+
+    # DEPRECATED use GITLAB!!!
     gogs:
         container_name: gogs
         restart: always

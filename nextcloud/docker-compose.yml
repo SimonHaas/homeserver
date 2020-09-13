@@ -6,9 +6,6 @@ services:
         image: nextcloud:18
         networks:
             - traefik_proxy
-        #links:
-            #- mariadb
-            #- redis
         environment:
             - REDIS_HOST=redis
         volumes:
