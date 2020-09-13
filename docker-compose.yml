@@ -68,24 +68,6 @@ services:
         - "traefik.enable=true"
         - "traefik.port=80"
 
-    calibre-web:
-      image: linuxserver/calibre-web
-      container_name: calibre-web
-      volumes:
-        - ./calibre-web/config:/config
-        - ./calibre-web/books:/books
-      restart: unless-stopped
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-      labels:
-        - "traefik.backend=calibre-web"
-        - "traefik.docker.network=web"
-        - "traefik.frontend.rule=Host:calibre-web.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=8083"
-
     gogs:
         container_name: gogs
         restart: always
