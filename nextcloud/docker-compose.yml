@@ -3,7 +3,7 @@ services:
     nextcloud:
         container_name: nextcloud
         restart: always
-        image: nextcloud:18
+        image: nextcloud@sha256:05571b15389e33e53282da0d18cf7c2400a75fcca3d4000cdba16f3fe03c0829
         networks:
             - traefik_proxy
         environment:
