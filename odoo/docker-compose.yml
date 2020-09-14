@@ -2,6 +2,8 @@ version: "3.6"
 services:
     odoo:
         image: odoo:12.0
+        container_name: odoo
+        restart: always
         networks:
             - traefik_proxy
         volumes:
