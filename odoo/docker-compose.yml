@@ -9,6 +9,8 @@ services:
         depends_on:
             - db
         environment:
+            - PUID=1000
+            - PGID=1000
             - HOST=db
             - USER=odoo
             - PASSWORD=myodoo
