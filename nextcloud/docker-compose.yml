@@ -15,9 +15,6 @@ services:
             - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=80"
-            - "traefik.frontend.redirect.permanent=true"
-            - "traefik.frontend.redirect.regex=https://(.*)/.well-known/(card|cal)dav"
-            - "traefik.frontend.redirect.replacement=https://$$1/remote.php/dav/"
 
     nextcloud-mariadb:
         image: mariadb
