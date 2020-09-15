@@ -12,6 +12,10 @@ services:
             - HOST=mydb
             - USER=odoo
             - PASSWORD=myodoo
+        volumes:
+            - ./data:/var/lib/odoo
+            - ./config:/etc/odoo
+            - ./addons:/mnt/extra-addons
         labels:
             - "traefik.backend=odoo"
             - "traefik.frontend.rule=Host:odoo.simon-haas.eu"
@@ -24,6 +28,9 @@ services:
             - POSTGRES_DB=postgres
             - POSTGRES_PASSWORD=myodoo
             - POSTGRES_USER=odoo
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        volumes:
+            - ./odoo-db:/var/lib/postgresql/data/pgdata
 
 networks:
     traefik_proxy:
