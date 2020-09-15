@@ -7,9 +7,9 @@ services:
         networks:
             - traefik_proxy
         depends_on:
-            - odoo-db
+            - db
         environment:
-            - HOST=odoo-db
+            - HOST=db
             - USER=odoo
             - PASSWORD=myodoo
         volumes:
@@ -22,7 +22,7 @@ services:
             - "traefik.enable=true"
             - "traefik.port=8069"
 
-    odoo-db:
+    db:
         image: postgres:10
         environment:
             - POSTGRES_DB=postgres
@@ -30,7 +30,7 @@ services:
             - POSTGRES_USER=odoo
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - ./odoo-db:/var/lib/postgresql/data/pgdata
+            - ./db:/var/lib/postgresql/data/pgdata
 
 networks:
     traefik_proxy:
