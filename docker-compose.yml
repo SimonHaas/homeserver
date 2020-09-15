@@ -56,9 +56,9 @@ services:
        - POSTGRES_PASSWORD=odoo
        - POSTGRES_DB=odoo
       volumes:
-        - '/postgresql/lib:/var/lib/postgresql'
-        - '/postgresql/data:/etc/postgresql'
-        - '/postgresql/log:/var/log/postgresql'
+        - './postgresql/lib:/var/lib/postgresql'
+        - './postgresql/data:/etc/postgresql'
+        - './postgresql/log:/var/log/postgresql'
       networks:
         - traefik_proxy
 
