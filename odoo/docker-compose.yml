@@ -1,24 +1,29 @@
 version: "3.6"
 services:
-    odoo:
-        image: odoo:13
+    web:
+        image: odoo:13.0
         container_name: odoo
         restart: always
         networks:
             - traefik_proxy
-        volumes:
-            - ./data/data:/var/lib/odoo
-            - ./data/config:/etc/odoo
-            - ./data/addons:/mnt/extra-addons
+        depends_on:
+            - odoo-db
         environment:
-            - HOST=postgres
+            - HOST=mydb
             - USER=odoo
-            - PASSWORD=odoo
+            - PASSWORD=myodoo
         labels:
             - "traefik.backend=odoo"
             - "traefik.frontend.rule=Host:odoo.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=8069"
+
+    odoo-db:
+        image: postgres:10
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_PASSWORD=myodoo
+            - POSTGRES_USER=odoo
 
 networks:
     traefik_proxy:
