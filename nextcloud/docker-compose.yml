@@ -15,6 +15,7 @@ services:
             - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=80"
+            - traefik.frontend.headers.STSSeconds=315360000
 
     nextcloud-mariadb:
         image: mariadb
