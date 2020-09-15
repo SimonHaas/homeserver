@@ -8,7 +8,7 @@ services:
         environment:
             - PUID=1000
             - PGID=1000
-            - MYSQL_HOST=mariadb
+            - MYSQL_HOST=clarkson-mariadb
             - MYSQL_USERNAME=clarkson_user
             - MYSQL_PASSWORD=supersecretpassword
             - ENABLE_REGISTRATIONS=true
@@ -19,6 +19,26 @@ services:
             - "traefik.frontend.rule=Host:clarkson.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=3000"
+
+    clarkson-mariadb:
+        image: mariadb
+        container_name: "clarkson-mariadb"
+        hostname: clarkson-mariadb
+        networks:
+            - traefik_proxy
+        volumes:
+            - ./mariadb:/var/lib/mysql
+        # ports:
+        #     - target: 3306
+        #         published: 3306
+        #         protocol: tcp
+        #         mode: host
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=keinerweisdas
+            - MYSQL_PASSWORD=supersecretpassword
+            - MYSQL_DATABASE=clarkson
+            - MYSQL_USER=clarkson_user
 
 networks:
     traefik_proxy:
