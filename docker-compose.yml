@@ -52,17 +52,15 @@ services:
       restart: always
       image: postgres:13-alpine
       environment:
-       - POSTGRES_USER=gitlab
-       - POSTGRES_PASSWORD=gitlab
-       - POSTGRES_DB=gitlab
+       - POSTGRES_USER=odoo
+       - POSTGRES_PASSWORD=odoo
+       - POSTGRES_DB=odoo
       volumes:
         - '/postgresql/lib:/var/lib/postgresql'
         - '/postgresql/data:/etc/postgresql'
         - '/postgresql/log:/var/log/postgresql'
       networks:
         - traefik_proxy
-      #labels:
-      #  - "traefik.enable=false"
 
     portainer:
       image: portainer/portainer
