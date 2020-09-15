@@ -9,7 +9,7 @@ services:
         depends_on:
             - odoo-db
         environment:
-            - HOST=mydb
+            - HOST=odoo-db
             - USER=odoo
             - PASSWORD=myodoo
         volumes:
