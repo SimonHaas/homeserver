@@ -24,6 +24,10 @@ services:
 
     db:
         image: postgres:10
+        container_name: odoo-db
+        restart: always
+        networks:
+            - traefik_proxy
         environment:
             - POSTGRES_DB=postgres
             - POSTGRES_PASSWORD=myodoo
