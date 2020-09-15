@@ -7,7 +7,7 @@ services:
         networks:
             - traefik_proxy
         environment:
-            - REDIS_HOST=redis
+            - REDIS_HOST=nextcloud-redis
         volumes:
             - ./data:/var/www/html
         labels:
@@ -15,6 +15,35 @@ services:
             - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=80"
+
+    nextcloud-mariadb:
+        image: mariadb
+        container_name: "nextcloud-mariadb"
+        hostname: nextcloud-mariadb
+        networks:
+            - traefik_proxy
+        volumes:
+            - ./mariadb:/var/lib/mysql
+        ports:
+            - target: 3306
+            published: 3306
+            protocol: tcp
+            mode: host
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=keinerweisdas
+            - MYSQL_PASSWORD=mysql
+            - MYSQL_DATABASE=nextcloud
+            - MYSQL_USER=nextcloud
+
+    nextcloud-redis:
+        image: redis:alpine
+        restart: always
+        container_name: nextcloud-redis
+        networks:
+            - traefik_proxy
+        volumes:
+            - ./redis:/data
 
 networks:
     traefik_proxy:

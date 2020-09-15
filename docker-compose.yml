@@ -37,15 +37,6 @@ services:
         - ./fullchain.pem:/cert.pem
         - ./privkey.pem:/privkey.pem
 
-    redis:
-      image: redis:alpine
-      restart: always
-      container_name: redis
-      networks:
-        - traefik_proxy
-      volumes:
-        - ./redis:/data
-
     portainer:
       image: portainer/portainer
       container_name: portainer
@@ -61,25 +52,7 @@ services:
         - "traefik.enable=true"
         - "traefik.port=9000"
           
-    mariadb:
-       image: mariadb
-       container_name: "mariadb"
-       hostname: mariadb
-       networks:
-        - traefik_proxy
-       volumes:
-           - ./mariadb:/var/lib/mysql
-       ports:
-         - target: 3306
-           published: 3306
-           protocol: tcp
-           mode: host
-       restart: always
-       environment:
-         - MYSQL_ROOT_PASSWORD=keinerweisdas
-         - MYSQL_PASSWORD=mysql
-         - MYSQL_DATABASE=nextcloud
-         - MYSQL_USER=nextcloud
+
 
     openvpn:
       cap_add:
