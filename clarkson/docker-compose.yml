@@ -28,11 +28,6 @@ services:
             - traefik_proxy
         volumes:
             - ./mariadb:/var/lib/mysql
-        # ports:
-        #     - target: 3306
-        #         published: 3306
-        #         protocol: tcp
-        #         mode: host
         restart: always
         environment:
             - MYSQL_ROOT_PASSWORD=keinerweisdas
