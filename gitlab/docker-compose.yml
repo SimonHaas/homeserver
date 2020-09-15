@@ -6,8 +6,8 @@ services:
         container_name: gitlab
         hostname: 'gitlab.simon-haas.eu'
         depends_on:
-            - redis
-            - postgresql
+            - gitlab-redis
+            - gitlab-postgresql
         networks:
             - traefik_proxy
         environment:
@@ -15,14 +15,14 @@ services:
                 external_url 'https://gitlab.simon-haas.eu'
                 postgresql['enable'] = false
                 gitlab_rails['db_username'] = "gitlab"
-                gitlab_rails['db_password'] = "password"
-                gitlab_rails['db_host'] = 'postgresql'
+                gitlab_rails['db_password'] = "gitlab"
+                gitlab_rails['db_host'] = 'gitlab-postgresql'
                 gitlab_rails['db_port'] = "5432"
-                gitlab_rails['db_database'] = "gitlabhq_prod"
+                gitlab_rails['db_database'] = "gitlab"
                 gitlab_rails['db_adapter'] = "postgresql"
                 gitlab_rails['db_encoding'] = 'utf8'
                 redis['enable'] = false
-                gitlab_rails['redis_host'] = 'redis'
+                gitlab_rails['redis_host'] = 'gitlab-redis'
                 gitlab_rails['redis_port'] = '6379'
                 gitlab_rails['gitlab_shell_ssh_port'] = 2224
                 nginx['listen_port'] = 443
@@ -46,14 +46,14 @@ services:
             - "traefik.frontend.entryPoints=https,http"
             # - "traefik.frontend.headers.SSLRedirect=true"
 
-    postgresql:
+    gitlab-postgresql:
         restart: always
         image: postgres:alpine
-        #container_name: gitlab_postgresql
+        container_name: gitlab-postgresql
         environment:
             - POSTGRES_USER=gitlab
-            - POSTGRES_PASSWORD=password
-            - POSTGRES_DB=gitlabhq_prod
+            - POSTGRES_PASSWORD=gitlab
+            - POSTGRES_DB=gitlab
         volumes:
             - './postgresql/lib:/var/lib/postgresql'
             - './postgresql/data:/etc/postgresql'
@@ -61,12 +61,12 @@ services:
         networks:
             - traefik_proxy
     
-    redis:
+    gitlab-redis:
+        container_name: gitlab-redis
         restart: always
         image: redis:3-alpine
-        #container_name: gitlab_redis
         volumes:
-            - './redis/data:/data'
+            - './redis:/data'
         networks:
             - traefik_proxy
 
