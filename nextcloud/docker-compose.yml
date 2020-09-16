@@ -15,18 +15,18 @@ services:
         volumes:
             - ./data:/var/www/html
 
-    nextcloud-cron:
-        image: nextcloud:fpm-alpine
-        restart: always
-        container_name: nextcloud-cron
-        networks:
-            - traefik_proxy
-        volumes:
-            - ./data:/var/www/html
-        entrypoint: /cron.sh
-        depends_on:
-            - nextcloud-mariadb
-            - nextcloud-redis
+    # nextcloud-cron:
+    #     image: nextcloud:fpm-alpine
+    #     restart: always
+    #     container_name: nextcloud-cron
+    #     networks:
+    #         - traefik_proxy
+    #     volumes:
+    #         - ./data:/var/www/html
+    #     entrypoint: /cron.sh
+    #     depends_on:
+    #         - nextcloud-mariadb
+    #         - nextcloud-redis
 
     nextcloud-web:
         build: ./web
