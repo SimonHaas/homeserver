@@ -3,13 +3,42 @@ services:
     nextcloud:
         container_name: nextcloud
         restart: always
-        image: nextcloud@sha256:5685a3345d3251e849e4c1a80451268d54c4296d7d9529fa514a6637e1dcfe06
+        image: nextcloud:fpm-alpine
+        depends_on: 
+            - nextcloud-mariadb
+            - nextcloud-redis
         networks:
             - traefik_proxy
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
             - ./data:/var/www/html
+
+    nextcloud-cron:
+        image: nextcloud:fpm-alpine
+        restart: always
+        container_name: nextcloud-cron
+        networks:
+            - traefik_proxy
+        volumes:
+            - ./data:/var/www/html
+        entrypoint: /cron.sh
+        depends_on:
+            - nextcloud-mariadb
+            - nextcloud-redis
+
+    nextcloud-web:
+        build: ./web
+        container_name: nextcloud-web
+        restart: always
+        ports:
+            - 8080:80
+        volumes:
+            - ./data:/var/www/html:ro
+        depends_on:
+            - nextcloud
+        networks:
+            - traefik_proxy
         labels:
             - "traefik.backend=nextcloud"
             - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
