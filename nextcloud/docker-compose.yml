@@ -14,7 +14,7 @@ services:
             - REDIS_HOST=nextcloud-redis
         volumes:
             - ./data:/var/www/html
-            - ./zz-docker.conf:/usr/local/etc/php/conf.d/zz-docker.conf
+            - ./zz-docker.conf:/usr/local/etc/php-fpm.d//zz-docker.conf
 
     nextcloud-web:
         build: ./web
