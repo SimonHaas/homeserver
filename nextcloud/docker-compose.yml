@@ -14,7 +14,7 @@ services:
             - REDIS_HOST=nextcloud-redis
         volumes:
             - ./data:/var/www/html
-            - ./fpm/zz-docker.conf:/usr/local/etc/php-fpm.d//zz-docker.conf
+            - ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
 
     nextcloud-web:
         build: ./web
