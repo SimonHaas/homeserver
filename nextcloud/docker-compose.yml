@@ -3,7 +3,8 @@ services:
     nextcloud:
         container_name: nextcloud
         restart: always
-        image: nextcloud:fpm-alpine
+        # docker-compose exec nextcloud chown -R www-data:root /var/www
+        build: ./fpm
         depends_on: 
             - nextcloud-mariadb
             - nextcloud-redis
