@@ -1,0 +1,29 @@
+version: "3.6"
+services:
+    paperless:
+        image: thepaperlessproject/paperless
+        restart: always
+        volumes:
+            - ./data:/usr/src/paperless/data
+            - ./media:/usr/src/paperless/media
+            - ./consume:/consume
+        environment:
+            - TZ=Europe/Berlin
+            - PAPERLESS_OCR_LANGUAGES=deu
+            - USERMAP_UID=1000
+            - USERMAP_GID=1000
+        command: ["gunicorn", "-b", "0.0.0.0:8000"]
+        networks: 
+            - traefik_proxy
+        labels:
+            - "traefik.backend=etiketten"
+            - "traefik.frontend.rule=Host:etiketten.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=8000"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
