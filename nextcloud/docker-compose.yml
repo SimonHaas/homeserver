@@ -20,8 +20,8 @@ services:
         build: ./web
         container_name: nextcloud-web
         restart: always
-        ports:
-            - 8080:80
+        #ports:
+        #    - 8080:80
         volumes:
             - ./data:/var/www/html:ro
         depends_on:
@@ -58,6 +58,18 @@ services:
             - traefik_proxy
         volumes:
             - ./redis:/data
+
+    onlyoffice:
+        image: onlyoffice/documentserver
+        container_name: onlyoffice
+        restart: always
+        networks: 
+            - traefik_proxy
+        labels:
+            - "traefik.backend=onlyoffice"
+            - "traefik.frontend.rule=Host:onlyoffice.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=80" 
 
 networks:
     traefik_proxy:
