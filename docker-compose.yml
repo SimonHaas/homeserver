@@ -12,7 +12,8 @@ services:
       ports:
         - "80:80"
         - "443:443"
-        - "8081:8080"
+      environment:
+        - DO_AUTH_TOKEN=${DO_AUTH_TOKEN}
       labels:
         - "traefik.enable=true"
         - "traefik.backend=traefik"
@@ -28,14 +29,12 @@ services:
         - "traefik.frontend.headers.STSIncludeSubdomains=true"
         - "traefik.frontend.headers.STSPreload=true"
         - "traefik.frontend.headers.frameDeny=true"
-        # - "traefik.frontend.auth.basic.users=${HTTP_USERNAME}:${HTTP_PASSWORD}"
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
         - ./traefik/traefik.toml:/etc/traefik/traefik.toml
         - ./traefik/servers.toml:/servers.toml
-        - ./shared:/shared
-        - ./fullchain.pem:/cert.pem
-        - ./privkey.pem:/privkey.pem
+        - ./traefik/acme.json:/acme.json # touch traefik/acme.json && chmod 600 traefik/acme.json
+        #- ./shared:/shared
 
     portainer:
       image: portainer/portainer
