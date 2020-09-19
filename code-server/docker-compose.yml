@@ -1,0 +1,28 @@
+version: "3.6"
+services:
+    code-server:
+        image: linuxserver/code-server
+        container_name: code-server
+        networks:
+            - traefik_proxy
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Berlin
+            - PASSWORD=dasistgeheim #optional
+            - SUDO_PASSWORD=dasistgeheim #optional
+            - PROXY_DOMAIN=code-server.simon-haas.eu #optional
+        volumes:
+            - ./config:/config
+        labels:
+            - "traefik.backend=code-server"
+            - "traefik.frontend.rule=Host:code-server.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=8443"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
