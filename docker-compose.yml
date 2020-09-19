@@ -34,7 +34,6 @@ services:
         - ./traefik/traefik.toml:/etc/traefik/traefik.toml
         - ./traefik/servers.toml:/servers.toml
         - ./traefik/acme.json:/acme.json # touch traefik/acme.json && chmod 600 traefik/acme.json
-        - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
 
     portainer:
       image: portainer/portainer
