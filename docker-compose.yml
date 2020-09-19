@@ -49,8 +49,6 @@ services:
         - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
         - "traefik.enable=true"
         - "traefik.port=9000"
-          
-
 
     openvpn:
       cap_add:
