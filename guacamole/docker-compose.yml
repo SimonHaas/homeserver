@@ -1,0 +1,9 @@
+version: "2"
+services:
+  guacamole:
+    image: oznu/guacamole
+    container_name: guacamole
+    volumes:
+      - ./config:/config
+    ports:
+      - 8080:8080
