@@ -15,8 +15,9 @@ services:
         - "traefik.enable=true"
         - "traefik.port=8080"
 
-traefik_proxy:
-    external:
-        name: traefik_proxy
-default:
-    driver: bridge
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
