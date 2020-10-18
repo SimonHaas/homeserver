@@ -18,6 +18,8 @@ services:
     restart: unless-stopped
     depends_on:
       - bookstack_db
+    networks:
+    - traefik_proxy
     labels:
       - "traefik.backend=bookstack"
       - "traefik.frontend.rule=Host:bookstack.simon-haas.eu"
@@ -37,4 +39,13 @@ services:
       - MYSQL_PASSWORD=yourdbpass
     volumes:
       - ./db/data:/config
+    networks:
+      - traefik_proxy
     restart: unless-stopped
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
