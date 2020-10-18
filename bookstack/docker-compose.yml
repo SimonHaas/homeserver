@@ -13,8 +13,8 @@ services:
       - APP_URL=https://bookstack.simon-haas.eu
     volumes:
       - ./app/data:/config
-    ports:
-      - 6875:80
+    #ports:
+    #  - 6875:80
     restart: unless-stopped
     depends_on:
       - bookstack_db
@@ -22,7 +22,7 @@ services:
       - "traefik.backend=bookstack"
       - "traefik.frontend.rule=Host:bookstack.simon-haas.eu"
       - "traefik.enable=true"
-      - "traefik.port=443"
+      - "traefik.port=80"
 
   bookstack_db:
     image: linuxserver/mariadb
