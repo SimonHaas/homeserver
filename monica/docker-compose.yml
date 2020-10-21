@@ -12,6 +12,7 @@ services:
       - APP_KEY=${APP_KEY}
       - DB_HOST=db
       - APP_URL=${APP_URL}
+      - APP_ENV=production
     volumes:
       - ./data/app:/var/www/html/storage
     restart: always
