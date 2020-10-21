@@ -1,0 +1,37 @@
+version: "3.4"
+
+services:
+  app:
+    image: monica
+    container_name: monica-app
+    depends_on:
+      - db
+    #ports:
+    #  - 8088:80
+    environment:
+      - APP_KEY=${APP_KEY}
+      - DB_HOST=db
+    volumes:
+      - ./data/app:/var/www/html/storage
+    restart: always
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=monica"
+      - "traefik.frontend.rule=Host:monica.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+
+  db:
+    image: mysql:5.7
+    container_name: monica-db
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - traefik_proxy
