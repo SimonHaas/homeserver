@@ -6,11 +6,12 @@ services:
     container_name: monica-app
     depends_on:
       - db
-    #ports:
-    #  - 8088:80
+    ports:
+      - 8088:80
     environment:
       - APP_KEY=${APP_KEY}
       - DB_HOST=db
+      - APP_URL=${APP_URL}
     volumes:
       - ./data/app:/var/www/html/storage
     restart: always
