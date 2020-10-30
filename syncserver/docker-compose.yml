@@ -9,23 +9,9 @@ services:
             - 5000:5000
         environment:
             SYNCSERVER_PUBLIC_URL: 'https://syncserver.simon-haas.eu:5000'
-            SYNCSERVER_SECRET: '<PUT YOUR SECRET KEY HERE>'
+            SYNCSERVER_SECRET: '0a247b49111c9eba316fa5bd105a9f823870fc78'
             SYNCSERVER_SQLURI: 'sqlite:////data/syncserver.db'
             SYNCSERVER_BATCH_UPLOAD_ENABLED: 'true'
             SYNCSERVER_FORCE_WSGI_ENVIRON: 'false'
             PORT: '5000'
         restart: always
-        networks:
-            - traefik_proxy
-        labels:
-            - "traefik.backend=syncserver"
-            - "traefik.frontend.rule=Host:syncserver.simon-haas.eu"
-            - "traefik.enable=true"
-            - "traefik.port=5000"
-
-networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
