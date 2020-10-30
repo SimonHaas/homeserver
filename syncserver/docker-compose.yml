@@ -15,6 +15,8 @@ services:
             SYNCSERVER_FORCE_WSGI_ENVIRON: 'false'
             PORT: '5000'
         restart: always
+        networks:
+            - traefik_proxy
         labels:
             - "traefik.backend=syncserver"
             - "traefik.frontend.rule=Host:syncserver.simon-haas.eu"
