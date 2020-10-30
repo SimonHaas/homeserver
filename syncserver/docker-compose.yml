@@ -12,7 +12,7 @@ services:
             SYNCSERVER_SECRET: '0a247b49111c9eba316fa5bd105a9f823870fc78'
             SYNCSERVER_SQLURI: 'sqlite:////data/syncserver.db'
             SYNCSERVER_BATCH_UPLOAD_ENABLED: 'true'
-            SYNCSERVER_FORCE_WSGI_ENVIRON: 'false'
+            SYNCSERVER_FORCE_WSGI_ENVIRON: 'true'
             PORT: '5000'
         restart: always
         networks:
