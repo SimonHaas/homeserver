@@ -50,6 +50,15 @@ services:
         - "traefik.enable=true"
         - "traefik.port=9000"
 
+    dyndns:
+      image: tunix/digitalocean-dyndns
+      container_name: dyndns
+      restart: always
+      environment:
+        - DIGITALOCEAN_TOKEN=${DO_AUTH_TOKEN}
+        - DOMAIN=${DOMAIN}
+        - NAME=${DYNDNS_NAME}
+
     openvpn:
       cap_add:
         - NET_ADMIN
