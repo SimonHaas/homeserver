@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  web:
+    image: liyasthomas/postwoman
+    container_name: hoppscotch
+    # volumes:
+    #   - "./data/.hoppscotch:/app/.hoppscotch"
+    #   - "./data/assets:/app/assets"
+    #   - "./data/directives:/app/directives"
+    #   - "./data/layouts:/app/layouts"
+    #   - "./data/middleware:/app/middleware"
+    #   - "./data/pages:/app/pages"
+    #   - "./data/plugins:/app/plugins"
+    #   - "./data/static:/app/static"
+    #   - "./data/store:/app/store"
+    #   - "./data/components:/app/components"
+    #   - "./data/helpers:/app/helpers"
+    #ports:
+    #  - "3000:3000"
+    environment:
+      HOST: 0.0.0.0
+    command: "npm run dev"
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=hoppscotch"
+      - "traefik.frontend.rule=Host:hoppscotch.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=3000"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
