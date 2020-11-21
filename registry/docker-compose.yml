@@ -9,6 +9,7 @@ services:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
     volumes:
       - ./data:/data
+    restart: always
     container_name: "registry"
     networks:
         - traefik_proxy
