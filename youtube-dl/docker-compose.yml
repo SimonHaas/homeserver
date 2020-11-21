@@ -10,8 +10,8 @@ services:
       - ./data/video:/app/video
       - ./data/subscriptions:/app/subscriptions
       - ./data/users:/app/users
-    ports:
-      - "8998:17442"
+    #ports:
+    #  - "8998:17442"
     image: tzahi12345/youtubedl-material:latest
     container_name: "youtube-dl"
     networks:
@@ -20,7 +20,7 @@ services:
       - "traefik.backend=youtube-dl"
       - "traefik.frontend.rule=Host:youtube-dl.simon-haas.eu"
       - "traefik.enable=true"
-      - "traefik.port=8998"
+      - "traefik.port=17442"
 
 networks:
   traefik_proxy:
