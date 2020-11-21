@@ -1,0 +1,47 @@
+version: "3.7"
+services:
+  php:
+    image: registry.simon-haas.eu/wertpapierkredit-php
+    container_name: wertpapierkredit-php
+    restart: always
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=wertpapierkredit-php"
+      - "traefik.frontend.rule=Host:wertpapierkredit-php.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+
+  pwa:
+    image: registry.simon-haas.eu/wertpapierkredit-pwa
+    container_name: wertpapierkredit-pwa
+    restart: always
+    container_name: "wertpapierkredit-pwa"
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=wertpapierkredit-pwa"
+      - "traefik.frontend.rule=Host:wertpapierkredit-pwa.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=443"
+
+  db:
+    image: mariadb
+    container_name: wertpapierkredit-db
+    restart: always
+    volumes: 
+      - ./data:/var/lib/mysql
+    networks:
+      - traefik_proxy
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: wertpapierkredit
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
