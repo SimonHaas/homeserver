@@ -23,7 +23,7 @@ services:
       - "traefik.backend=wertpapierkredit-pwa"
       - "traefik.frontend.rule=Host:wertpapierkredit-pwa.simon-haas.eu"
       - "traefik.enable=true"
-      - "traefik.port=443"
+      - "traefik.port=80"
 
   db:
     image: mariadb
