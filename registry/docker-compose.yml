@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  registry:
+    image: registry:2
+    ports:
+      - "5000:5000"
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - ./data:/data
+    container_name: "registry"
+    networks:
+        - traefik_proxy
+    labels:
+        - "traefik.backend=registry"
+        - "traefik.frontend.rule=Host:registry.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=5000"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
