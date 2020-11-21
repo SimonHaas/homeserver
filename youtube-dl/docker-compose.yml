@@ -12,7 +12,7 @@ services:
       - ./data/users:/app/users
     #ports:
     #  - "8998:17442"
-    image: tzahi12345/youtubedl-material:latest
+    image: tzahi12345/youtubedl-material:nightly
     container_name: "youtube-dl"
     networks:
       - traefik_proxy
