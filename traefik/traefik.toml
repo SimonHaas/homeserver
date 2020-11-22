@@ -17,6 +17,8 @@ defaultEntryPoints = ["https", "http"]
     entryPoint = "https"
   [entryPoints.https]
   address = ":443"
+  [entryPoints.http.auth.digest]
+  usersFile = ".htdigest"
     [entryPoints.https.tls]
    # [[entryPoints.https.tls.certificates]]
    # certFile = "/cert.pem"
