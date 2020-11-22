@@ -4,7 +4,7 @@ services:
     image: dwaaan/hrconvert2-docker:latest
     restart: always
     volumes:
-      - ./data/config.php:/var/www/html/HRProprietary/HRConvert2/config.php
+      - ./config.php:/var/www/html/HRProprietary/HRConvert2/config.php
     container_name: "hrconvert2"
     networks:
         - traefik_proxy
