@@ -2,7 +2,7 @@ version: "3.6"
 services:
     airsonic:
         image: linuxserver/airsonic
-        container_name: airsonic
+        container_name: airsonic-music
         networks:
             - traefik_proxy
         environment:
