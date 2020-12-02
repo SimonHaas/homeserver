@@ -3,6 +3,7 @@ services:
     fireflyiii:
         image: jc5x/firefly-iii:latest
         container_name: fireflyiii
+        restart: always
         networks:
             - traefik_proxy
         volumes:

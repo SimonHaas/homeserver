@@ -1,26 +1,39 @@
 version: "3.7"
 
 services:
+  proxy:
+    image: hoppscotch/proxyscotch
+    container_name: hoppscotch_proxy
+    #ports:
+    #  - 9159:9159
+    restart: always
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=hoppscotch-proxy"
+      - "traefik.frontend.rule=Host:hoppscotch-proxy.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=9159"
   web:
-    image: liyasthomas/postwoman
-    container_name: hoppscotch
-    volumes:
-      - "./data/.hoppscotch:/app/.hoppscotch"
-      - "./data/assets:/app/assets"
-      - "./data/directives:/app/directives"
-      - "./data/layouts:/app/layouts"
-      - "./data/middleware:/app/middleware"
-      - "./data/pages:/app/pages"
-      - "./data/plugins:/app/plugins"
-      - "./data/static:/app/static"
-      - "./data/store:/app/store"
-      - "./data/components:/app/components"
-      - "./data/helpers:/app/helpers"
+    image: registry.simon-haas.eu/hoppscotch-web
+    restart: always
+    # volumes:
+    #   - "./.hoppscotch:/app/.hoppscotch"
+    #   - "./assets:/app/assets"
+    #   - "./directives:/app/directives"
+    #   - "./layouts:/app/layouts"
+    #   - "./middleware:/app/middleware"
+    #   - "./pages:/app/pages"
+    #   - "./plugins:/app/plugins"
+    #   - "./static:/app/static"
+    #   - "./store:/app/store"
+    #   - "./components:/app/components"
+    #   - "./helpers:/app/helpers"
     #ports:
     #  - "3000:3000"
-    environment:
-      HOST: 0.0.0.0
-    command: "npm run dev"
+    # environment:
+    #   HOST: 0.0.0.0
+    container_name: hoppscotch_web
     networks:
       - traefik_proxy
     labels:
