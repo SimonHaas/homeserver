@@ -4,9 +4,9 @@ services:
         image: thepaperlessproject/paperless
         restart: always
         volumes:
-            - ./data:/usr/src/paperless/data
-            - ./media:/usr/src/paperless/media
-            - ./consume:/consume
+            - ./data/data:/usr/src/paperless/data
+            - ./data/media:/usr/src/paperless/media
+            - ./data/consume:/consume
         environment:
             - TZ=Europe/Berlin
             - PAPERLESS_OCR_LANGUAGES=deu
@@ -21,16 +21,25 @@ services:
             - "traefik.enable=true"
             - "traefik.port=8000"
 
-    proftpd:
-        image: hauptmedia/proftpd
-        container_name: proftpd
-        network_mode: "host"
-        environment: 
-            FTP_USERNAME: simon
-            FTP_PASSWORD: dasistganzgeheim
-        volumes:
-            - ./consume:/home/simon
+    ftpd_server:
+        image: stilliard/pure-ftpd
+        container_name: pure-ftpd
+        ports:
+            - "2001:21"
+            #- "30000-30009:30000-30009"
+        volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
+            - "./data/consume:/home/ftpusers/simon/"
+            - "./data/passwd:/etc/pure-ftpd/passwd"
+    # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
+    #      - "/folder_on_disk/ssl:/etc/ssl/private/"
+        environment:
+            PUBLICHOST: "192.168.153.215"
+            #ADDED_FLAGS: "-d -d" # logging of commands an responses
+    # also for ssl/tls:
+    #      ADDED_FLAGS: "--tls=2"
         restart: always
+
+        # pure-pw useradd simon -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u 1000 -g 1000 -d /home/ftpusers/simon
 
 networks:
     traefik_proxy:
