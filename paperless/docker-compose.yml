@@ -21,6 +21,17 @@ services:
             - "traefik.enable=true"
             - "traefik.port=8000"
 
+    proftpd:
+        image: hauptmedia/proftpd
+        container_name: proftpd
+        network_mode: "host"
+        environment: 
+            FTP_USERNAME: simon
+            FTP_PASSWORD: dasistganzgeheim
+        volumes:
+            - ./consume:/home/simon
+        restart: always
+
 networks:
     traefik_proxy:
         external:
