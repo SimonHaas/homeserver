@@ -33,7 +33,7 @@ services:
     # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
     #      - "/folder_on_disk/ssl:/etc/ssl/private/"
         environment:
-            PUBLICHOST: "192.168.153.215"
+            PUBLICHOST: "192.168.153.212"
             #ADDED_FLAGS: "-d -d" # logging of commands an responses
     # also for ssl/tls:
     #      ADDED_FLAGS: "--tls=2"
