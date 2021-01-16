@@ -5,7 +5,7 @@ services:
         image: stilliard/pure-ftpd
         container_name: pure-ftpd
         ports:
-            - "21:21"
+            - "2001:21"
             - "30000-30009:30000-30009"
         volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
             - "../paperless/data/consume:/home/ftpusers/simon/paperless"
