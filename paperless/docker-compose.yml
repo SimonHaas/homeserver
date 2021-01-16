@@ -28,6 +28,8 @@ services:
         environment:
             - PAPERLESS_OCR_LANGUAGES=
         command: ["gunicorn", "-b", "0.0.0.0:8000"]
+        networks: 
+            - traefik_proxy
         labels:
             - "traefik.backend=paperless"
             - "traefik.frontend.rule=Host:paperless.simon-haas.eu"
