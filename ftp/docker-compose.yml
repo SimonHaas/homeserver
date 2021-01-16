@@ -1,4 +1,7 @@
-    ftpd_server:
+version: "3.6"
+
+services:
+    ftpd:
         image: stilliard/pure-ftpd
         container_name: pure-ftpd
         ports:
