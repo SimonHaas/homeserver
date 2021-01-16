@@ -35,7 +35,7 @@ services:
             - "traefik.port=8000"
 
     consumer:
-        build: thepaperlessproject/paperless
+        image: thepaperlessproject/paperless
         # uncomment the following line to start automatically on system boot
         # restart: always
         depends_on:
