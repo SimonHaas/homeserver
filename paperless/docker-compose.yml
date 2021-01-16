@@ -1,45 +1,60 @@
-version: "3.6"
+version: '2.1'
+
 services:
-    paperless:
+    webserver:
         image: thepaperlessproject/paperless
-        restart: always
+        # uncomment the following line to start automatically on system boot
+        # restart: always
+        #ports:
+            # You can adapt the port you want Paperless to listen on by
+            # modifying the part before the `:`.
+            #- "8000:8000"
+        healthcheck:
+            test: ["CMD", "curl" , "-f", "https://paperless.simon-haas.eu"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
         volumes:
             - ./data/data:/usr/src/paperless/data
             - ./data/media:/usr/src/paperless/media
+            # You have to adapt the local path you want the consumption
+            # directory to mount to by modifying the part before the ':'.
             - ./data/consume:/consume
+        env_file: docker-compose.env
+        # The reason the line is here is so that the webserver that doesn't do
+        # any text recognition and doesn't have to install unnecessary
+        # languages the user might have set in the env-file by overwriting the
+        # value with nothing.
         environment:
-            - TZ=Europe/Berlin
-            - PAPERLESS_OCR_LANGUAGES=deu
-            - USERMAP_UID=1000
-            - USERMAP_GID=1000
+            - PAPERLESS_OCR_LANGUAGES=
         command: ["gunicorn", "-b", "0.0.0.0:8000"]
-        networks: 
-            - traefik_proxy
         labels:
             - "traefik.backend=paperless"
             - "traefik.frontend.rule=Host:paperless.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=8000"
 
-    ftpd_server:
-        image: stilliard/pure-ftpd
-        container_name: pure-ftpd
-        ports:
-            - "2001:21"
-            - "30000-30009:30000-30009"
-        volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
-            - "./data/consume:/home/ftpusers/simon/"
-            - "./data/passwd:/etc/pure-ftpd/passwd" #simon:dasistganzgeheim
-    # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
-    #      - "/folder_on_disk/ssl:/etc/ssl/private/"
-        environment:
-            PUBLICHOST: "192.168.153.212"
-            #ADDED_FLAGS: "-d -d" # logging of commands an responses
-    # also for ssl/tls:
-    #      ADDED_FLAGS: "--tls=2"
-        restart: always
-
-        # pure-pw useradd simon -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u 1000 -g 1000 -d /home/ftpusers/simon
+    consumer:
+        build: thepaperlessproject/paperless
+        # uncomment the following line to start automatically on system boot
+        # restart: always
+        depends_on:
+            webserver:
+                condition: service_healthy
+        volumes:
+            - ./data/data:/usr/src/paperless/data
+            - ./data/media:/usr/src/paperless/media
+            # This should be set to the same value as the consume directory
+            # in the webserver service above.
+            - ./data/consume:/consume
+            # Likewise, you can add a local path to mount a directory for
+            # exporting. This is not strictly needed for paperless to
+            # function, only if you're exporting your files: uncomment
+            # it and fill in a local path if you know you're going to
+            # want to export your documents.
+            # - /path/to/another/arbitrary/place:/export
+        env_file: docker-compose.env
+        command: ["document_consumer"]
 
 networks:
     traefik_proxy:
