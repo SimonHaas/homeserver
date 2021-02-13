@@ -1,7 +1,7 @@
 # iamklaus - ENJOY IT
 # Use a temporary image to compile and test the libraries
 #
-FROM nextcloud:fpm as builder
+FROM nextcloud:20.0.7-fpm as builder
 
 # Build and install dlib on builder
 
@@ -52,7 +52,7 @@ RUN cd; \
 # If pass the tests, we are able to create the final image.
 #
 
-FROM nextcloud:fpm
+FROM nextcloud:20.0.7-fpm
 
 # Install dependencies to image
 
