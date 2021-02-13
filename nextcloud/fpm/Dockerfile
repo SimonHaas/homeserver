@@ -1,7 +1,7 @@
 # iamklaus - ENJOY IT
 # Use a temporary image to compile and test the libraries
 #
-FROM nextcloud:20.0.7-fpm as builder
+FROM nextcloud:fpm as builder
 
 # Build and install dlib on builder
 
@@ -52,7 +52,7 @@ RUN cd; \
 # If pass the tests, we are able to create the final image.
 #
 
-FROM nextcloud:20.0.7-fpm
+FROM nextcloud:fpm
 
 # Install dependencies to image
 
@@ -84,9 +84,9 @@ RUN wget -c -q -O facerecognition https://github.com/matiasdelellis/facerecognit
   && unzip facerecognition \
   && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
   && cd /usr/src/nextcloud/facerecognition \
-  && make; \
+  && make;
 
-RUN set -ex; \
+RUN set -ex;
 
 RUN set -ex; \
     apt-get update; \
@@ -102,8 +102,7 @@ RUN set -ex; \
         fuse \
         fontconfig \
         exiftool \
-        gnupg \
-    ; \
+        gnupg
 
 RUN set -ex; \
     \
@@ -135,7 +134,6 @@ RUN set -ex; \
         | cut -d: -f1 \
         | sort -u \
         | xargs -rt apt-mark manual; \
-    
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/*; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
@@ -149,7 +147,7 @@ RUN mkdir -p \
 COPY supervisord.conf /
 
 ENV NEXTCLOUD_UPDATE=1
-ENV MEMORY_LIMIT=16G
+ENV MEMORY_LIMIT=1G
 
 RUN echo '*/30 * * * * php -f /var/www/html/occ face:background_job -t 900' >> /var/spool/cron/crontabs/www-data
 CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
