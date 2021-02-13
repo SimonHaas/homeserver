@@ -1,4 +1,4 @@
-FROM nextcloud:19.0.3-fpm-alpine
+FROM nextcloud:20.0.7-fpm-alpine
 
 # facedetection
 RUN apk add -X http://dl-cdn.alpinelinux.org/alpine/edge/testing dlib
