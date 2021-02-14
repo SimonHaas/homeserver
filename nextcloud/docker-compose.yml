@@ -4,8 +4,8 @@ services:
         container_name: nextcloud
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
-        #build: ./fpm
-        image: registry.simon-haas.eu/nextcloud:20.0.7-fpm
+        build: ./fpm
+        #image: registry.simon-haas.eu/nextcloud:20.0.7-fpm
         depends_on: 
             - nextcloud-mariadb
             - nextcloud-redis
@@ -20,8 +20,8 @@ services:
 
 
     nextcloud-web:
-        #build: ./web
-        image: registry.simon-haas.eu/nextcloud-web
+        build: ./web
+        #image: registry.simon-haas.eu/nextcloud-web
         container_name: nextcloud-web
         restart: always
         volumes:
