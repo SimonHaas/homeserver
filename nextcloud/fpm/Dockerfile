@@ -80,11 +80,11 @@ RUN echo 'memory_limit=-1' > /usr/local/etc/php/conf.d/memory-limit.ini
 #
 ARG FR_BRANCH=master
 RUN apt-get install -y wget unzip nodejs npm
-RUN wget -c -q -O facerecognition https://github.com/matiasdelellis/facerecognition/archive/$FR_BRANCH.zip \
-  && unzip facerecognition \
-  && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
-  && cd /usr/src/nextcloud/facerecognition \
-  && make;
+# RUN wget -c -q -O facerecognition https://github.com/matiasdelellis/facerecognition/archive/$FR_BRANCH.zip \
+#   && unzip facerecognition \
+#   && mv facerecognition-*  /usr/src/nextcloud/facerecognition \
+#   && cd /usr/src/nextcloud/facerecognition \
+#   && make;
 
 RUN set -ex;
 
