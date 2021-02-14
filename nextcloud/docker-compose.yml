@@ -4,7 +4,8 @@ services:
         container_name: nextcloud
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
-        image: nextcloud:20.0.7-fpm-alpine
+        #image: nextcloud:20.0.7-fpm-alpine
+        build: ./fpm
         depends_on: 
             - nextcloud-mariadb
             - nextcloud-redis
