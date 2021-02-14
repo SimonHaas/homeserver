@@ -73,7 +73,7 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini
 
 # Increse memory limits
 
-RUN echo 'memory_limit=${MEMORY_LIMIT}' > /usr/local/etc/php/conf.d/memory-limit.ini
+RUN echo 'memory_limit=-1' > /usr/local/etc/php/conf.d/memory-limit.ini
 
 # At this point you meet all the dependencies to install the application
 # If is available you can skip this step and install the application from the application store
@@ -147,7 +147,7 @@ RUN mkdir -p \
 COPY supervisord.conf /
 
 ENV NEXTCLOUD_UPDATE=1
-ENV MEMORY_LIMIT=1G
+ENV MEMORY_LIMIT=-1
 
 RUN echo '*/30 * * * * php -f /var/www/html/occ face:background_job -t 900' >> /var/spool/cron/crontabs/www-data
 CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
