@@ -1,4 +1,4 @@
-FROM nextcloud:20.0.7-fpm-alpine
+FROM nextcloud:21.0.0-fpm-alpine
 
 RUN apk add --no-cache supervisor \
   && mkdir /var/log/supervisord /var/run/supervisord
