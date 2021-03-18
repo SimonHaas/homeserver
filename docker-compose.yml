@@ -35,20 +35,20 @@ services:
         - ./traefik/servers.toml:/servers.toml
         - ./traefik/acme.json:/acme.json # touch traefik/acme.json && chmod 600 traefik/acme.json
 
-    portainer:
-      image: portainer/portainer
-      container_name: portainer
-      restart: always
-      networks:
-        - traefik_proxy
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - ./portainer:/data
-      labels:
-        - "traefik.backend=portainer"
-        - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=9000"
+    # portainer:
+    #   image: portainer/portainer
+    #   container_name: portainer
+    #   restart: always
+    #   networks:
+    #     - traefik_proxy
+    #   volumes:
+    #     - /var/run/docker.sock:/var/run/docker.sock
+    #     - ./portainer:/data
+    #   labels:
+    #     - "traefik.backend=portainer"
+    #     - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
+    #     - "traefik.enable=true"
+    #     - "traefik.port=9000"
 
     dyndns:
       image: tunix/digitalocean-dyndns
@@ -59,16 +59,16 @@ services:
         - DOMAIN=${DOMAIN}
         - NAME=${DYNDNS_NAME}
 
-    openvpn:
-      cap_add:
-        - NET_ADMIN
-      image: kylemanna/openvpn
-      container_name: openvpn
-      ports:
-        - "1194:1194/udp"
-      restart: always
-      volumes:
-        - ./openvpn-data/conf:/etc/openvpn
+    # openvpn:
+    #   cap_add:
+    #     - NET_ADMIN
+    #   image: kylemanna/openvpn
+    #   container_name: openvpn
+    #   ports:
+    #     - "1194:1194/udp"
+    #   restart: always
+    #   volumes:
+    #     - ./openvpn-data/conf:/etc/openvpn
 
     adminer:
       container_name: adminer
