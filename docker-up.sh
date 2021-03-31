@@ -37,5 +37,5 @@ arr+=("wireguard")
 
 for item in ${arr[*]}
 do
-    docker-compose -f /mnt/docker/$item up -d
+    docker-compose -f /mnt/docker/$item/docker-compose.yml up -d
 done
