@@ -7,8 +7,8 @@ services:
       - PGID=1000
       - TZ=Europe/Berlin
       - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
-      - USER=${USER} #optional
-      - PASS=${PASS} #optional
+      #- USER=${USER} #optional
+      #- PASS=${PASS} #optional
       #- WHITELIST=iplist #optional
       #- HOST_WHITELIST=dnsnane list #optional
     volumes:
