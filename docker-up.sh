@@ -31,7 +31,7 @@ arr+=("registry")
 arr+=("syncthing")
 #arr+=("traggo")
 #arr+=("wertpapierkredit")
-#arr+=("wger")
+arr+=("wger")
 #arr+=("youtube-dl")
 
 for item in ${arr[*]}
