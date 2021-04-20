@@ -6,6 +6,11 @@ services:
     volumes:
       - ./data/static:/home/wger/static
       - ./data/media:/home/wger/media
+    env_file:
+      - ./prod.env
+    depends_on:
+      - db-wger
+      - cache-wger
     restart: always
     networks:
       - traefik_proxy
@@ -15,8 +20,9 @@ services:
       - "traefik.enable=true"
       - "traefik.port=80"
 
-  db:
+  db-wger:
     image: postgres:12.0-alpine
+    container_name: db-wger
     volumes:
       - ./data/db:/var/lib/postgresql/data/
     expose:
@@ -27,7 +33,8 @@ services:
       - POSTGRES_PASSWORD=wger
       - POSTGRES_DB=wger
 
-  cache:
+  cache-wger:
+    container_name: cache-wger
     restart: always
     image: redis:latest
     expose:
