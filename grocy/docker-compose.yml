@@ -11,7 +11,7 @@ services:
       - ./data/config:/config
     #ports:
     #  - 9283:80
-    restart: unless-stopped
+    restart: always
     labels:
       - "traefik.backend=grocy"
       - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
