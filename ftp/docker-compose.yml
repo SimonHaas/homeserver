@@ -1,0 +1,22 @@
+version: "3.6"
+
+services:
+    ftpd:
+        image: stilliard/pure-ftpd
+        container_name: pure-ftpd
+        ports:
+            - "2001:21"
+            - "30000-30009:30000-30009"
+        volumes: # remember to replace /folder_on_disk/ with the path to where you want to store the files on the host machine
+            - "../paperless/data/consume:/home/ftpusers/simon/paperless"
+            - "./data/passwd:/etc/pure-ftpd/passwd" #simon:dasistganzgeheim
+    # uncomment for ssl/tls, see https://github.com/stilliard/docker-pure-ftpd#tls
+    #      - "/folder_on_disk/ssl:/etc/ssl/private/"
+        environment:
+            PUBLICHOST: "192.168.153.212"
+            #ADDED_FLAGS: "-d -d" # logging of commands an responses
+    # also for ssl/tls:
+    #      ADDED_FLAGS: "--tls=2"
+        restart: always
+
+        # pure-pw useradd simon -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u 1000 -g 1000 -d /home/ftpusers/simon

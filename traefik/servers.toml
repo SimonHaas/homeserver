@@ -10,6 +10,9 @@ loglevel = "DEBUG"
     [backends.code-server]
         [backends.code-server.servers.code-server]
             url = "http://192.168.153.215:8080"
+    [backends.jupyter]
+        [backends.jupyter.servers.jupyter]
+            url = "http://192.168.153.221:8888"
 
 [frontends]
     [frontends.tvheadend]
@@ -24,3 +27,7 @@ loglevel = "DEBUG"
         backend = "code-server"
     [frontends.code-server.routes.code-server]
         rule = "Host:code-server.simon-haas.eu"
+    [frontends.jupyter]
+        backend = "jupyter"
+    [frontends.jupyter.routes.jupyter]
+        rule = "Host:jupyter.simon-haas.eu"

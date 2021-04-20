@@ -4,6 +4,7 @@ services:
         container_name: nextcloud
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
+        #image: nextcloud:20.0.7-fpm-alpine
         build: ./fpm
         depends_on: 
             - nextcloud-mariadb
@@ -14,18 +15,17 @@ services:
             - REDIS_HOST=nextcloud-redis
         volumes:
             - ./data:/var/www/html
-            - ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
+            #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
 
-
-    nextcloud-web:
+    web:
         build: ./web
-        container_name: nextcloud-web
         restart: always
+        links:
+            - nextcloud
+        container_name: nextcloud-web
         volumes:
             - ./data:/var/www/html:ro
-        depends_on:
-            - nextcloud
         networks:
             - traefik_proxy
         labels:

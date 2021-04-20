@@ -3,6 +3,7 @@ services:
   guacamole:
     image: oznu/guacamole
     container_name: guacamole
+    restart: always
     volumes:
       - ./config:/config
     #ports:

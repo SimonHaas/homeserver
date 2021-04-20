@@ -1,16 +1,14 @@
 version: "3.6"
 services:
-    rainloop:
-        container_name: "rainloop"
-        image: solidnerd/rainloop:1.10.5.192
+    etiketten:
+        container_name: cyberchef
+        image: registry.simon-haas.eu/cyberchef
         restart: always
         networks:
             - traefik_proxy
-        volumes:
-            - ./data:/var/www/rainloop/data
         labels:
-            - "traefik.backend=rainloop"
-            - "traefik.frontend.rule=Host:rainloop.simon-haas.eu"
+            - "traefik.backend=cyberchef"
+            - "traefik.frontend.rule=Host:cyberchef.simon-haas.eu"
             - "traefik.enable=true"
             - "traefik.port=80"
 

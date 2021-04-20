@@ -1,0 +1,32 @@
+version: "2.1"
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    container_name: syncthing
+    hostname: syncthing #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ./data/appdata/config:/config
+      - ./data/data:/data
+    ports:
+      #- 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
+    networks:
+        - traefik_proxy
+    labels:
+        - "traefik.backend=syncthing"
+        - "traefik.frontend.rule=Host:syncthing.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8384"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
