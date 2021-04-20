@@ -9,11 +9,11 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - ./data/config:/config
-    #ports:
-    #  - 9283:80
+    ports:
+      - 9283:80
     restart: always
-    labels:
-      - "traefik.backend=grocy"
-      - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
-      - "traefik.enable=true"
-      - "traefik.port=80" 
+    # labels:
+    #   - "traefik.backend=grocy"
+    #   - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
+    #   - "traefik.enable=true"
+    #   - "traefik.port=80" 
