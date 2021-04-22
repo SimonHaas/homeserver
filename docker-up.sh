@@ -32,7 +32,7 @@ arr+=("syncthing")
 #arr+=("traggo")
 #arr+=("wertpapierkredit")
 arr+=("wger")
-#arr+=("youtube-dl")
+arr+=("youtube-dl")
 
 for item in ${arr[*]}
 do
