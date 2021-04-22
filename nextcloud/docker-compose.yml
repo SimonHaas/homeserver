@@ -26,6 +26,8 @@ services:
         container_name: nextcloud-web
         volumes:
             - ./data:/var/www/html:ro
+        ports: 
+            - 88:80
         networks:
             - traefik_proxy
         labels:
