@@ -35,8 +35,8 @@ services:
         - "traefik.port=8096"
 
 networks:
-traefik_proxy:
-    external:
-        name: traefik_proxy
-default:
-    driver: bridge
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
