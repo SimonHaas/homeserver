@@ -1,0 +1,33 @@
+version: "3.6"
+services:
+    dolibarr:
+        container_name: dolibarr
+        image: monogramm/docker-dolibarr
+        volumes: 
+            - ./data/dolibarr/html:/var/www/html
+            - ./dolibarr/docs:/var/www/documents
+        environment: 
+            - DOLI_AUTO_CONFIGURE=''
+        restart: always
+        networks:
+            - traefik_proxy
+        labels:
+            - "traefik.backend=dolibarr"
+            - "traefik.frontend.rule=Host:dolibarr.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=80"
+
+    dolibarr-db:
+        container_name: dolibarr-db
+        image: mariadb
+        volumes: 
+            - ./data/db:/var/lib/mysql
+        networks:
+            - traefik_proxy
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
