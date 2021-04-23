@@ -1,0 +1,42 @@
+version: "2.1"
+services:
+  jellyfin:
+    image: ghcr.io/linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - JELLYFIN_PublishedServerUrl=jellyfin.simon-haas.eu #optional
+    volumes:
+      - ./data/library:/config
+      - ./data/tvseries:/data/tvshows
+      - ./data/movies:/data/movies
+      #- /opt/vc/lib:/opt/vc/lib #optional Raspberry Pi OpenMAX libs
+    ports:
+      #- 8096:8096 #http
+      #- 8920:8920 #optional https
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    # devices:
+    #   - /dev/dri:/dev/dri #optional
+    #   - /dev/vcsm:/dev/vcsm #optional
+    #   - /dev/vchiq:/dev/vchiq #optional
+    #   - /dev/video10:/dev/video10 #optional
+    #   - /dev/video11:/dev/video11 #optional
+    #   - /dev/video12:/dev/video12 #optional
+    restart: always
+    networks:
+        - traefik_proxy
+    labels:
+        - "traefik.backend=jellyfin"
+        - "traefik.frontend.rule=Host:jellyfin.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8096"
+
+networks:
+traefik_proxy:
+    external:
+        name: traefik_proxy
+default:
+    driver: bridge
