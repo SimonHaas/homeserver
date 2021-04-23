@@ -9,9 +9,9 @@ services:
       - TZ=Europe/Berlin
       - JELLYFIN_PublishedServerUrl=jellyfin.simon-haas.eu #optional
     volumes:
-      - ./data/library:/config
-      - ./data/tvseries:/data/tvshows
-      - ./data/movies:/data/movies
+      - ./data/library:/config # Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
+      - ./data/tvseries:/data/tvshows # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
+      - ./data/movies:/data/movies # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
       #- /opt/vc/lib:/opt/vc/lib #optional Raspberry Pi OpenMAX libs
     ports:
       #- 8096:8096 #http
