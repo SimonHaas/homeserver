@@ -17,13 +17,20 @@ services:
             - "traefik.enable=true"
             - "traefik.port=80"
 
-    dolibarr-db:
-        container_name: dolibarr-db
+    dolibarr-mariadb:
         image: mariadb
-        volumes: 
-            - ./data/db:/var/lib/mysql
+        container_name: "dolibarr-mariadb"
+        hostname: dolibarr-mariadb
         networks:
             - traefik_proxy
+        volumes:
+            - ./data/mariadb:/var/lib/mysql
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=keinerweisdas
+            - MYSQL_PASSWORD=mysql
+            - MYSQL_DATABASE=dolibarr
+            - MYSQL_USER=dolibarr
 
 networks:
     traefik_proxy:
