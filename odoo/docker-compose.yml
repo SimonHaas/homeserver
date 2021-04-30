@@ -1,7 +1,7 @@
 version: "3.6"
 services:
     web:
-        image: odoo:12.0
+        image: odoo:14.0
         container_name: odoo
         restart: always
         networks:
@@ -13,10 +13,10 @@ services:
             - USER=odoo
             - PASSWORD=myodoo
         volumes:
-            # sudo chown -R 101:101 data/
-            - ./data:/var/lib/odoo
-            - ./config:/etc/odoo
-            - ./addons:/mnt/extra-addons
+            # sudo chown -R 101:101 data/odoo/lib
+            - ./data/odoo/lib:/var/lib/odoo
+            - ./data/odoo/config:/etc/odoo
+            - ./data/odoo/addons:/mnt/extra-addons
         labels:
             - "traefik.backend=odoo"
             - "traefik.frontend.rule=Host:odoo.simon-haas.eu"
@@ -35,7 +35,7 @@ services:
             - POSTGRES_USER=odoo
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - ./db:/var/lib/postgresql/data/pgdata
+            - ./data/postgres:/var/lib/postgresql/data/pgdata
 
 networks:
     traefik_proxy:
