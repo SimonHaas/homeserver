@@ -12,18 +12,18 @@ services:
     ports:
       - 9283:80
     restart: always
-#     networks:
-#       - traefik_proxy
-#     labels:
-#       - "traefik.backend=grocy"
-#       #- "traefik.protocol=http"
-#       - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
-#       - "traefik.enable=true"
-#       - "traefik.port=80" 
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=grocy"
+      #- "traefik.protocol=http"
+      - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80" 
 
-# networks:
-#   traefik_proxy:
-#       external:
-#           name: traefik_proxy
-#   default:
-#       driver: bridge
+networks:
+  traefik_proxy:
+      external:
+          name: traefik_proxy
+  default:
+      driver: bridge
