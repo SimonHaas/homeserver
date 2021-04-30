@@ -12,8 +12,9 @@ services:
     ports:
       - 9283:80
     restart: always
-    # labels:
-    #   - "traefik.backend=grocy"
-    #   - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
-    #   - "traefik.enable=true"
-    #   - "traefik.port=80" 
+    labels:
+      - "traefik.backend=grocy"
+      - "traefik.protocol=http"
+      - "traefik.frontend.rule=Host:grocy.simon-haas.eu; PathPrefixStrip: /grocy"
+      - "traefik.enable=true"
+      - "traefik.port=80" 
