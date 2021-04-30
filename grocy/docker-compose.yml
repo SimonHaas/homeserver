@@ -16,7 +16,7 @@ services:
       - traefik_proxy
     labels:
       - "traefik.backend=grocy"
-      - "traefik.protocol=http"
+      #- "traefik.protocol=http"
       - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
       - "traefik.enable=true"
       - "traefik.port=80" 
