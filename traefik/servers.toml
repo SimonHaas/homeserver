@@ -10,9 +10,9 @@ loglevel = "DEBUG"
     [backends.code-server]
         [backends.code-server.servers.code-server]
             url = "http://192.168.153.215:8080"
-    [backends.grocy]
-        [backends.grocy.servers.grocy]
-            url = "http://192.168.153.212:9283"
+    [backends.pihole]
+        [backends.pihole.servers.pihole]
+            url = "http://192.168.153.2"
 
 [frontends]
     [frontends.tvheadend]
@@ -27,7 +27,7 @@ loglevel = "DEBUG"
         backend = "code-server"
     [frontends.code-server.routes.code-server]
         rule = "Host:code-server.simon-haas.eu"
-    [frontends.grocy]
-        backend = "grocy"
-    [frontends.grocy.routes.grocy]
-        rule = "Host:grocy.simon-haas.eu"
+    [frontends.pihole]
+        backend = "pihole"
+    [frontends.pihole.routes.pihole]
+        rule = "Host:pihole.simon-haas.eu"
