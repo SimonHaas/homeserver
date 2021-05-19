@@ -1,2 +1,0 @@
-FILTER: rot rotate image
-s|</head>|<style>img{transform: rotate(180deg);}</style></head>|gisU
