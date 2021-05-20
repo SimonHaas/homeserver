@@ -16,6 +16,8 @@ services:
       - "./data/db:/data/db"
       - "./data/backups:/data/backups"
       - "./mongoconfig.js:/docker-entrypoint-initdb.d/mongoconfig.js"
+    networks:
+        - traefik_proxy
   api:
     container_name: "xbs-api"
     depends_on:
@@ -34,3 +36,17 @@ services:
     volumes:
       - "./settings.json:/usr/src/api/config/settings.json"
       - "./healthcheck.js:/usr/src/api/healthcheck.js"
+    networks:
+        - traefik_proxy
+    labels:
+        - "traefik.backend=xbsapi"
+        - "traefik.frontend.rule=Host:xbsapi.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
