@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: "xbs-db"
+    environment:
+      - "MONGO_INITDB_DATABASE=$DB_NAME"
+      - "MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD"
+      - "MONGO_INITDB_ROOT_USERNAME=$DB_USERNAME"
+      - "XBS_DB_NAME=$DB_NAME"
+      - "XBS_DB_PASSWORD=$DB_PASSWORD"
+      - "XBS_DB_USERNAME=$DB_USERNAME"
+    image: "mongo:4.4.4"
+    restart: "unless-stopped"
+    volumes:
+      - "./data/db:/data/db"
+      - "./data/backups:/data/backups"
+      - "./mongoconfig.js:/docker-entrypoint-initdb.d/mongoconfig.js"
+  api:
+    container_name: "xbs-api"
+    depends_on:
+      - "db"
+    environment:
+      - "XBROWSERSYNC_DB_PWD=$DB_PASSWORD"
+      - "XBROWSERSYNC_DB_USER=$DB_USERNAME"
+    healthcheck:
+      test: [ "CMD", "node", "/usr/src/api/healthcheck.js" ]
+      interval: "1m"
+      timeout: "10s"
+      retries: "5"
+      start_period: "30s"
+    image: "xbrowsersync/api:1.1.13"
+    restart: "unless-stopped"
+    volumes:
+      - "./settings.json:/usr/src/api/config/settings.json"
+      - "./healthcheck.js:/usr/src/api/healthcheck.js"
