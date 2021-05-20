@@ -35,6 +35,8 @@ arr+=("syncthing")
 #arr+=("traggo")
 #arr+=("wertpapierkredit")
 arr+=("wger")
+arr+=("wireguard")
+#arr+=("xbrowsersync")
 arr+=("youtube-dl")
 
 for item in ${arr[*]}
