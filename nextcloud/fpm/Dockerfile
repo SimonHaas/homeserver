@@ -8,6 +8,8 @@ COPY supervisord.conf /
 ENV NEXTCLOUD_UPDATE=1
 
 #facedetection
+RUN apk add -X http://dl-cdn.alpinelinux.org/alpine/edge/testing dlib
+
 RUN wget https://github.com/goodspb/pdlib/archive/master.zip \
   && mkdir -p /usr/src/php/ext/ \
   && unzip -d /usr/src/php/ext/ master.zip \
