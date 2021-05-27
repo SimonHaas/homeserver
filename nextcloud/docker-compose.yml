@@ -5,7 +5,8 @@ services:
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
         #image: nextcloud:20.0.7-fpm-alpine
-        build: ./fpm
+        image: registry.simon-haas.eu/nextcloud:21.0.0-fpm-alpine
+        #build: ./fpm
         depends_on: 
             - nextcloud-mariadb
             - nextcloud-redis
@@ -14,20 +15,22 @@ services:
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
-            - ./data:/var/www/html
+            - ./data/nextcloud:/var/www/html
             #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
+            - ./php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
     web:
-        build: ./web
+        #build: ./web
+        image: registry.simon-haas.eu/nextcloud-nginx:alpine
         restart: always
         links:
             - nextcloud
         container_name: nextcloud-web
         volumes:
-            - ./data:/var/www/html:ro
-        ports: 
-            - 88:80
+            - ./data/nextcloud:/var/www/html:ro
+        #ports: 
+        #    - 88:80
         networks:
             - traefik_proxy
         labels:
@@ -44,7 +47,7 @@ services:
         networks:
             - traefik_proxy
         volumes:
-            - ./mariadb:/var/lib/mysql
+            - ./data/mariadb:/var/lib/mysql
         restart: always
         environment:
             - MYSQL_ROOT_PASSWORD=keinerweisdas
@@ -59,7 +62,7 @@ services:
         networks:
             - traefik_proxy
         volumes:
-            - ./redis:/data
+            - ./data/redis:/data
 
     onlyoffice:
         image: onlyoffice/documentserver
