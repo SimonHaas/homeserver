@@ -15,6 +15,6 @@ services:
 networks:
     traefik_proxy:
         external:
-        name: traefik_proxy
+            name: traefik_proxy
     default:
         driver: bridge
