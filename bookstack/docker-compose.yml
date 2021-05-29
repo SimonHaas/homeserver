@@ -33,7 +33,7 @@ services:
       - PUID=1000
       - PGID=1000
       - MYSQL_ROOT_PASSWORD=yourdbpass
-      - TZ=Europe/London
+      - TZ=${TZ}
       - MYSQL_DATABASE=bookstackapp
       - MYSQL_USER=bookstack
       - MYSQL_PASSWORD=yourdbpass

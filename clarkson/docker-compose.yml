@@ -12,7 +12,7 @@ services:
             - MYSQL_USERNAME=clarkson_user
             - MYSQL_PASSWORD=supersecretpassword
             - ENABLE_REGISTRATIONS=true
-            - TZ=Europe/London
+            - TZ=${TZ}
         restart: unless-stopped
         labels:
             - "traefik.backend=clarkson"
