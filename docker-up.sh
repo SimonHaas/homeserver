@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker-compose -f /mnt/docker/docker-compose.yml up -d
+docker-compose -f ./docker-compose.yml up -d
 
 arr+=("airsonic")
 arr+=("bookstack")
@@ -32,6 +32,7 @@ arr+=("rainloop")
 arr+=("registry")
 #arr+=("searx")
 arr+=("syncthing")
+arr+=("traefik")
 #arr+=("traggo")
 #arr+=("wertpapierkredit")
 arr+=("wger")
@@ -41,5 +42,5 @@ arr+=("youtube-dl")
 
 for item in ${arr[*]}
 do
-    docker-compose -f /mnt/docker/$item/docker-compose.yml up -d
+    docker-compose -f ./$item/docker-compose.yml up -d
 done

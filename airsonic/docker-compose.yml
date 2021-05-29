@@ -11,12 +11,12 @@ services:
             - PGID=1000
             - TZ=Europe/London
         volumes:
-            - ./data/config:/config
-            - ./data/music:/music
-            - ./data/playlists:/playlists
-            - ./data/podcasts:/podcasts
-            - ./data/media:/media #optional
-            - ./data/audiobooks:/audiobooks
+            - ../airsonic/data/config:/config
+            - ../airsonic/data/music:/music
+            - ../airsonic/data/playlists:/playlists
+            - ../airsonic/data/podcasts:/podcasts
+            - ../airsonic/data/media:/media #optional
+            - ../airsonic/data/audiobooks:/audiobooks
         restart: unless-stopped
         labels:
             - "traefik.backend=airsonic"

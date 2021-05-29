@@ -1,0 +1,43 @@
+version: "3.6"
+services:
+    traefik:
+      hostname: traefik
+      image: traefik:v1.7.16
+      container_name: traefik
+      restart: always
+      domainname: simon-haas.eu
+      networks:
+        - default
+        - traefik_proxy
+      ports:
+        - "80:80"
+        - "443:443"
+      environment:
+        - DO_AUTH_TOKEN=${DO_AUTH_TOKEN}
+      labels:
+        - "traefik.enable=true"
+        - "traefik.backend=traefik"
+        - "traefik.frontend.rule=Host:traefik.simon-haas.eu"  
+        - "traefik.port=8080"
+        - "traefik.docker.network=traefik_proxy"
+        - "traefik.frontend.headers.SSLRedirect=true"
+        - "traefik.frontend.headers.STSSeconds=315360000"
+        - "traefik.frontend.headers.browserXSSFilter=true"
+        - "traefik.frontend.headers.contentTypeNosniff=true"
+        - "traefik.frontend.headers.forceSTSHeader=true"
+        - "traefik.frontend.headers.SSLHost=simon-haas.eu"
+        - "traefik.frontend.headers.STSIncludeSubdomains=true"
+        - "traefik.frontend.headers.STSPreload=true"
+        - "traefik.frontend.headers.frameDeny=true"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - ../traefik/traefik.toml:/etc/traefik/traefik.toml
+        - ../traefik/servers.toml:/servers.toml
+        - ../traefik/acme.json:/acme.json # touch traefik/acme.json && chmod 600 traefik/acme.json
+
+networks:
+    traefik_proxy:
+        external:
+          name: traefik_proxy
+    default:
+        driver: bridge

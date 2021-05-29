@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 
 services:
   registry:
@@ -8,7 +8,7 @@ services:
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
     volumes:
-      - ./data:/data
+      - ../registry/data:/data
     restart: always
     container_name: "registry"
     networks:

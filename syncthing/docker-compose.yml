@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3.6"
 services:
   syncthing:
     image: ghcr.io/linuxserver/syncthing
@@ -9,8 +9,8 @@ services:
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - ./data/appdata/config:/config
-      - ./data/data:/data
+      - ../syncthing/data/appdata/config:/config
+      - ../syncthing/data/data:/data
     ports:
       #- 8384:8384
       - 22000:22000
