@@ -12,7 +12,7 @@ services:
       - DB_DATABASE=bookstackapp
       - APP_URL=https://bookstack.simon-haas.eu
     volumes:
-      - ../bookstack/app/data:/config
+      - ../bookstack/data/app:/config
     #ports:
     #  - 6875:80
     restart: unless-stopped
@@ -38,7 +38,7 @@ services:
       - MYSQL_USER=bookstack
       - MYSQL_PASSWORD=yourdbpass
     volumes:
-      - ./db/data:/config
+      - ../bookstack/data/db:/config
     networks:
       - traefik_proxy
     restart: unless-stopped
