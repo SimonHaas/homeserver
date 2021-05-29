@@ -1,5 +1,6 @@
 */data/*
 fullchain.pem
 privkey.pem
+acme.json
 .env
 docker-compose.override.yml
