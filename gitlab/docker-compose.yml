@@ -35,9 +35,9 @@ services:
         ports:
             - '2224:22'
         volumes:
-            - './gitlab/config:/etc/gitlab'
-            - './gitlab/logs:/var/log/gitlab'
-            - './gitlab/data:/var/opt/gitlab'
+            - '../gitlab/data/gitlab/config:/etc/gitlab'
+            - '../gitlab/data/gitlab/logs:/var/log/gitlab'
+            - '../gitlab/data/gitlab/data:/var/opt/gitlab'
         labels:
             - "traefik.backend=gitlab"
             - "traefik.frontend.rule=Host:gitlab.simon-haas.eu"
@@ -55,9 +55,9 @@ services:
             - POSTGRES_PASSWORD=gitlab
             - POSTGRES_DB=gitlab
         volumes:
-            - './postgresql/lib:/var/lib/postgresql'
-            - './postgresql/data:/etc/postgresql'
-            - './postgresql/log:/var/log/postgresql'
+            - '../gitlab/data/postgresql/lib:/var/lib/postgresql'
+            - '../gitlab/data/postgresql/data:/etc/postgresql'
+            - '../gitlab/data/postgresql/log:/var/log/postgresql'
         networks:
             - traefik_proxy
     
@@ -66,7 +66,7 @@ services:
         restart: always
         image: redis:3-alpine
         volumes:
-            - './redis:/data'
+            - '../gitlab/data/redis:/data'
         networks:
             - traefik_proxy
 

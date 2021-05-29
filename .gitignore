@@ -1,1 +1,5 @@
 */data/*
+fullchain.pem
+privkey.pem
+.env
+docker-compose.override.yml

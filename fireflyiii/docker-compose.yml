@@ -8,9 +8,9 @@ services:
             - traefik_proxy
         volumes:
             # owner must be www-data, maybe change it manually
-            - ./data/export:/var/www/firefly-iii/storage/export
-            - ./data/upload:/var/www/firefly-iii/storage/upload
-            - ./data/logs:/var/www/firefly-iii/storage/logs
+            - ../fireflyiii/data/firefly/export:/var/www/firefly-iii/storage/export
+            - ../fireflyiii/data/firefly/upload:/var/www/firefly-iii/storage/upload
+            - ../fireflyiii/data/firefly/logs:/var/www/firefly-iii/storage/logs
         env_file: .env
         labels:
             - "traefik.backend=firefly"
@@ -25,7 +25,7 @@ services:
         networks:
             - traefik_proxy
         volumes:
-            - ./mariadb:/var/lib/mysql
+            - ../fireflyiii/data/mariadb:/var/lib/mysql
         restart: always
         environment:
             - MYSQL_ROOT_PASSWORD=keinerweisdas

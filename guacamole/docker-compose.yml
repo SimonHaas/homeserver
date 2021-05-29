@@ -5,7 +5,7 @@ services:
     container_name: guacamole
     restart: always
     volumes:
-      - ./config:/config
+      - ../guacamole/data/config:/config
     #ports:
     #  - 8080:8080
     networks:
