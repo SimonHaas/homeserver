@@ -2,5 +2,6 @@
 fullchain.pem
 privkey.pem
 acme.json
+letsencrypt
 .env
 docker-compose.override.yml
