@@ -12,7 +12,7 @@ services:
       - DB_DATABASE=bookstackapp
       - APP_URL=https://bookstack.simon-haas.eu
     volumes:
-      - ./app/data:/config
+      - ../bookstack/app/data:/config
     #ports:
     #  - 6875:80
     restart: unless-stopped

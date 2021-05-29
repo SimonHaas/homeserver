@@ -5,11 +5,11 @@ services:
       ALLOW_CONFIG_MUTATIONS: 'true'
     restart: always
     volumes:
-      - ./data/appdata:/app/appdata
-      - ./data/audio:/app/audio
-      - ./data/video:/app/video
-      - ./data/subscriptions:/app/subscriptions
-      - ./data/users:/app/users
+      - ../youtube-dl/data/appdata:/app/appdata
+      - ../youtube-dl/data/audio:/app/audio
+      - ../youtube-dl/data/video:/app/video
+      - ../youtube-dl/data/subscriptions:/app/subscriptions
+      - ../youtube-dl/data/users:/app/users
     #ports:
     #  - "8998:17442"
     image: tzahi12345/youtubedl-material:nightly

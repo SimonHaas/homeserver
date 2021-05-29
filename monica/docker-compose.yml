@@ -14,7 +14,7 @@ services:
       - APP_URL=${APP_URL}
       - APP_ENV=production
     volumes:
-      - ./data/app:/var/www/html/storage
+      - ../monica/data/app:/var/www/html/storage
     restart: always
     networks:
       - traefik_proxy
@@ -33,7 +33,7 @@ services:
       - MYSQL_USER=homestead
       - MYSQL_PASSWORD=secret
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - ../monica/data/mysql:/var/lib/mysql
     restart: always
     networks:
       - traefik_proxy

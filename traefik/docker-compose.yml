@@ -31,9 +31,9 @@ services:
         - "traefik.frontend.headers.frameDeny=true"
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
-        - ./traefik.toml:/etc/traefik/traefik.toml
-        - ./servers.toml:/servers.toml
-        - ./acme.json:/acme.json # touch traefik/acme.json && chmod 600 traefik/acme.json
+        - ../traefik/traefik.toml:/etc/traefik/traefik.toml
+        - ../traefik/servers.toml:/servers.toml
+        - ../traefik/acme.json:/acme.json # touch traefik/acme.json && chmod 600 traefik/acme.json
 
 networks:
     traefik_proxy:
