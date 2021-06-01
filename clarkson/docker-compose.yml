@@ -27,7 +27,7 @@ services:
         networks:
             - traefik_proxy
         volumes:
-            - ../clarkson/mariadb:/var/lib/mysql
+            - ../clarkson/data/mariadb:/var/lib/mysql
         restart: always
         environment:
             - MYSQL_ROOT_PASSWORD=keinerweisdas
