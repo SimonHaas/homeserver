@@ -18,7 +18,7 @@ then
 
     rdiff-backup --remove-older-than 4W /mnt/backup/rdiff-backup/docker
     
-    docker-compose down
+    docker-compose stop
     rdiff-backup -v5 --print-statistics /mnt/external4TB/docker /mnt/backup/rdiff-backup/docker
     docker-compose up -d
 fi
