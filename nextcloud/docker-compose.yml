@@ -49,11 +49,9 @@ services:
         volumes:
             - ../nextcloud/data/mariadb:/var/lib/mysql
         restart: always
-        environment:
-            - MYSQL_ROOT_PASSWORD=keinerweisdas
-            - MYSQL_PASSWORD=mysql
-            - MYSQL_DATABASE=nextcloud
-            - MYSQL_USER=nextcloud
+        env_file: 
+            - ../nextcloud/.env.example
+            - ../nextcloud/.env
 
     nextcloud-redis:
         image: redis:alpine
