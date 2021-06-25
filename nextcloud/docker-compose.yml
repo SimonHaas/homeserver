@@ -5,7 +5,7 @@ services:
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
         #image: nextcloud:20.0.7-fpm-alpine
-        image: registry.simon-haas.eu/nextcloud:21.0.0-fpm-alpine-rev3
+        image: registry.simon-haas.eu/nextcloud:21.0.0-fpm-alpine-rev2
         #build: ./fpm
         depends_on: 
             - nextcloud-mariadb
@@ -15,6 +15,7 @@ services:
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
+            - /mnt/omv:/mnt/omv
             - ../nextcloud/data/nextcloud:/var/www/html
             #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
