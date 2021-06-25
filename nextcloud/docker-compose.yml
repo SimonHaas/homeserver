@@ -5,7 +5,7 @@ services:
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
         #image: nextcloud:20.0.7-fpm-alpine
-        image: registry.simon-haas.eu/nextcloud:21.0.0-fpm-alpine-rev2
+        image: registry.simon-haas.eu/nextcloud:21.0.0-fpm-alpine-rev3
         #build: ./fpm
         depends_on: 
             - nextcloud-mariadb
