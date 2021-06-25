@@ -7,4 +7,4 @@ letsencrypt
 docker-compose.override.yml
 custom
 *.key
-*.cert
+*.crt
