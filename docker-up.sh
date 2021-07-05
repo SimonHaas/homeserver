@@ -1,7 +1,5 @@
 #!/bin/bash
 
-docker-compose -f ./docker-compose.yml up -d
-
 arr+=("airsonic")
 arr+=("bookstack")
 arr+=("calibre-web")
