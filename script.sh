@@ -43,5 +43,5 @@ arr+=("youtube-dl")
 
 for item in ${arr[*]}
 do
-    docker-compose ./$item/docker-compose.yml $1 $2 $3 $4
+    docker-compose -f ./$item/docker-compose.yml $1 $2 $3
 done
