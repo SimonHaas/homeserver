@@ -2,7 +2,6 @@ version: '3.6'
 services:
   trilium:
     image: zadam/trilium
-    restart: always
     #ports:
     #  - "8080:8080"
     volumes:
