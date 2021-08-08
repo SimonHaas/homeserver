@@ -1,6 +1,9 @@
 #!/bin/bash
 
-echo "Hello World"
+# sudo crontab -e
+# 0 0 * * *  /mnt/external4TB/docker/backup.sh &>> /mnt/external4TB/docker/backup-logs.txt
+
+echo `date`
 
 #TODO wenn Ziel noch kein rdiff-backup dir, dann erstmal rsync bis alles einmal kopiert wurde
 
@@ -18,7 +21,7 @@ then
 
     rdiff-backup --remove-older-than 4W /mnt/backup/rdiff-backup/docker
     
-    docker-compose stop
+    ./script.sh stop
     rdiff-backup -v5 --print-statistics /mnt/external4TB/docker /mnt/backup/rdiff-backup/docker
-    docker-compose up -d
+    ./script.sh start
 fi
