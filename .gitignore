@@ -8,3 +8,4 @@ docker-compose.override.yml
 custom
 *.key
 *.crt
+backup-logs.txt
