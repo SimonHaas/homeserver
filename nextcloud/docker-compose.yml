@@ -65,7 +65,7 @@ services:
             - ../nextcloud/data/redis:/data
 
     onlyoffice:
-        image: onlyoffice/documentserver:5.5.0
+        image: onlyoffice/documentserver:6.3
         container_name: onlyoffice
         restart: always
         networks: 
