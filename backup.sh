@@ -8,14 +8,14 @@ echo `date`
 
 #TODO wenn Ziel noch kein rdiff-backup dir, dann erstmal rsync bis alles einmal kopiert wurde
 
-if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/omv' /proc/mounts
-then
-    echo "########### lets backup omv"
+# if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/omv' /proc/mounts
+# then
+#     echo "########### lets backup omv"
 
-    #rdiff-backup -l /mnt/backup/rdiff-backup/omv
-    rdiff-backup --remove-older-than 4W /mnt/backup/rdiff-backup/omv
-    rdiff-backup -v5 --print-statistics /mnt/omv /mnt/backup/rdiff-backup/omv
-fi
+#     #rdiff-backup -l /mnt/backup/rdiff-backup/omv
+#     rdiff-backup --remove-older-than 4W /mnt/backup/rdiff-backup/omv
+#     rdiff-backup -v5 --print-statistics /mnt/omv /mnt/backup/rdiff-backup/omv
+# fi
 
 if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/external4TB' /proc/mounts
 then
