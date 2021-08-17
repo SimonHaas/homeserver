@@ -3,6 +3,9 @@
 # sudo crontab -e
 # 0 0 * * *  /mnt/external4TB/docker/backup.sh >> /mnt/external4TB/docker/backup-logs.txt 2>&1
 
+# Beim erstmaligen Backup von einem großen Ordner erstmal alles mit rsync kopieren und dann erst rdiff-backup drauf anwenden.
+# rdiff-backup kann ein abgebrochenes Backup nicht weitermachen und löscht erst mal wieder alles.
+
 echo "########### START ###########"
 echo `date`
 
