@@ -3,7 +3,7 @@ services:
   filebrowser:
     image: filebrowser/filebrowser:v2.17.2
     container_name: filebrowser
-    user: 1000:1000
+    user: 0:0
     #ports:
     #  - 8081:80
     volumes:
