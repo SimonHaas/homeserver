@@ -5,8 +5,6 @@ services:
         image: mozilla/syncserver:latest
         volumes:
             - ../syncserver/data:/data
-        ports:
-            - 5000:5000
         env_file:
             - .env
         restart: always
