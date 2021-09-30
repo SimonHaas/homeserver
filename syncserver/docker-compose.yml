@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+    syncserver:
+        container_name: syncserver
+        image: mozilla/syncserver:latest
+        volumes:
+            - ../syncserver/data:/data
+        ports:
+            - 5000:5000
+        restart: always
+        networks:
+            - traefik_proxy
+        labels:
+            - "traefik.backend=syncserver"
+            - "traefik.frontend.rule=Host:syncserver.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=5000"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
