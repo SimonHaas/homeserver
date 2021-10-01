@@ -8,6 +8,9 @@ services:
       - db
     environment:
       - APP_KEY=base64:L2TswbK1KXdP+eHHuiPNf9IcvyZj8Nx+qCBfwJevP18=
+      - DB_HOST=db
+      - DB_USERNAME=monica
+      - DB_PASSWORD=secret
     volumes:
       - ../monica/data/app:/var/www/html/storage
     restart: always
@@ -25,7 +28,7 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=monica
-      - MYSQL_USER=homestead
+      - MYSQL_USER=monica
       - MYSQL_PASSWORD=secret
     volumes:
       - ../monica/data/mysql:/var/lib/mysql
