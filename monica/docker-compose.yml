@@ -9,7 +9,7 @@ services:
     environment:
       - APP_KEY=base64:L2TswbK1KXdP+eHHuiPNf9IcvyZj8Nx+qCBfwJevP18=
       - DB_HOST=db
-      - DB_USERNAME=monica
+      - DB_USERNAME=root
       - DB_PASSWORD=secret
     volumes:
       - ../monica/data/app:/var/www/html/storage
@@ -26,7 +26,7 @@ services:
     image: mysql:5.7
     container_name: monica-db
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=monica
       - MYSQL_USER=monica
       - MYSQL_PASSWORD=secret
