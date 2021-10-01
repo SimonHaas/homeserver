@@ -13,6 +13,7 @@ services:
       - DB_PASSWORD=secret
       - APP_URL=https://monica.simon-haas.eu
       - APP_TRUSTED_PROXIES=*
+      - APP_ENV=production
     volumes:
       - ../monica/data/app:/var/www/html/storage
     restart: always
