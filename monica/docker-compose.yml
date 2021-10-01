@@ -6,6 +6,8 @@ services:
     container_name: monica-app
     depends_on:
       - db
+    environment:
+      - APP_KEY=base64:L2TswbK1KXdP+eHHuiPNf9IcvyZj8Nx+qCBfwJevP18=
     volumes:
       - ../monica/data/app:/var/www/html/storage
     restart: always
