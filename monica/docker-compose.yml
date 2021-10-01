@@ -1,18 +1,18 @@
-version: "3.6"
-
+version: "3.4"
 services:
   app:
-    image: monica:3.2.0
-    container_name: monica-app
+    image: monica
     depends_on:
       - db
+    #ports:
+    #  - 8080:80
     environment:
-      - APP_KEY=base64:L2TswbK1KXdP+eHHuiPNf9IcvyZj8Nx+qCBfwJevP18=
+      - APP_KEY=L2TswbK1KXdP+eHHuiPNf9IcvyZj8Nx+
       - DB_HOST=db
-      - DB_USERNAME=root
+      - DB_USERNAME=monica
       - DB_PASSWORD=secret
     volumes:
-      - ../monica/data/app:/var/www/html/storage
+      - data:/var/www/html/storage
     restart: always
     networks:
       - traefik_proxy
@@ -23,15 +23,14 @@ services:
       - "traefik.port=80"
 
   db:
-    image: mariadb
-    container_name: monica-db
+    image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=monica
       - MYSQL_USER=monica
       - MYSQL_PASSWORD=secret
     volumes:
-      - ../monica/data/mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql
     restart: always
     networks:
       - traefik_proxy
