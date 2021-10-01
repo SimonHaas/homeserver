@@ -11,6 +11,7 @@ services:
       - DB_HOST=db
       - DB_USERNAME=monica
       - DB_PASSWORD=secret
+      - APP_URL=https://monica.simon-haas.eu
     volumes:
       - ../monica/data/app:/var/www/html/storage
     restart: always
