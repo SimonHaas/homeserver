@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  client:
+    image: registry.simon-haas.eu/tallycounter_client
+    container_name: client
+    restart: always
+    env_file: .env
+    labels:
+        - "traefik.backend=tallycounter"
+        - "traefik.frontend.rule=Host:tallycounter.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8081"
+    networks:
+        - traefik_proxy
+
+  server:
+    image: registry.simon-haas.eu/tallycounter_server
+    container_name: server
+    env_file: .env
+    restart: always
+    labels:
+        - "traefik.backend=tallycounter-backend"
+        - "traefik.frontend.rule=Host:tallycounter-backend.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+    networks:
+        - traefik_proxy
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
