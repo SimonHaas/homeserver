@@ -5,13 +5,15 @@ services:
     container_name: client
     restart: always
     env_file: .env
-    labels:
-        - "traefik.backend=tallycounter"
-        - "traefik.frontend.rule=Host:tallycounter.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=8081"
-    networks:
-        - traefik_proxy
+    ports: 
+        - 8081:80
+    # labels:
+    #     - "traefik.backend=tallycounter"
+    #     - "traefik.frontend.rule=Host:tallycounter.simon-haas.eu"
+    #     - "traefik.enable=true"
+    #     - "traefik.port=8081"
+    # networks:
+    #     - traefik_proxy
 
   # server:
   #   image: registry.simon-haas.eu/tallycounter_server
