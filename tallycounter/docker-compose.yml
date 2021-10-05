@@ -4,9 +4,6 @@ services:
     image: registry.simon-haas.eu/tallycounter_client
     container_name: client
     restart: always
-    environment:
-        - SERVER=http://192.168.153.212:8080
-        - CLIENT=http://192.168.153.212:8081
     ports: 
         - 8081:80
     # labels:
@@ -20,13 +17,8 @@ services:
   server:
     image: registry.simon-haas.eu/tallycounter_server
     container_name: server
-    # env_file: .env
+    env_file: .env
     restart: always
-    environment:
-        - WEBSOCKET_ADMIN_USERNAME=root
-        - WEBSOCKET_ADMIN_PASSWORD=test
-        - SERVER=http://192.168.153.212:8080
-        - CLIENT=http://192.168.153.212:8081
     ports:
       - 8080:8080
   #   labels:
