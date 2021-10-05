@@ -10,7 +10,7 @@ services:
         - "traefik.backend=tallycounter"
         - "traefik.frontend.rule=Host:tallycounter.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=8081"
+        - "traefik.port=80"
     networks:
         - traefik_proxy
 
