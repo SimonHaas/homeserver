@@ -14,20 +14,20 @@ services:
     networks:
         - traefik_proxy
 
-  # server:
-  #   image: registry.simon-haas.eu/tallycounter_server
-  #   container_name: server
-  #   env_file: .env
-  #   restart: always
-  #   # ports:
-  #     # - 8080:8080
-  #   labels:
-  #       - "traefik.backend=tallycounter-backend"
-  #       - "traefik.frontend.rule=Host:tallycounter-backend.simon-haas.eu"
-  #       - "traefik.enable=true"
-  #       - "traefik.port=8080"
-  #   networks:
-  #       - traefik_proxy
+  server:
+    image: registry.simon-haas.eu/tallycounter_server
+    container_name: server
+    env_file: .env
+    restart: always
+    # ports:
+      # - 8080:8080
+    labels:
+        - "traefik.backend=tallycounter-backend"
+        - "traefik.frontend.rule=Host:tallycounter-backend.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+    networks:
+        - traefik_proxy
 
 networks:
   traefik_proxy:
