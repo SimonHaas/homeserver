@@ -17,7 +17,6 @@ services:
   server:
     image: registry.simon-haas.eu/tallycounter_server
     container_name: server
-    env_file: .env
     restart: always
     # ports:
       # - 8080:8080
