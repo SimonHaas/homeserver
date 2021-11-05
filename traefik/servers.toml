@@ -16,6 +16,9 @@ loglevel = "DEBUG"
     [backends.wol-service]
         [backends.wol-service.servers.wol-service]
             url = "http://192.168.153.227"
+    [backends.umbrel]
+        [backends.umbrel.servers.umbrel]
+            url = "http://192.168.153.231"
 
 [frontends]
     [frontends.tvheadend]
@@ -38,3 +41,7 @@ loglevel = "DEBUG"
         backend = "wol-service"
     [frontends.wol-service.routes.wol-service]
         rule = "Host:wol.simon-haas.eu"
+    [frontends.umbrel]
+        backend = "umbrel"
+    [frontends.umbrel.routes.umbrel]
+        rule = "Host:umbrel.simon-haas.eu"
