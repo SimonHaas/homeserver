@@ -16,3 +16,4 @@ services:
 # docker run -e EDGELAUNCHER_CONFIG_PATH=/edgelauncher/data/mainnet -e PASSWORD=<YOUR_PASSWORD> -v ~/.edgelauncher:/edgelauncher/data/mainnet -p 127.0.0.1:15888:15888 -p 127.0.0.1:17888:17888 --name edgelauncher -it thetalabsorg/edgelauncher_mainnet:v1.0.0
 
 # (WSL) My address: 0xd77a60b3ccd29a494950a73837da569220f66189
+# (homeserver) My address: 0x97d3f88dbb8e0c583e601566b1265eb964cbbf5b
