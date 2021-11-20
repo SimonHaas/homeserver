@@ -21,7 +21,7 @@ loglevel = "DEBUG"
             url = "http://192.168.155.231"
     [backends.fittrackee]
         [backends.fittrackee.servers.fittrackee]
-            url = "http://192.168.1535.234:5000"
+            url = "http://192.168.155.234:5000"
 
 [frontends]
     [frontends.tvheadend]
