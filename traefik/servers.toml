@@ -3,22 +3,25 @@ loglevel = "DEBUG"
 [backends]
     [backends.tvheadend]
         [backends.tvheadend.servers.tvheadend]
-            url = "http://192.168.153.204:9981"
+            url = "http://192.168.155.204:9981"
     [backends.motioneyeos]
         [backends.motioneyeos.servers.motioneyeos]
-            url = "http://192.168.153.211:80"
+            url = "http://192.168.155.211:80"
     [backends.code-server]
         [backends.code-server.servers.code-server]
-            url = "http://192.168.153.215:8080"
+            url = "http://192.168.155.215:8080"
     [backends.pihole]
         [backends.pihole.servers.pihole]
-            url = "http://192.168.153.2"
+            url = "http://192.168.155.2"
     [backends.wol-service]
         [backends.wol-service.servers.wol-service]
-            url = "http://192.168.153.227"
+            url = "http://192.168.155.227"
     [backends.umbrel]
         [backends.umbrel.servers.umbrel]
-            url = "http://192.168.153.231"
+            url = "http://192.168.155.231"
+    [backends.fittrackee]
+        [backends.fittrackee.servers.fittrackee]
+            url = "http://192.168.1535.234"
 
 [frontends]
     [frontends.tvheadend]
@@ -45,3 +48,7 @@ loglevel = "DEBUG"
         backend = "umbrel"
     [frontends.umbrel.routes.umbrel]
         rule = "Host:umbrel.simon-haas.eu"
+    [frontends.fittrackee]
+        backend = "fittrackee"
+    [frontends.fittrackee.routes.fittrackee]
+        rule = "Host:fittrackee.simon-haas.eu"
