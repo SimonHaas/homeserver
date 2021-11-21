@@ -1,3 +1,4 @@
+deprecated
 version: "3.6"
 services:
     airsonic:

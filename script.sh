@@ -1,6 +1,6 @@
 #!/bin/bash
 
-arr+=("airsonic")
+#arr+=("airsonic")
 arr+=("bookstack")
 arr+=("calibre-web")
 #arr+=("clarkson")
