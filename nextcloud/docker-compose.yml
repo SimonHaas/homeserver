@@ -42,7 +42,7 @@ services:
             - traefik.frontend.headers.STSSeconds=315360000
 
     nextcloud-mariadb:
-        image: mariadb:10.6
+        image: mariadb:10.5
         container_name: "nextcloud-mariadb"
         hostname: nextcloud-mariadb
         networks:
