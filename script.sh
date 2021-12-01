@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #arr+=("airsonic")
-arr+=("bookstack")
+#arr+=("bookstack")
 arr+=("calibre-web")
 #arr+=("clarkson")
 #arr+=("cyberchef")
