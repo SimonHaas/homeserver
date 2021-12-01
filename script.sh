@@ -2,7 +2,7 @@
 
 #arr+=("airsonic")
 #arr+=("bookstack")
-arr+=("calibre-web")
+#arr+=("calibre-web")
 #arr+=("clarkson")
 #arr+=("cyberchef")
 #arr+=("dolibarr")
