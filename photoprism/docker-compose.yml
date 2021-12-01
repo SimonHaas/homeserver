@@ -105,7 +105,7 @@ services:
       # - "/mnt/Family:/photoprism/originals/Family"    # [folder 1]:/photoprism/originals/[folder 1]
       # - "/mnt/Friends:/photoprism/originals/Friends"  # [folder 2]:/photoprism/originals/[folder 2]
       ## You may mount an *import* folder from which files can be transferred to *originals* (optional):
-      - "../photoprism/data/Import:/photoprism/import"
+      - "../syncthing/data/appdata/config/Camera:/photoprism/import"
       ## Cache, session, thumbnail, and sidecar files will be created in the *storage* folder (never remove):
       - "../photoprism/data/storage:/photoprism/storage"
     networks:
