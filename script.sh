@@ -7,7 +7,7 @@
 #arr+=("cyberchef")
 #arr+=("dolibarr")
 #arr+=("drone")
-arr+=("dyndns")
+#arr+=("dyndns") # dupliziert die A-Records immer
 arr+=("etiketten")
 #arr+=("filebrowser")
 #arr+=("fireflyiii")
