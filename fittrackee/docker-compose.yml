@@ -21,10 +21,10 @@ services:
       - .env
     depends_on:
       - fittrackee-db
-      - redis
+      - fittrackee-redis
     links:
       - fittrackee-db
-      - redis
+      - fittrackee-redis
     volumes:
       - ../fittrackee/repo:/usr/src/app
       - ../fittrackee/data/workouts:/usr/src/app/workouts
@@ -39,10 +39,10 @@ services:
       - "traefik.enable=true"
       - "traefik.port=5000"
 
-  redis:
+  fittrackee-redis:
     container_name: fittrackee-redis
     image: "redis:latest"
-    hostname: redis
+    hostname: fittrackee-redis
     #ports:
     #  - "6379:6379"
 
