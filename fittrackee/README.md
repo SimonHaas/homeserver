@@ -1,5 +1,6 @@
 # initial startup
 git clone https://github.com/SamR1/FitTrackee.git repo
+cp .env.example .env
 docker-compose build
 docker-compose up -d fittrackee
 docker-compose exec fittrackee docker/init-database.sh
