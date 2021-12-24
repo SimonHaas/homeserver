@@ -13,9 +13,6 @@ loglevel = "DEBUG"
     [backends.pihole]
         [backends.pihole.servers.pihole]
             url = "http://192.168.155.2"
-    [backends.wol-service]
-        [backends.wol-service.servers.wol-service]
-            url = "http://192.168.155.227"
 
 [frontends]
     [frontends.tvheadend]
@@ -34,7 +31,3 @@ loglevel = "DEBUG"
         backend = "pihole"
     [frontends.pihole.routes.pihole]
         rule = "Host:pihole.simon-haas.eu"
-    [frontends.wol-service]
-        backend = "wol-service"
-    [frontends.wol-service.routes.wol-service]
-        rule = "Host:wol.simon-haas.eu"
