@@ -45,6 +45,7 @@ arr+=("transmission")
 #arr+=("webtop")
 #arr+=("wertpapierkredit")
 #arr+=("wger")
+arr+=("wol")
 #arr+=("xbrowsersync")
 arr+=("youtube-dl")
 
