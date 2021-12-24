@@ -1,0 +1,23 @@
+version: "3.6"
+services:
+  wol:
+    image: php:7.2-apache
+    container_name: wol
+    volumes:
+      - ../wol/src:/var/www/html:ro
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=wol"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:wol.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
