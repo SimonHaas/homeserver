@@ -9,7 +9,7 @@ services:
     networks:
       - traefik_proxy
     labels:
-      - "traefik.backend=gogs"
+      - "traefik.backend=gauth"
       - "traefik.docker.network=web"
       - "traefik.frontend.rule=Host:gauth2.simon-haas.eu"
       - "traefik.enable=true"
