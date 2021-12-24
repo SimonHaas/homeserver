@@ -10,6 +10,7 @@
 arr+=("etiketten")
 #arr+=("filebrowser")
 #arr+=("fireflyiii")
+arr+=("fittrackee")
 #arr+=("gitlab")
 arr+=("gogs")
 #arr+=("grocy")
