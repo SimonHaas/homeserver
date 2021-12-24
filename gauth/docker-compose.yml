@@ -11,7 +11,7 @@ services:
     labels:
       - "traefik.backend=gauth"
       - "traefik.docker.network=web"
-      - "traefik.frontend.rule=Host:gauth2.simon-haas.eu"
+      - "traefik.frontend.rule=Host:gauth.simon-haas.eu"
       - "traefik.enable=true"
       - "traefik.port=80"
 
