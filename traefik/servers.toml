@@ -4,9 +4,6 @@ loglevel = "DEBUG"
     [backends.tvheadend]
         [backends.tvheadend.servers.tvheadend]
             url = "http://192.168.155.204:9981"
-    [backends.motioneyeos]
-        [backends.motioneyeos.servers.motioneyeos]
-            url = "http://192.168.155.211:80"
     [backends.code-server]
         [backends.code-server.servers.code-server]
             url = "http://192.168.155.215:8080"
@@ -19,10 +16,6 @@ loglevel = "DEBUG"
         backend = "tvheadend"
     [frontends.tvheadend.routes.tvheadend]
         rule = "Host:tvheadend.simon-haas.eu"
-    [frontends.motioneyeos]
-        backend = "motioneyeos"
-    [frontends.motioneyeos.routes.motioneyeos]
-        rule = "Host:motioneyeos.simon-haas.eu"
     [frontends.code-server]
         backend = "code-server"
     [frontends.code-server.routes.code-server]
