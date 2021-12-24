@@ -17,8 +17,8 @@ services:
   fittrackee:
     container_name: fittrackee
     build: ./repo/.
-    ports:
-      - "5000:5000"
+    #ports:
+    #  - "5000:5000"
     env_file:
       - .env
     depends_on:
