@@ -11,12 +11,14 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ../fittrackee/data/db:/var/lib/postgresql/data
+    networks:
+      - traefik_proxy
   
   fittrackee:
     container_name: fittrackee
     build: ./repo/.
-    #ports:
-    #  - "5000:5000"
+    ports:
+      - "5000:5000"
     env_file:
       - .env
     depends_on:
@@ -45,6 +47,8 @@ services:
     hostname: fittrackee-redis
     #ports:
     #  - "6379:6379"
+    networks:
+      - traefik_proxy
 
 networks:
     traefik_proxy:
