@@ -1,4 +1,5 @@
 */data/*
+*/repo/*
 fullchain.pem
 privkey.pem
 acme.json

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  fittrackee-db:
+    container_name: fittrackee-db
+    build: ./repo/db
+    #ports:
+    #  - "5435:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ../fittrackee/data/db:/var/lib/postgresql/data
+  
+  fittrackee:
+    container_name: fittrackee
+    build: ./repo/.
+    #ports:
+    #  - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - fittrackee-db
+      - redis
+    links:
+      - fittrackee-db
+      - redis
+    volumes:
+      - ../fittrackee/repo:/usr/src/app
+      - ../fittrackee/data/workouts:/usr/src/app/workouts
+      - ../fittrackee/data/uploads:/usr/src/app/uploads
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=fittrackee"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:fittrackee.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+
+  redis:
+    container_name: fittrackee-redis
+    image: "redis:latest"
+    hostname: redis
+    #ports:
+    #  - "6379:6379"
