@@ -16,9 +16,6 @@ loglevel = "DEBUG"
     [backends.wol-service]
         [backends.wol-service.servers.wol-service]
             url = "http://192.168.155.227"
-    [backends.gauth]
-        [backends.gauth.servers.gauth]
-            url = "http://192.168.155.217"
 
 [frontends]
     [frontends.tvheadend]
@@ -41,7 +38,3 @@ loglevel = "DEBUG"
         backend = "wol-service"
     [frontends.wol-service.routes.wol-service]
         rule = "Host:wol.simon-haas.eu"
-    [frontends.gauth]
-        backend = "gauth"
-    [frontends.gauth.routes.gauth]
-        rule = "Host:gauth.simon-haas.eu"

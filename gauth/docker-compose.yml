@@ -1,0 +1,23 @@
+version: "3.6"
+services:
+  web:
+    image: nginx
+    container_name: gauth
+    volumes:
+      - ../gauth/repo:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=gogs"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:gauth2.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
