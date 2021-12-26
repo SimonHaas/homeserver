@@ -4,9 +4,7 @@ services:
         container_name: nextcloud
         restart: always
         # docker-compose exec nextcloud chown -R www-data:root /var/www
-        #image: nextcloud:20.0.7-fpm-alpine
-        image: registry.simon-haas.eu/nextcloud:22.2.3-fpm-rev1
-        #build: ./fpm
+        build: ./src/fpm
         depends_on: 
             - nextcloud-mariadb
             - nextcloud-redis
@@ -15,23 +13,20 @@ services:
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
-            - /mnt/external4TB/docker/syncthing/data/appdata/config/Camera:/mnt/syncthing/camera
+            # - /mnt/external4TB/docker/syncthing/data/appdata/config/Camera:/mnt/syncthing/camera
             - ../nextcloud/data/nextcloud:/var/www/html
             #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
             - ../nextcloud/php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
     web:
-        #build: ./web
-        image: registry.simon-haas.eu/nextcloud-nginx:alpine
+        build: ./src/web
         restart: always
         links:
             - nextcloud
         container_name: nextcloud-web
         volumes:
             - ../nextcloud/data/nextcloud:/var/www/html:ro
-        #ports: 
-        #    - 88:80
         networks:
             - traefik_proxy
         labels:
