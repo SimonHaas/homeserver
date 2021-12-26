@@ -13,7 +13,7 @@ services:
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
-            # - /mnt/external4TB/docker/syncthing/data/appdata/config/Camera:/mnt/syncthing/camera
+            - /mnt/external4TB/docker/syncthing/data/appdata/config/Camera:/mnt/syncthing/camera
             - ../nextcloud/data/nextcloud:/var/www/html
             #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
