@@ -12,7 +12,7 @@ services:
     volumes:
       - ../radarr/data/config:/config
       - ../radarr/data/movies:/movies #optional
-      - ../radarr/data/downloads:/downloads #optional
+      - ../radarr/data/downloads:/torrents/downloads #optional
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
