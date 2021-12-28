@@ -1,0 +1,32 @@
+version: "2.1"
+services:
+  jackett:
+    image: lscr.io/linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - AUTO_UPDATE=true #optional
+      # - RUN_OPTS=<run options here> #optional
+    volumes:
+      - ../jacket/data/config:/config
+      - ../jacket/data/downloads:/downloads
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=jackett"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:jackett.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=9117"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
