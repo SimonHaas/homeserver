@@ -7,6 +7,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Berlin
+    ports:
+      - 7878:7878
     volumes:
       - ../radarr/data/config:/config
       - ../radarr/data/movies:/movies #optional
