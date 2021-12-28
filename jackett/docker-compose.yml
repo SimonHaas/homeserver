@@ -12,8 +12,8 @@ services:
     ports:
       - 9117:9117
     volumes:
-      - ../jacket/data/config:/config
-      - ../jacket/data/downloads:/downloads
+      - ../jackett/data/config:/config
+      - ../jackett/data/downloads:/downloads
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
