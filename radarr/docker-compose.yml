@@ -11,8 +11,8 @@ services:
       - 7878:7878
     volumes:
       - ../radarr/data/config:/config
-      - ../radarr/data/movies:/movies #optional
-      - ../radarr/data/downloads:/downloads #optional
+      - ../samba/data/media/movies:/movies #optional
+      - ../samba/data/media/downloads:/downloads #optional
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
