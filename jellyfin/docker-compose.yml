@@ -6,7 +6,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=${TZ}
+      - TZ=Europe/Berlin
       - JELLYFIN_PublishedServerUrl=jellyfin.simon-haas.eu #optional
     volumes:
       - ../jellyfin/data/library:/config # Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
