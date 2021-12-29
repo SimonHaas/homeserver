@@ -8,6 +8,7 @@ services:
       - "NMBD=True"
       - "RECYCLE=False"
       - "USER=simon.haas;MeinBrutalesPasswort"
+      - "PERMISSIONS"
     hostname: samba
     image: dperson/samba
     network_mode: host
