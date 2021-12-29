@@ -1,0 +1,33 @@
+version: "2.1"
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ../sonarr/data/config:/config
+      - ../samba/data/media/tvseries:/tvseries #optional
+      - ../samba/data/media/torrents:/downloads/torrents #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=sonarr"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:sonarr.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=8989"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
