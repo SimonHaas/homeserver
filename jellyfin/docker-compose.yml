@@ -12,6 +12,8 @@ services:
       - ../jellyfin/data/library:/config # Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
       # - ../jellyfin/data/tvseries:/data/tvshows # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
       - ../samba/data/media/torrents:/data/movies # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
+      - ../samba/data/media/movies:/data/movies2 # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
+      - ../samba/data/media/tvseries:/data/tvseries # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
     # ports:
       # - 8096:8096 # http
       # - 8920:8920 # optional https
