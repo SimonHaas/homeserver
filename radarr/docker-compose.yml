@@ -12,7 +12,7 @@ services:
     volumes:
       - ../radarr/data/config:/config
       - ../samba/data/media/movies:/movies #optional
-      - ../samba/data/media/downloads:/downloads #optional
+      - ../samba/data/media/torrents:/downloads/torrents #optional
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
