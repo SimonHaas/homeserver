@@ -39,6 +39,7 @@ arr+=("photoprism")
 arr+=("radarr")
 arr+=("rainloop")
 arr+=("registry")
+arr+=("samba")
 #arr+=("searx")
 #arr+=("syncserver") does not work
 arr+=("syncthing")
