@@ -9,9 +9,6 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - ../heimdall/data/config:/config
-    ports:
-      - 80:80
-      - 443:443
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
