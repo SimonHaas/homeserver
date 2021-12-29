@@ -10,3 +10,4 @@ custom
 *.key
 *.crt
 backup-logs.txt
+nohup.out
