@@ -9,23 +9,17 @@ services:
       - TZ=${TZ}
       - JELLYFIN_PublishedServerUrl=jellyfin.simon-haas.eu #optional
     volumes:
-      - ./data/library:/config # Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
-      - ./data/tvseries:/data/tvshows # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
-      - ./data/movies:/data/movies # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
-      #- /opt/vc/lib:/opt/vc/lib #optional Raspberry Pi OpenMAX libs
+      - ../jellyfin/data/library:/config # Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
+      # - ../jellyfin/data/tvseries:/data/tvshows # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
+      - ../jellyfin/data/movies:/data/movies # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
     ports:
-      #- 8096:8096 #http
-      #- 8920:8920 #optional https
-      - 7359:7359/udp #optional
-      - 1900:1900/udp #optional
-    # devices:
-    #   - /dev/dri:/dev/dri #optional
-    #   - /dev/vcsm:/dev/vcsm #optional
-    #   - /dev/vchiq:/dev/vchiq #optional
-    #   - /dev/video10:/dev/video10 #optional
-    #   - /dev/video11:/dev/video11 #optional
-    #   - /dev/video12:/dev/video12 #optional
-    restart: always
+      # - 8096:8096 # http
+      # - 8920:8920 # optional https
+      # - 7359:7359/udp #optional Allows clients to discover Jellyfin on the local network.
+      # - 1900:1900/udp #optional Service discovery used by DNLA and clients.
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     networks:
         - traefik_proxy
     labels:
