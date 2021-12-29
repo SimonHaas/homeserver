@@ -3,7 +3,7 @@ version: "3"
 services:
   samba: 
     container_name: samba
-    command: "-s \"torrents;/media/torrents;yes;no;no\" -p"
+    command: "-s \"media;/media/media;yes;no;no\" -p"
     environment: 
       - "NMBD=True"
       - "RECYCLE=False"
@@ -18,4 +18,4 @@ services:
       - "139:139/tcp"
       - "445:445/tcp"
     volumes: 
-      - "../samba/data/torrents:/media/torrents"
+      - "../samba/data/media:/media/media"
