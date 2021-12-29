@@ -3,12 +3,11 @@ version: "3"
 services:
   samba: 
     container_name: samba
-    command: "-s \"torrents;/media/torrents;yes;no;no\""
+    command: "-s \"torrents;/media/torrents;yes;no;no\" -p"
     environment: 
       - "NMBD=True"
       - "RECYCLE=False"
       - "USER=simon.haas;MeinBrutalesPasswort"
-      - "PERMISSIONS"
     hostname: samba
     image: dperson/samba
     network_mode: host
