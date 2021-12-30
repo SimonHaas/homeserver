@@ -11,3 +11,5 @@ services:
     ports:
       - "${PORT:-8191}:8191"
     restart: unless-stopped
+
+# curl -L -X POST 'http://192.168.155.212:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'
