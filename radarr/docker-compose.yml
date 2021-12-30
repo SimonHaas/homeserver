@@ -11,7 +11,7 @@ services:
       - 7878:7878
     volumes:
       - ../radarr/data/config:/config
-      - ../samba/data/media/movies:/movies #optional
+      - ../samba/data/media/movies:/movies #optional # TODO nur einen media share wegen hardlinks und move vs copy + delete
       - ../samba/data/media/torrents:/downloads/torrents #optional
     restart: unless-stopped
     security_opt:
