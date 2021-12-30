@@ -9,7 +9,7 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - ../sonarr/data/config:/config
-      - ../samba/data/media/sonarr-tvseries:/tvseries #optional # TODO nur einen media share wegen hardlinks und move vs copy + delete
+      - ../samba/data/media/tvseries:/tvseries #optional # TODO nur einen media share wegen hardlinks und move vs copy + delete
       - ../samba/data/media/torrents:/downloads/torrents #optional
     ports:
       - 8989:8989
