@@ -4,8 +4,8 @@ services:
     image: lscr.io/linuxserver/radarr
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=100
+      - PGID=100
       - TZ=Europe/Berlin
     ports:
       - 7878:7878
