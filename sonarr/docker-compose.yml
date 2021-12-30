@@ -4,8 +4,8 @@ services:
     image: lscr.io/linuxserver/sonarr
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=100
+      - PGID=100
       - TZ=Europe/Berlin
     volumes:
       - ../sonarr/data/config:/config
