@@ -15,6 +15,6 @@ services:
       - ../webtop/data:/config
       #- /var/run/docker.sock:/var/run/docker.sock #optional for docker in docker
     ports:
-      - 3000:3000
+      - 3003:3000
     shm_size: "1gb" #optional
     restart: unless-stopped
