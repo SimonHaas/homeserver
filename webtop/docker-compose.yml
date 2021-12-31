@@ -3,7 +3,7 @@ services:
   webtop:
     image: ghcr.io/linuxserver/webtop:ubuntu-mate
     container_name: webtop
-    privileged: true #optional
+    # privileged: true #optional
     environment:
       - PUID=1000
       - PGID=1000
