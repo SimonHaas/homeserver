@@ -9,6 +9,8 @@ services:
       - PGID=1000
       - TZ=Europe/Berlin
       #- SUBFOLDER=/ #optional
+    env_file:
+      - .env
     volumes:
       - ../webtop/data:/config
       #- /var/run/docker.sock:/var/run/docker.sock #optional for docker in docker
