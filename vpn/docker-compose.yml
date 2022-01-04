@@ -1,0 +1,36 @@
+version: "3"
+services:
+  vpn:
+    image: ghcr.io/bubuntux/nordvpn
+    cap_add:
+      - NET_ADMIN               # Required
+    environment:                # Review https://github.com/bubuntux/nordvpn#environment-variables
+      - USER=${USERNAME}     # Required
+      - PASS=${PASSWORD}         # Required
+      - CONNECT=${CONNECT}
+      - TECHNOLOGY=NordLynx
+      - NETWORK=192.168.155.0/24  # So it can be accessed within the local network
+    ports:
+      - 8080:8080
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
+    restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - WEBUI_PORT=8080
+    volumes:
+      - ../vpn/data/qbittorrent/config:/config
+      - ../vpn/data/qbittorrent/downloads:/downloads
+    # ports:
+    #   - 6881:6881
+    #   - 6881:6881/udp
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
