@@ -6,6 +6,8 @@ services:
     image: gotify/server
     volumes:
       - ../gotify/data:/app/data
+    environment:
+      - GOTIFY_SERVER_SSL_LETSENCRYPT_HOSTS=- gotify.simon-haas.eu
     networks:
       - traefik_proxy
     labels:
