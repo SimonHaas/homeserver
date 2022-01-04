@@ -5,6 +5,7 @@
 #arr+=("calibre-web")
 #arr+=("clarkson")
 #arr+=("cyberchef")
+arr+=("diun")
 #arr+=("dolibarr")
 #arr+=("drone")
 arr+=("etiketten")
