@@ -16,6 +16,7 @@ services:
       - 8686:8686
       - 9117:9117
       - 8191:8191
+      - 7878:7878
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
     security_opt:
@@ -48,6 +49,23 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - ../vpn/data/lidarr/config:/config
+      - ../vpn/data/media:/media
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=100
+      - PGID=100
+      - TZ=Europe/Berlin
+    volumes:
+      - ../vpn/data/radarr/config:/config
       - ../vpn/data/media:/media
     restart: unless-stopped
     network_mode: service:vpn
