@@ -10,7 +10,7 @@ services:
       - PASS=${PASSWORD}         # Required
       - CONNECT=${CONNECT}
       - TECHNOLOGY=NordLynx
-      - NETWORK=192.168.1.0/24  # So it can be accessed within the local network
+      - NETWORK=192.168.155.0/24  # So it can be accessed within the local network
     ports:
       - 8080:8080
       - 8686:8686
