@@ -14,6 +14,7 @@ services:
     ports:
       - 8080:8080
       - 8686:8686
+      - 9117:9117
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
     security_opt:
@@ -54,5 +55,21 @@ services:
     security_opt:
       - no-new-privileges:true
       
-# The torrent service would be available at http://localhost:8080/ 
-# or anywhere inside of the local network http://192.168.1.xxx:8080
+  jackett:
+    image: lscr.io/linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - AUTO_UPDATE=true #optional
+      # - RUN_OPTS=<run options here> #optional
+    volumes:
+      - ../vpn/data/jackett/config:/config
+      - ../vpn/data/jackett/downloads:/downloads
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
