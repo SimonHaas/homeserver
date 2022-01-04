@@ -1,0 +1,33 @@
+version: "2.1"
+services:
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ../lidarr/data/config:/config
+      - ../samba/data/media/music:/music #optional
+      - ../samba/data/media/torrents:/downloads/torrents #optional
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=lidarr"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:lidarr.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=8686"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
