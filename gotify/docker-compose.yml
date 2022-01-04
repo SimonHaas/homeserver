@@ -1,0 +1,23 @@
+version: "3.6"
+services:
+  gotify:
+    container_name: gotify
+    restart: unless-stopped
+    image: gotify/server
+    volumes:
+      - ../gotify/data:/app/data
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=gotify"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:gotify.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
