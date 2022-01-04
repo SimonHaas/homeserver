@@ -61,8 +61,8 @@ services:
     image: lscr.io/linuxserver/radarr
     container_name: radarr
     environment:
-      - PUID=100
-      - PGID=100
+      - PUID=1000
+      - PGID=1000
       - TZ=Europe/Berlin
     volumes:
       - ../vpn/data/radarr/config:/config
