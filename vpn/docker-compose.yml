@@ -15,6 +15,7 @@ services:
       - 8080:8080
       - 8686:8686
       - 9117:9117
+      - 8191:8191
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
     security_opt:
@@ -73,3 +74,19 @@ services:
       - vpn
     security_opt:
       - no-new-privileges:true
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+# curl -L -X POST 'http://192.168.155.212:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'
