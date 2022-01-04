@@ -16,4 +16,6 @@ services:
       - "DIUN_WATCH_SCHEDULE=0 */6 * * *"
       - "DIUN_PROVIDERS_DOCKER=true"
       - "DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true"
+      - DIUN_NOTIF_GOTIFY_ENDPOINT=gotify.simon-haas.eu
+      - DIUN_NOTIF_GOTIFY_TOKEN=Aw2ucheOKrNylC2
     restart: unless-stopped
