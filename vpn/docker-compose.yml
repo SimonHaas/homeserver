@@ -2,6 +2,7 @@ version: "3"
 services:
   vpn:
     image: ghcr.io/bubuntux/nordvpn
+    container_name: nordvpnwireguard
     cap_add:
       - NET_ADMIN               # Required
     environment:                # Review https://github.com/bubuntux/nordvpn#environment-variables
@@ -9,28 +10,49 @@ services:
       - PASS=${PASSWORD}         # Required
       - CONNECT=${CONNECT}
       - TECHNOLOGY=NordLynx
-      - NETWORK=192.168.155.0/24  # So it can be accessed within the local network
+      - NETWORK=192.168.1.0/24  # So it can be accessed within the local network
     ports:
       - 8080:8080
+      - 8686:8686
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
-    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
 
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent
+  torrent:
+    image: ghcr.io/linuxserver/qbittorrent
     container_name: qbittorrent
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Berlin
-      - WEBUI_PORT=8080
+      - WEBUI_PORT=808
     volumes:
       - ../vpn/data/qbittorrent/config:/config
-      - ../vpn/data/qbittorrent/downloads:/downloads
-    # ports:
-    #   - 6881:6881
-    #   - 6881:6881/udp
+      - ../vpn/data/media/qbittorrent:/downloads
     restart: unless-stopped
     network_mode: service:vpn
     depends_on:
       - vpn
+    security_opt:
+      - no-new-privileges:true
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ../vpn/data/lidarr/config:/config
+      - ../vpn/data/media:/media
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+      
+# The torrent service would be available at http://localhost:8080/ 
+# or anywhere inside of the local network http://192.168.1.xxx:8080
