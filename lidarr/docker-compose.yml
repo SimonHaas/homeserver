@@ -4,8 +4,8 @@ services:
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=100
+      - PGID=100
       - TZ=Europe/Berlin
     volumes:
       - ../lidarr/data/config:/config
