@@ -38,7 +38,7 @@ services:
     # ports:
       # - "8080:80"
     environment:
-      - NGINX_HOST=nginx.docker.localhost
+      - NGINX_HOST=nginx.simonhaas.eu
       - NGINX_PORT=80
     labels:
       - "traefik.http.routers.nginx.rule=Host(`nginx.simonhaas.eu`)"
@@ -51,5 +51,3 @@ networks:
     traefik_public:
         external:
           name: traefik_public
-    # default:
-        # driver: bridge
