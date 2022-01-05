@@ -14,10 +14,10 @@ services:
       - ./data/config/gitlab:/etc/gitlab
       - ./data/data/gitlab:/var/opt/gitlab
       - ./data/logs:/var/log/gitlab
-    # labels:
-    #   - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
-    #   - traefik.enable=true
-    #   - traefik.zone=public
+    labels:
+      - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
+      - traefik.enable=true
+      - traefik.zone=public
     # networks:
       # - traefik_public
 
