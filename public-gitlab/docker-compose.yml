@@ -7,7 +7,6 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         gitlab_rails['gitlab_shell_ssh_port'] = 8822
-        external_url 'https://gitlab.simonhaas.eu'
     ports:
       # - "8000:80"
       - "8822:22"
@@ -30,6 +29,8 @@ services:
     volumes:
       - ./data/config/gitlab-runner:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik_public
 
 # version: '3.6'
 # services:
