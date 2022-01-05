@@ -8,18 +8,18 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         gitlab_rails['gitlab_shell_ssh_port'] = 8822
     ports:
-      # - "8000:80"
+      - "8000:80"
       - "8822:22"
     volumes:
       - ./data/config/gitlab:/etc/gitlab
       - ./data/data/gitlab:/var/opt/gitlab
       - ./data/logs:/var/log/gitlab
-    labels:
-      - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
-      - traefik.enable=true
-      - traefik.zone=public
-    networks:
-      - traefik_public
+    # labels:
+    #   - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
+    #   - traefik.enable=true
+    #   - traefik.zone=public
+    # networks:
+      # - traefik_public
 
   gitlab-runner:
     image: gitlab/gitlab-runner:alpine
@@ -29,36 +29,10 @@ services:
     volumes:
       - ./data/config/gitlab-runner:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - traefik_public
-
-# version: '3.6'
-# services:
-#   web:
-#     image: 'gitlab/gitlab-ce:latest'
-#     restart: always
-#     hostname: 'gitlab.simonhaas.eu'
-#     environment:
-#       GITLAB_OMNIBUS_CONFIG: |
-#         external_url 'https://gitlab.simonhaas.eu'
-#         # Add any other gitlab.rb configuration here, each on its own line
-#     # ports:
-#     #   - '80:80'
-#     #   - '443:443'
-#     #   - '22:22'
-#     volumes:
-#       - ../public-gitlab/data/config:/etc/gitlab
-#       - ../public-gitlab/data/logs:/var/log/gitlab
-#       - ../public-gitlab/data/data:/var/opt/gitlab
-#     shm_size: '256m'
-#     labels:
-#       - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
-#       - traefik.enable=true
-#       - traefik.zone=public
 #     networks:
 #       - traefik_public
 
-networks:
-  traefik_public:
-    external:
-      name: traefik_public
+# networks:
+#   traefik_public:
+#     external:
+#       name: traefik_public
