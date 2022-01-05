@@ -32,7 +32,7 @@ services:
     networks:
       - traefik_public
 
-# networks:
-#   traefik_public:
-#     external:
-#       name: traefik_public
+networks:
+  traefik_public:
+    external:
+      name: traefik_public
