@@ -1,30 +1,56 @@
-version: '3.6'
+version: '3.5'
 services:
-  web:
-    image: 'gitlab/gitlab-ce:latest'
-    restart: always
-    hostname: 'gitlab.simonhaas.eu'
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    hostname: gitlab.simonhaas.eu
+    restart: unless-stopped
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.simonhaas.eu'
-        # Add any other gitlab.rb configuration here, each on its own line
-    # ports:
-    #   - '80:80'
-    #   - '443:443'
-    #   - '22:22'
+        gitlab_rails['gitlab_shell_ssh_port'] = 8822
+    ports:
+      - "8000:80"
+      - "8822:22"
     volumes:
-      - ../public-gitlab/data/config:/etc/gitlab
-      - ../public-gitlab/data/logs:/var/log/gitlab
-      - ../public-gitlab/data/data:/var/opt/gitlab
-    shm_size: '256m'
-    labels:
-      - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
-      - traefik.enable=true
-      - traefik.zone=public
-    networks:
-      - traefik_public
+      - ./config/gitlab:/etc/gitlab
+      - ./data/gitlab:/var/opt/gitlab
+      - ./logs:/var/log/gitlab
 
-networks:
-  traefik_public:
-    external:
-      name: traefik_public
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: unless-stopped
+    depends_on:
+      - gitlab
+    volumes:
+      - ./config/gitlab-runner:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+
+# version: '3.6'
+# services:
+#   web:
+#     image: 'gitlab/gitlab-ce:latest'
+#     restart: always
+#     hostname: 'gitlab.simonhaas.eu'
+#     environment:
+#       GITLAB_OMNIBUS_CONFIG: |
+#         external_url 'https://gitlab.simonhaas.eu'
+#         # Add any other gitlab.rb configuration here, each on its own line
+#     # ports:
+#     #   - '80:80'
+#     #   - '443:443'
+#     #   - '22:22'
+#     volumes:
+#       - ../public-gitlab/data/config:/etc/gitlab
+#       - ../public-gitlab/data/logs:/var/log/gitlab
+#       - ../public-gitlab/data/data:/var/opt/gitlab
+#     shm_size: '256m'
+#     labels:
+#       - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
+#       - traefik.enable=true
+#       - traefik.zone=public
+#     networks:
+#       - traefik_public
+
+# networks:
+#   traefik_public:
+#     external:
+#       name: traefik_public
