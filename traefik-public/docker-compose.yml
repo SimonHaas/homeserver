@@ -28,6 +28,7 @@ services:
     image: traefik/whoami
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+      - traefik.enable=true
       - traefik.zone=public
     networks:
       - traefik_public
