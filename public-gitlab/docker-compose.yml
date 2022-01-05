@@ -13,9 +13,9 @@ services:
     #   - '443:443'
     #   - '22:22'
     volumes:
-      - ../gitlab/data/config:/etc/gitlab
-      - ../gitlab/data/logs:/var/log/gitlab
-      - ../gitlab/data/data:/var/opt/gitlab
+      - ../public-gitlab/data/config:/etc/gitlab
+      - ../public-gitlab/data/logs:/var/log/gitlab
+      - ../public-gitlab/data/data:/var/opt/gitlab
     shm_size: '256m'
     labels:
       - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
