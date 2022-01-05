@@ -25,7 +25,7 @@ services:
       - traefik.enable=true
       - traefik.zone=public
       - "traefik.http.routers.gitlab.entrypoints=http"
-      - "traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)"
+      # - "traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)"
       - "traefik.http.middlewares.gitlab-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.gitlab.middlewares=gitlab-https-redirect"
       - "traefik.http.routers.gitlab-secure.entrypoints=https"
