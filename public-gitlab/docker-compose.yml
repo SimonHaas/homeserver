@@ -13,9 +13,9 @@ services:
           "X-Forwarded-Proto" => "https",
           "X-Forwarded-Ssl" => "on"
         }
-    ports:
-      - "8000:80"
-      - "8822:22"
+    # ports:
+      # - "8000:80"
+      # - "8822:22"
     volumes:
       - ./data/config/gitlab:/etc/gitlab
       - ./data/data/gitlab:/var/opt/gitlab
