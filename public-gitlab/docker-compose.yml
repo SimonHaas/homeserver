@@ -11,9 +11,9 @@ services:
       - "8000:80"
       - "8822:22"
     volumes:
-      - ./config/gitlab:/etc/gitlab
-      - ./data/gitlab:/var/opt/gitlab
-      - ./logs:/var/log/gitlab
+      - ./data/config/gitlab:/etc/gitlab
+      - ./data/data/gitlab:/var/opt/gitlab
+      - ./data/logs:/var/log/gitlab
 
   gitlab-runner:
     image: gitlab/gitlab-runner:alpine
@@ -21,7 +21,7 @@ services:
     depends_on:
       - gitlab
     volumes:
-      - ./config/gitlab-runner:/etc/gitlab-runner
+      - ./data/config/gitlab-runner:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
 
 # version: '3.6'
