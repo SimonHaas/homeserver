@@ -1,0 +1,30 @@
+version: '3.6'
+services:
+  web:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'gitlab.simonhaas.eu'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.simonhaas.eu'
+        # Add any other gitlab.rb configuration here, each on its own line
+    # ports:
+    #   - '80:80'
+    #   - '443:443'
+    #   - '22:22'
+    volumes:
+      - ../gitlab/data/config:/etc/gitlab
+      - ../gitlab/data/logs:/var/log/gitlab
+      - ../gitlab/data/data:/var/opt/gitlab
+    shm_size: '256m'
+    labels:
+      - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
+      - traefik.enable=true
+      - traefik.zone=public
+    networks:
+      - traefik_public
+
+networks:
+  traefik_public:
+    external:
+      name: traefik_public
