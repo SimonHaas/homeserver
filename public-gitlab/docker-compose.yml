@@ -9,7 +9,7 @@ services:
         gitlab_rails['gitlab_shell_ssh_port'] = 8822
         external_url 'https://gitlab.simonhaas.eu'
     ports:
-      - "8000:80"
+      # - "8000:80"
       - "8822:22"
     volumes:
       - ./data/config/gitlab:/etc/gitlab
