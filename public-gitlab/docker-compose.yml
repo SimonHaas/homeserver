@@ -18,8 +18,8 @@ services:
       - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
       - traefik.enable=true
       - traefik.zone=public
-    # networks:
-      # - traefik_public
+    networks:
+      - traefik_public
 
   gitlab-runner:
     image: gitlab/gitlab-runner:alpine
@@ -29,8 +29,8 @@ services:
     volumes:
       - ./data/config/gitlab-runner:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
-#     networks:
-#       - traefik_public
+    networks:
+      - traefik_public
 
 # networks:
 #   traefik_public:
