@@ -14,12 +14,16 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik_public
 
   whoami:
     # A container that exposes an API to show its IP address
     image: traefik/whoami
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+    networks:
+      - traefik_public
 
   nginx:
     image: nginx
@@ -30,3 +34,12 @@ services:
       - NGINX_PORT=80
     labels:
       - "traefik.http.routers.nginx.rule=Host(`nginx.simonhaas.eu`)"
+    networks:
+      - traefik_public
+
+networks:
+    traefik_public:
+        external:
+          name: traefik_public
+    # default:
+        # driver: bridge
