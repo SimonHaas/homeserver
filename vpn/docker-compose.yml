@@ -12,11 +12,12 @@ services:
       - TECHNOLOGY=NordLynx
       - NETWORK=${NETWORK}  # So it can be accessed within the local network
     ports:
-      - 8080:8080
-      - 8686:8686
-      - 9117:9117
-      - 8191:8191
-      - 7878:7878
+      - 8080:8080 # torrent
+      - 8686:8686 # lidarr
+      - 9117:9117 # jackett
+      - 8191:8191 # flaresolverr
+      - 7878:7878 # radarr
+      - 8989:8989 # sonarr
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
     security_opt:
@@ -66,6 +67,23 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - ../vpn/data/radarr/config:/config
+      - ../vpn/data/media:/media
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ../sonarr/data/config:/config
       - ../vpn/data/media:/media
     restart: unless-stopped
     network_mode: service:vpn
