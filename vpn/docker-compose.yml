@@ -83,7 +83,7 @@ services:
       - PGID=1000
       - TZ=Europe/Berlin
     volumes:
-      - ../sonarr/data/config:/config
+      - ../vpn/data/sonarr/config:/config
       - ../vpn/data/media:/media
     restart: unless-stopped
     network_mode: service:vpn
