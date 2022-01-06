@@ -13,8 +13,8 @@ services:
         - "80:80"
         - "443:443"
         #- "8088:8080"
-      environment:
-        - DO_AUTH_TOKEN=${ACCESS_TOKEN}
+      env_file:
+        - ../.env
       labels:
         - "traefik.enable=true"
         - "traefik.backend=traefik"
