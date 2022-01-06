@@ -41,7 +41,6 @@ arr+=("rainloop")
 arr+=("registry")
 arr+=("samba")
 #arr+=("searx")
-arr+=("sonarr")
 #arr+=("syncserver") does not work
 arr+=("syncthing")
 arr+=("traefik")
