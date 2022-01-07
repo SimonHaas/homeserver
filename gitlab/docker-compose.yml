@@ -15,16 +15,12 @@ services:
             - "--entrypoints.websecure.http.tls.certResolver=myresolver"
             - "--certificatesresolvers.myresolver.acme.storage=acme.json"
             - "--certificatesResolvers.myresolver.acme.email=me@simonhaas.eu" # Let's Encrypt staging server
-            - "--certificatesResolvers.myresolver.acme.caserver=https://acme-st\
-              aging-v02.api.letsencrypt.org/directory"
+            - "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
             - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
             #       - "--certificatesResolvers.myresolver.acme.dnsChallenge.disablePropagationCheck=true"
-            - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=di\
-              gitalocean"
-            - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8\
-              .8.4.4:53,8.8.8.8:53"
-            - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBefore\
-              Check=0"
+            - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=digitalocean"
+            - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
+            - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
         ports:
             - "80:80"
             - "443:443"
@@ -54,10 +50,8 @@ services:
             # - "traefik.http.middlewares.auth.basicauth.users=admin:XXXXXXXXXXXXX"
 
             # Use Middlewares for a global redirect to https
-            - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme\
-              =https"
-            - "traefik.http.middlewares.redirect-to-https.redirectscheme.perman\
-              ent=true"
+            - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
             - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
             - "traefik.http.routers.redirs.entrypoints=web"
             - "traefik.http.routers.redirs.middlewares=redirect-to-https"
@@ -71,42 +65,58 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.whoami.rule=Host(`whoami.simonhaas.eu`)"
 
+    gitlab:
+        restart: always
+        image: gitlab/gitlab-ce:latest
+        container_name: gitlab
+        hostname: gitlab.simonhaas.eu
+        environment:
+            GITLAB_OMNIBUS_CONFIG: |
+                external_url 'https://gitlab.simonhaas.eu'
+                nginx['listen_port'] = 80
+                nginx['listen_https'] = false
+                nginx['http2_enabled'] = false
+                gitlab_rails['gitlab_shell_ssh_port'] = 2222
+                nginx['proxy_set_headers'] = {
+                    "Host" => "$$http_host",
+                    "X-Real-IP" => "$$remote_addr",
+                    "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+                    "X-Forwarded-Proto" => "https",
+                    "X-Forwarded-Ssl" => "on"
+                }
+        ports:
+            - "2222:22"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.gitlab.frontend.rule=Host:gitlab.simonhaas.eu"
+            - "traefik.gitlab.port=80"
+
+            - "traefik.frontend.entryPoints=websecure"
+            - "traefik.port=80"
+
+            #  Host settings for GitLab itself
+            - traefik.http.middlewares.gitlab-https-redirect.redirectscheme.scheme=https
+            - traefik.http.routers.gitlab.middlewares=gitlab-https-redirect
+            - traefik.http.services.gitlab.loadbalancer.server.port=80
+
+            - traefik.http.routers.gitlab.tls=true
+            - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
+            - traefik.http.routers.gitlab.tls.certresolver=myresolver
+            - traefik.http.routers.gitlab.entrypoints=websecure
+            - traefik.docker.network=traefik_internal
+        expose:
+            - "80"
+            - "443"
+            - "5200"
+        volumes:
+            - ./config:/etc/gitlab/
+            - ./logs:/var/log/gitlab/
+            - ./data:/var/opt/gitlab/
+            - /etc/localtime:/etc/localtime:ro
+        networks:
+            - traefik_internal
+
 networks:
     traefik_internal:
         external:
             name: traefik_internal
-        # The GitLab container itself
-        # gitlab:
-        #     image: 'gitlab/gitlab-ce:latest'
-        #     restart: always
-        #     hostname: 'gitlab.simonhaas.eu'
-        #     environment:
-        #         GITLAB_OMNIBUS_CONFIG: |
-        #             external_url 'https://gitlab.simonhaas.eu'
-        #             nginx['listen_https'] = false
-        #             nginx['listen_port'] = 80
-        #             gitlab_rails['gitlab_shell_ssh_port'] = 2222
-        #     volumes:
-        #         - './config:/etc/gitlab'
-        #         - './logs:/var/log/gitlab'
-        #         - './data:/var/opt/gitlab'
-        #     networks:
-        #         - web
-        #     ports:
-        #         - "2222:22" # expose GitLab SSH on port 2222 on the host, as Traefik does not yet support TCP routing
-        #     labels:
-        #         - "traefik.frontend.rule=Host:gitlab.simonhaas.eu"
-        #         - "traefik.docker.network=web"
-        #         - "traefik.enable=true"
-        #         - "traefik.port=80"
-        #         - "traefik.protocol=http"
-
-        #         - traefik.http.routers.gitlab.rule=Host(gitlab.simonhaas.eu)
-        #         - traefik.http.routers.gitlab.entrypoints=websecure
-        #         - traefik.http.routers.gitlab.tls.certresolver=le
-        #         - traefik.http.services.gitlab.loadbalancer.server.port=80
-        #         - traefik.docker.network=traefik-proxy
-        #         - traefik.tcp.routers.gitlab-ssh.rule=HostSNI(gitlab.simonhaas.eu)
-        #         - traefik.tcp.routers.gitlab-ssh.entrypoints=ssh
-        #         - traefik.tcp.routers.gitlab-ssh.service=gitlab-ssh-svc
-        #         - traefik.tcp.services.gitlab-ssh-svc.loadbalancer.server.port=2222
