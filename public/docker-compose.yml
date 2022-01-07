@@ -4,7 +4,7 @@ services:
     traefik:
         restart: always
         image: "traefik:v2.2.1"
-        container_name: "traefik"
+        container_name: traefik_public
         command:
             - "--log.level=DEBUG"
             - "--api.insecure=true"
@@ -22,11 +22,11 @@ services:
             - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
             - --providers.docker.constraints=Label(`traefik.zone`, `public`)
         ports:
-            - "808:80"
-            - "4438:443"
-            - "80808:8080"
+            - "880:80"
+            - "8443:443"
+            - "8088:8080"
         networks:
-            - traefik_internal
+            - traefik_public
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./acme.json:/acme.json
@@ -34,7 +34,7 @@ services:
             - .env
         labels:
             - "traefik.enable=true"
-            - "traefik.docker.network=traefik_internal"
+            - "traefik.docker.network=traefik_public"
             - "traefik.http.routers.traefik.entrypoints=web"
             - "traefik.http.routers.traefik.rule=Host(`traefik.simonhaas.eu`)"
             - "traefik.http.routers.traefik.tls=true"
@@ -96,7 +96,7 @@ services:
             - traefik.http.routers.gitlab.rule=Host(`gitlab.simonhaas.eu`)
             - traefik.http.routers.gitlab.tls.certresolver=myresolver
             - traefik.http.routers.gitlab.entrypoints=websecure
-            - traefik.docker.network=traefik_internal
+            - traefik.docker.network=traefik_public
         expose:
             - "80"
             - "443"
@@ -107,9 +107,9 @@ services:
             - ./data:/var/opt/gitlab/
             - /etc/localtime:/etc/localtime:ro
         networks:
-            - traefik_internal
+            - traefik_public
 
 networks:
-    traefik_internal:
+    traefik_public:
         external:
-            name: traefik_internal
+            name: traefik_public
