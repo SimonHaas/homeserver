@@ -15,16 +15,16 @@ services:
             - "--entrypoints.websecure.http.tls.certResolver=myresolver"
             - "--certificatesresolvers.myresolver.acme.storage=acme.json"
             - "--certificatesResolvers.myresolver.acme.email=me@simonhaas.eu" # Let's Encrypt staging server
-            - "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            # - "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
             - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
-            #       - "--certificatesResolvers.myresolver.acme.dnsChallenge.disablePropagationCheck=true"
             - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=digitalocean"
             - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
             - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
+            - --providers.docker.constraints=Label(`traefik.zone`, `public`)
         ports:
-            - "80:80"
-            - "443:443"
-            - "8080:8080"
+            - "808:80"
+            - "4438:443"
+            - "80808:8080"
         networks:
             - traefik_internal
         volumes:
@@ -42,6 +42,7 @@ services:
             - "traefik.http.routers.traefik.tls.domains[0].main=simonhaas.eu"
             - "traefik.http.routers.traefik.tls.domains[0].sans=*.simonhaas.eu"
 
+            - traefik.zone=public
             - "traefik.http.routers.api.tls=true"
             - "traefik.http.routers.api.entrypoints=websecure"
             - "traefik.http.routers.api.rule=Host(`traefik.simonhaas.eu`)"
@@ -55,15 +56,6 @@ services:
             - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
             - "traefik.http.routers.redirs.entrypoints=web"
             - "traefik.http.routers.redirs.middlewares=redirect-to-https"
-
-    whoami:
-        # A container that exposes an API to show its IP address
-        image: traefik/whoami
-        networks:
-            - traefik_internal
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.whoami.rule=Host(`whoami.simonhaas.eu`)"
 
     gitlab:
         restart: always
@@ -87,6 +79,7 @@ services:
         ports:
             - "2222:22"
         labels:
+            - traefik.zone=public
             - "traefik.enable=true"
             - "traefik.gitlab.frontend.rule=Host:gitlab.simonhaas.eu"
             - "traefik.gitlab.port=80"
