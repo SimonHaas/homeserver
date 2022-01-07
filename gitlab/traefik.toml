@@ -1,0 +1,40 @@
+debug = false
+
+defaultEntryPoints = ["https", "http"]
+logLevel = "ERROR"
+
+[entryPoints]
+[entryPoints.http]
+address = ":80"
+[entryPoints.http.redirect]
+entryPoint = "https"
+[entryPoints.https]
+address = ":443"
+[entryPoints.https.tls]
+
+[entryPoints.traefik]
+address = ":9000"
+
+[retry]
+
+[docker]
+domain = "simonhaas.eu"
+endpoint = "unix:///var/run/docker.sock"
+exposedByDefault = false
+watch = true
+
+[acme]
+acmeLogging = true
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+email = "me@simonhaas.eu"
+entryPoint = "https"
+onHostRule = true
+storage = "acme.json"
+[acme.dnsChallenge]
+provider = "digitalocean"
+[[acme.domains]]
+main = "*.simonhaas.eu"
+
+[api]
+dashboard = true
+entryPoint = "traefik"

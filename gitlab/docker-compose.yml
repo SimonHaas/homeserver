@@ -1,78 +1,50 @@
-version: "3.6"
-services:
-    gitlab:
-        image: 'gitlab/gitlab-ce:14.0.10-ce.0'
-        restart: always
-        container_name: gitlab
-        hostname: 'gitlab.simon-haas.eu'
-        depends_on:
-            - gitlab-redis
-            - gitlab-postgresql
-        networks:
-            - traefik_proxy
-        environment:
-            GITLAB_OMNIBUS_CONFIG: |
-                external_url 'https://gitlab.simon-haas.eu'
-                postgresql['enable'] = false
-                gitlab_rails['db_username'] = "gitlab"
-                gitlab_rails['db_password'] = "gitlab"
-                gitlab_rails['db_host'] = 'gitlab-postgresql'
-                gitlab_rails['db_port'] = "5432"
-                gitlab_rails['db_database'] = "gitlab"
-                gitlab_rails['db_adapter'] = "postgresql"
-                gitlab_rails['db_encoding'] = 'utf8'
-                redis['enable'] = false
-                gitlab_rails['redis_host'] = 'gitlab-redis'
-                gitlab_rails['redis_port'] = '6379'
-                gitlab_rails['gitlab_shell_ssh_port'] = 2224
-                nginx['listen_port'] = 443
-                nginx['listen_https'] = false
-                nginx['proxy_set_headers'] = {
-                    'X-Forwarded-Proto' => 'https',
-                    'X-Forwarded-Ssl' => 'on',
-                    'Host' => 'gitlab.simon-haas.eu'
-                }
-        ports:
-            - '2224:22'
-        volumes:
-            - '../gitlab/data/gitlab/config:/etc/gitlab'
-            - '../gitlab/data/gitlab/logs:/var/log/gitlab'
-            - '../gitlab/data/gitlab/data:/var/opt/gitlab'
-        labels:
-            - "traefik.backend=gitlab"
-            - "traefik.frontend.rule=Host:gitlab.simon-haas.eu"
-            - "traefik.port=443"
-            - "traefik.enable=true"
-            - "traefik.frontend.entryPoints=https,http"
-            # - "traefik.frontend.headers.SSLRedirect=true"
-
-    gitlab-postgresql:
-        restart: always
-        image: postgres:alpine
-        container_name: gitlab-postgresql
-        environment:
-            - POSTGRES_USER=gitlab
-            - POSTGRES_PASSWORD=gitlab
-            - POSTGRES_DB=gitlab
-        volumes:
-            - '../gitlab/data/postgresql/lib:/var/lib/postgresql'
-            - '../gitlab/data/postgresql/data:/etc/postgresql'
-            - '../gitlab/data/postgresql/log:/var/log/postgresql'
-        networks:
-            - traefik_proxy
-    
-    gitlab-redis:
-        container_name: gitlab-redis
-        restart: always
-        image: redis:3-alpine
-        volumes:
-            - '../gitlab/data/redis:/data'
-        networks:
-            - traefik_proxy
+version: '3'
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    web:
+        external: true
+
+services:
+    # The reverse proxy service (Traefik)
+    traefik:
+        image: traefik:1.7 # The official Traefik docker image
+        command: --api --docker # Enables the web UI and tells Traefik to listen to docker
+        restart: always
+        networks:
+            - web
+        env_file:
+            - .env
+        ports:
+            - "80:80"
+            - "443:443"
+            - "9000:9000" # exposes the Traefik web UI
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock" # So that Traefik can listen to the Docker events
+            - "./traefik.toml:/traefik.toml"
+            - "./acme.json:/acme.json"
+        container_name: traefik
+
+    # The GitLab container itself
+    gitlab:
+        image: 'gitlab/gitlab-ce:latest'
+        restart: always
+        hostname: 'gitlab.simonhaas.eu'
+        environment:
+            GITLAB_OMNIBUS_CONFIG: |
+                external_url 'https://gitlab.simonhaas.eu'
+                nginx['listen_https'] = false
+                nginx['listen_port'] = 80
+        volumes:
+            - './config:/etc/gitlab'
+            - './logs:/var/log/gitlab'
+            - './data:/var/opt/gitlab'
+        networks:
+            - web
+        ports:
+            - "2222:22" # expose GitLab SSH on port 2222 on the host, as Traefik does not yet support TCP routing
+        labels:
+            - "traefik.frontend.rule=Host:gitlab.simonhaas.eu"
+            - "traefik.docker.network=web"
+            - "traefik.enable=true"
+            - "traefik.port=80"
+            - "traefik.protocol=http"
