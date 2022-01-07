@@ -1,0 +1,37 @@
+[global]
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+    [entryPoints.http.http]
+  [entryPoints.https]
+    address = ":443"
+    [entryPoints.https.http]
+  [entryPoints.traefik]
+    address = ":9000"
+    [entryPoints.traefik.http]
+
+[providers]
+  providersThrottleDuration = "2s"
+  [providers.docker]
+    watch = true
+    endpoint = "unix:///var/run/docker.sock"
+    swarmModeRefreshSeconds = "15s"
+    httpClientTimeout = "0s"
+
+[api]
+  insecure = true
+  dashboard = true
+
+[log]
+  level = "ERROR"
+
+[certificatesResolvers]
+  [certificatesResolvers.default]
+    [certificatesResolvers.default.acme]
+      email = "me@simonhaas.eu"
+      caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+      storage = "acme.json"
+      [certificatesResolvers.default.acme.dnsChallenge]
+        provider = "digitalocean"
+        delayBeforeCheck = "0s"
