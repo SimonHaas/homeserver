@@ -1,50 +1,112 @@
-version: '3'
-
-networks:
-    web:
-        external: true
+version: '3.5'
 
 services:
-    # The reverse proxy service (Traefik)
     traefik:
-        image: traefik:1.7 # The official Traefik docker image
-        command: --api --docker # Enables the web UI and tells Traefik to listen to docker
         restart: always
-        networks:
-            - web
-        env_file:
-            - .env
+        image: "traefik:v2.2.1"
+        container_name: "traefik"
+        command:
+            - "--log.level=DEBUG"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+            - "--entrypoints.websecure.http.tls.certResolver=myresolver"
+            - "--certificatesresolvers.myresolver.acme.storage=acme.json"
+            - "--certificatesResolvers.myresolver.acme.email=me@simonhaas.eu" # Let's Encrypt staging server
+            - "--certificatesResolvers.myresolver.acme.caserver=https://acme-st\
+              aging-v02.api.letsencrypt.org/directory"
+            - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
+            #       - "--certificatesResolvers.myresolver.acme.dnsChallenge.disablePropagationCheck=true"
+            - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=di\
+              gitalocean"
+            - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8\
+              .8.4.4:53,8.8.8.8:53"
+            - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBefore\
+              Check=0"
         ports:
             - "80:80"
             - "443:443"
-            - "9000:9000" # exposes the Traefik web UI
-        volumes:
-            - "/var/run/docker.sock:/var/run/docker.sock" # So that Traefik can listen to the Docker events
-            - "./traefik.toml:/traefik.toml"
-            - "./acme.json:/acme.json"
-        container_name: traefik
-
-    # The GitLab container itself
-    gitlab:
-        image: 'gitlab/gitlab-ce:latest'
-        restart: always
-        hostname: 'gitlab.simonhaas.eu'
-        environment:
-            GITLAB_OMNIBUS_CONFIG: |
-                external_url 'https://gitlab.simonhaas.eu'
-                nginx['listen_https'] = false
-                nginx['listen_port'] = 80
-        volumes:
-            - './config:/etc/gitlab'
-            - './logs:/var/log/gitlab'
-            - './data:/var/opt/gitlab'
+            - "8080:8080"
         networks:
-            - web
-        ports:
-            - "2222:22" # expose GitLab SSH on port 2222 on the host, as Traefik does not yet support TCP routing
+            - traefik_internal
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./acme.json:/acme.json
+        env_file:
+            - .env
         labels:
-            - "traefik.frontend.rule=Host:gitlab.simonhaas.eu"
-            - "traefik.docker.network=web"
             - "traefik.enable=true"
-            - "traefik.port=80"
-            - "traefik.protocol=http"
+            - "traefik.docker.network=traefik_internal"
+            - "traefik.http.routers.traefik.entrypoints=web"
+            - "traefik.http.routers.traefik.rule=Host(`traefik.simonhaas.eu`)"
+            - "traefik.http.routers.traefik.tls=true"
+            - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+            - "traefik.http.routers.traefik.tls.domains[0].main=simonhaas.eu"
+            - "traefik.http.routers.traefik.tls.domains[0].sans=*.simonhaas.eu"
+
+            - "traefik.http.routers.api.tls=true"
+            - "traefik.http.routers.api.entrypoints=websecure"
+            - "traefik.http.routers.api.rule=Host(`traefik.simonhaas.eu`)"
+            - "traefik.http.routers.api.service=api@internal"
+            # - "traefik.http.routers.api.middlewares=auth"
+            # - "traefik.http.middlewares.auth.basicauth.users=admin:XXXXXXXXXXXXX"
+
+            # Use Middlewares for a global redirect to https
+            - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme\
+              =https"
+            - "traefik.http.middlewares.redirect-to-https.redirectscheme.perman\
+              ent=true"
+            - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+            - "traefik.http.routers.redirs.entrypoints=web"
+            - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+
+    whoami:
+        # A container that exposes an API to show its IP address
+        image: traefik/whoami
+        networks:
+            - traefik_internal
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.whoami.rule=Host(`whoami.simonhaas.eu`)"
+
+networks:
+    traefik_internal:
+        external:
+            name: traefik_internal
+        # The GitLab container itself
+        # gitlab:
+        #     image: 'gitlab/gitlab-ce:latest'
+        #     restart: always
+        #     hostname: 'gitlab.simonhaas.eu'
+        #     environment:
+        #         GITLAB_OMNIBUS_CONFIG: |
+        #             external_url 'https://gitlab.simonhaas.eu'
+        #             nginx['listen_https'] = false
+        #             nginx['listen_port'] = 80
+        #             gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        #     volumes:
+        #         - './config:/etc/gitlab'
+        #         - './logs:/var/log/gitlab'
+        #         - './data:/var/opt/gitlab'
+        #     networks:
+        #         - web
+        #     ports:
+        #         - "2222:22" # expose GitLab SSH on port 2222 on the host, as Traefik does not yet support TCP routing
+        #     labels:
+        #         - "traefik.frontend.rule=Host:gitlab.simonhaas.eu"
+        #         - "traefik.docker.network=web"
+        #         - "traefik.enable=true"
+        #         - "traefik.port=80"
+        #         - "traefik.protocol=http"
+
+        #         - traefik.http.routers.gitlab.rule=Host(gitlab.simonhaas.eu)
+        #         - traefik.http.routers.gitlab.entrypoints=websecure
+        #         - traefik.http.routers.gitlab.tls.certresolver=le
+        #         - traefik.http.services.gitlab.loadbalancer.server.port=80
+        #         - traefik.docker.network=traefik-proxy
+        #         - traefik.tcp.routers.gitlab-ssh.rule=HostSNI(gitlab.simonhaas.eu)
+        #         - traefik.tcp.routers.gitlab-ssh.entrypoints=ssh
+        #         - traefik.tcp.routers.gitlab-ssh.service=gitlab-ssh-svc
+        #         - traefik.tcp.services.gitlab-ssh-svc.loadbalancer.server.port=2222
