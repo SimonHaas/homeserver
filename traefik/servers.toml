@@ -10,9 +10,6 @@ loglevel = "DEBUG"
     [backends.pihole]
         [backends.pihole.servers.pihole]
             url = "http://192.168.155.2"
-    [backends.gitlab]
-        [backends.gitlab.servers.gitlab]
-            url = "http://192.168.155.212:880"
 
 [frontends]
     [frontends.tvheadend]
@@ -27,7 +24,3 @@ loglevel = "DEBUG"
         backend = "pihole"
     [frontends.pihole.routes.pihole]
         rule = "Host:pihole.simon-haas.eu"
-    [frontends.gitlab]
-        backend = "gitlab"
-    [frontends.gitlab.routes.gitlab]
-        rule = "Host:gitlab.simonhaas.eu"
