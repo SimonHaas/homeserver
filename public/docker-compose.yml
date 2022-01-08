@@ -118,9 +118,9 @@ services:
         restart: unless-stopped
         container_name: ubuntu-portforwarding
         image: ubuntu
-        ports:
-            - 80:80
-            - 443:443
+        # ports:
+        #     - 80:80
+        #     - 443:443
         networks:
             portforwarding:
                 ipv4_address: 192.168.155.237
