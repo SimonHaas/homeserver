@@ -21,6 +21,10 @@ services:
             - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
             - --providers.docker.constraints=Label(`traefik.zone`, `public`)
         ports:
+# use these commands on a different machine locally to forward requests from your local network to these ports, use pihole or something similar to change the A-records when resolving locally
+# https://github.com/troglobit/redir
+# redir -I http :80 192.168.155.212:880
+# redir -I https :443 192.168.155.212:8443
             - "880:80"
             - "8443:443"
             - "8088:8080"
