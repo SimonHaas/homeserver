@@ -114,7 +114,24 @@ services:
         networks:
             - traefik_public
 
+    ubuntu-portforwarding:
+        restart: unless-stopped
+        container_name: ubuntu-portforwarding
+        image: ubuntu
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            portforwarding:
+                ipv4_address: 192.168.155.237
+
 networks:
     traefik_public:
         external:
             name: traefik_public
+    portforwarding:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+            - subnet: 192.168.155.0/24
