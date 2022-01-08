@@ -40,7 +40,7 @@ services:
       - vpn
     security_opt:
       - no-new-privileges:true
-
+# TODO https://www.youtube.com/watch?v=u6H-Qwf4nZA
   lidarr:
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
