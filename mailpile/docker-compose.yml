@@ -1,0 +1,10 @@
+version: '3'
+services:
+  mailpile:
+    container_name: mailpile
+    image: rroemhild/mailpile
+    volumes:
+      - './data/mailpile:/root/.local/share/Mailpile'
+      - './data/gnupg:/root/.gnupg'
+    ports:
+      - '33411:33411'
