@@ -52,7 +52,6 @@ arr+=("transmission")
 #arr+=("uptimekuma")
 #arr+=("vpn") # disabled, so that backup script does not stop it, might cause problems when restarting
 #arr+=("webtop")
-#arr+=("wertpapierkredit")
 #arr+=("wger")
 arr+=("whoogle")
 arr+=("wol")
