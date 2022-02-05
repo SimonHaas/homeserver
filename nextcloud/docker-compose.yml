@@ -9,14 +9,14 @@ services:
             - nextcloud-mariadb
             - nextcloud-redis
         networks:
-            - traefik_proxy
+            - traefik_public
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
-            - ../nextcloud/data/nextcloud:/var/www/html
+            - ./data/nextcloud:/var/www/html
             #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
-            - ../nextcloud/php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
+            - ./php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
     web:
         build: ./src/web
@@ -25,53 +25,51 @@ services:
             - nextcloud
         container_name: nextcloud-web
         volumes:
-            - ../nextcloud/data/nextcloud:/var/www/html:ro
+            - ./data/nextcloud:/var/www/html:ro
         networks:
-            - traefik_proxy
+            - traefik_public
         labels:
-            - "traefik.backend=nextcloud"
-            - "traefik.frontend.rule=Host:nextcloud.simon-haas.eu"
-            - "traefik.enable=true"
-            - "traefik.port=80"
             - traefik.frontend.headers.STSSeconds=315360000
+            - "traefik.enable=true"
+            - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+            - "traefik.http.routers.nextcloud.rule=Host(`${SUB_DOMAIN_NEXTCLOUD}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.nextcloud.entrypoints=websecure"
+            - "traefik.http.routers.nextcloud.tls.certresolver=myresolver"
 
     nextcloud-mariadb:
         image: mariadb:10.5
         container_name: "nextcloud-mariadb"
         hostname: nextcloud-mariadb
         networks:
-            - traefik_proxy
+            - traefik_public
         volumes:
-            - ../nextcloud/data/mariadb:/var/lib/mysql
+            - ./data/mariadb:/var/lib/mysql
         restart: always
         env_file: 
-            - ../nextcloud/.env.example
-            - ../nextcloud/.env
+            - .env
 
     nextcloud-redis:
         image: redis:alpine
         restart: always
         container_name: nextcloud-redis
         networks:
-            - traefik_proxy
+            - traefik_public
         volumes:
-            - ../nextcloud/data/redis:/data
+            - ./data/redis:/data
 
     onlyoffice:
         image: onlyoffice/documentserver:6.3
         container_name: onlyoffice
         restart: always
         networks: 
-            - traefik_proxy
+            - traefik_public
         labels:
-            - "traefik.backend=onlyoffice"
-            - "traefik.frontend.rule=Host:onlyoffice.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=80" 
+            - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
+            - "traefik.http.routers.onlyoffice.rule=Host(`${SUB_DOMAIN_ONLYOFFICE}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.onlyoffice.entrypoints=websecure"
+            - "traefik.http.routers.onlyoffice.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik_public:
+        name: traefik_public
