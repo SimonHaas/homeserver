@@ -1,0 +1,52 @@
+version: '3.5'
+
+services:
+    gitlab:
+        restart: always
+        image: gitlab/gitlab-ce:latest
+        container_name: gitlab
+        hostname: test2.simonhaas.eu
+        environment:
+            GITLAB_OMNIBUS_CONFIG: |
+                external_url 'https://test2.simon-haas.eu'
+                nginx['listen_port'] = 80
+                nginx['listen_https'] = false
+                nginx['http2_enabled'] = false
+                gitlab_rails['gitlab_shell_ssh_port'] = 2222
+                nginx['proxy_set_headers'] = {
+                    "Host" => "$$http_host",
+                    "X-Real-IP" => "$$remote_addr",
+                    "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+                    "X-Forwarded-Proto" => "https",
+                    "X-Forwarded-Ssl" => "on"
+                }
+        ports:
+            - "2222:22"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.gitlab.frontend.rule=Host:test2.simon-haas.eu"
+            - "traefik.gitlab.port=80"
+
+            - "traefik.frontend.entryPoints=websecure"
+            - "traefik.port=80"
+
+            - traefik.http.middlewares.gitlab-https-redirect.redirectscheme.scheme=https
+            - traefik.http.routers.gitlab.middlewares=gitlab-https-redirect
+            - traefik.http.services.gitlab.loadbalancer.server.port=80
+
+            - traefik.http.routers.gitlab.tls=true
+            - traefik.http.routers.gitlab.rule=Host(`test2.simon-haas.eu`)
+            - traefik.http.routers.gitlab.tls.certresolver=myresolver
+            - traefik.http.routers.gitlab.entrypoints=websecure
+            - traefik.docker.network=traefik_public
+        volumes:
+            - ./data/config:/etc/gitlab/
+            - ./data/logs:/var/log/gitlab/
+            - ./data/data:/var/opt/gitlab/
+            - /etc/localtime:/etc/localtime:ro
+        networks:
+            - traefik_public
+
+networks:
+    traefik_public:
+        name: traefik_public
