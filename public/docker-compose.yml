@@ -19,10 +19,10 @@ services:
             - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=digitalocean"
             - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
             - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
+            - --api.dashboard=true
         ports:
             - "80:80"
             - "443:443"
-            - "8080:8080"
         networks:
             - traefik_public
         volumes:
@@ -35,21 +35,16 @@ services:
             - "traefik.docker.network=traefik_public"
             - "traefik.http.routers.traefik.entrypoints=web"
             - "traefik.http.routers.traefik.tls=true"
-            - "traefik.http.routers.traefik.tls.certresolver=myresolver"
             - "traefik.http.routers.traefik.tls.domains[0].main=simon-haas.eu"
             - "traefik.http.routers.traefik.tls.domains[0].sans=*.simon-haas.eu"
 
-            - --api.dashboard=false
-            - --api.insecure=true
             - "traefik.http.routers.traefik.rule=Host(`test1.simon-haas.eu`)"
-            - "traefik.http.routers.api.tls=true"
-            - "traefik.http.routers.api.entrypoints=websecure"
-            - "traefik.http.routers.api.rule=Host(`test1.simon-haas.eu`)"
-            - "traefik.http.routers.api.service=api@internal"
-            - "traefik.http.routers.api.middlewares=api-auth"
-            - "traefik.http.middlewares.api-auth.basicauth.users=admin:$$apr1$$DNuSHMb0$$ZTvM595flViQSR2ZUJTzu0"
+            - "traefik.http.routers.traefik.entrypoints=websecure"
+            - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.middlewares=traefik-auth"
+            - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$8EVjn/nj$$GiLUZqcbueTFeD23SuB6x0"
 
-            # Use Middlewares for a global redirect to https
             - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
             - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
             - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
@@ -85,7 +80,6 @@ services:
             - "traefik.frontend.entryPoints=websecure"
             - "traefik.port=80"
 
-            #  Host settings for GitLab itself
             - traefik.http.middlewares.gitlab-https-redirect.redirectscheme.scheme=https
             - traefik.http.routers.gitlab.middlewares=gitlab-https-redirect
             - traefik.http.services.gitlab.loadbalancer.server.port=80
