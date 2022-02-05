@@ -3,7 +3,7 @@ version: '3.5'
 services:
     gitlab:
         restart: always
-        image: gitlab/gitlab-ce:latest
+        image: gitlab/gitlab-ce@sha256:94bf9202d48c52ccaabb7bdb9c48bc3b7f1b944c0c6c891afce0a1dc50048d3a
         container_name: gitlab
         hostname: test2.simonhaas.eu
         environment:
