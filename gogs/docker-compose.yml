@@ -5,26 +5,22 @@ services:
         restart: always
         image: gogs/gogs@sha256:6130c146f032f6d9bdc366a90590658f17d489e78db59feeaa82c0b7047beb91
         ports:
-        # to keep backwards compatibility with ip:port
-            - "3000:3000"
             - "10022:22"
         environment:
             - PUID=1000
             - PGID=1000
         volumes:
-            - ../gogs/data:/data
+            - ./data:/data
         networks:
-            - traefik_proxy
+            - traefik_public
         labels:
-            - "traefik.backend=gogs"
-            - "traefik.docker.network=web"
-            - "traefik.frontend.rule=Host:gogs.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=3000"
+            - "traefik.http.services.gogs.loadbalancer.server.port=3000"
+            # - "traefik.http.routers.gogs.rule=Host(`gogs.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.gogs.rule=Host(`test3.simon-haas.eu`)"
+            - "traefik.http.routers.gogs.entrypoints=websecure"
+            - "traefik.http.routers.gogs.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik_public:
+        name: traefik_public
