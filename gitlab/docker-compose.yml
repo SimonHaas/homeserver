@@ -5,10 +5,10 @@ services:
         restart: always
         image: gitlab/gitlab-ce@sha256:94bf9202d48c52ccaabb7bdb9c48bc3b7f1b944c0c6c891afce0a1dc50048d3a
         container_name: gitlab
-        hostname: test2.simonhaas.eu
+        hostname: ${SUB_DOMAIN}.${SERVER_DOMAIN}
         environment:
             GITLAB_OMNIBUS_CONFIG: |
-                external_url 'https://test2.simon-haas.eu'
+                external_url 'https://${SUB_DOMAIN}.${SERVER_DOMAIN}'
                 nginx['listen_port'] = 80
                 nginx['listen_https'] = false
                 nginx['http2_enabled'] = false
@@ -24,7 +24,7 @@ services:
             - "2222:22"
         labels:
             - "traefik.enable=true"
-            - "traefik.gitlab.frontend.rule=Host:test2.simon-haas.eu"
+            - "traefik.gitlab.frontend.rule=Host:${SUB_DOMAIN}.${SERVER_DOMAIN}"
             - "traefik.gitlab.port=80"
 
             - "traefik.frontend.entryPoints=websecure"
@@ -35,7 +35,7 @@ services:
             - traefik.http.services.gitlab.loadbalancer.server.port=80
 
             - traefik.http.routers.gitlab.tls=true
-            - traefik.http.routers.gitlab.rule=Host(`test2.simon-haas.eu`)
+            - traefik.http.routers.gitlab.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
             - traefik.http.routers.gitlab.tls.certresolver=myresolver
             - traefik.http.routers.gitlab.entrypoints=websecure
             - traefik.docker.network=traefik_public
