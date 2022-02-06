@@ -14,7 +14,7 @@ services:
             - "--entrypoints.websecure.http.tls.certResolver=myresolver"
             - "--certificatesresolvers.myresolver.acme.storage=letsencrypt/acme.json"
             - "--certificatesResolvers.myresolver.acme.email=${ACME_EMAIL}"
-            - "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            #- "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
             - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
             - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=${DNS_CHALLENGE_PROVIDER}"
             - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
