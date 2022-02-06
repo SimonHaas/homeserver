@@ -4,7 +4,7 @@ services:
     traefik:
         restart: always
         image: "traefik:2.6"
-        container_name: traefik_public
+        container_name: traefik
         command:
             - "--log.level=DEBUG"
             - "--providers.docker=true"
@@ -24,7 +24,7 @@ services:
             - "80:80"
             - "443:443"
         networks:
-            - traefik_public
+            - traefik
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./letsencrypt:/letsencrypt
@@ -32,7 +32,7 @@ services:
             - .env
         labels:
             - "traefik.enable=true"
-            - "traefik.docker.network=traefik_public"
+            - "traefik.docker.network=traefik"
             - "traefik.http.routers.traefik.entrypoints=web"
             - "traefik.http.routers.traefik.tls=true"
             - "traefik.http.routers.traefik.tls.domains[0].main=${SERVER_DOMAIN}"
@@ -52,5 +52,5 @@ services:
             - "traefik.http.routers.redirs.middlewares=redirect-to-https"
 
 networks:
-    traefik_public:
-        name: traefik_public
+    traefik:
+        name: traefik
