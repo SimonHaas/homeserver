@@ -4,7 +4,7 @@
 # https://borgbackup.readthedocs.io/en/stable/
 
 # sudo crontab -e
-# 0 0 * * *  /mnt/external4TB/docker/backup.sh >> /mnt/external4TB/docker/backup-logs.txt 2>&1
+# 0 0 * * *  /mnt/data/homeserver/backup.sh >> /mnt/data/homeserver/backup-logs.txt 2>&1
 
 # Hier Pfad zum Sicherungsmedium angeben.
 # z.B. zielpfad="/media/peter/HD_Backup"
@@ -16,7 +16,7 @@ repository="homeserver"
 
 # Hier eine Liste mit den zu sichernden Verzeichnissen angeben
 # z.B. sicherung="/home/peter/Bilder /home/peter/Videos --exclude *.tmp"
-sicherung="/mnt/data"
+sicherung="/mnt/data/homeserver"
 
 # Hier die Art der Verschlüsselung angeben
 # z.B. verschluesselung="none"
@@ -31,7 +31,7 @@ kompression="lz4"
 rootuser="ja"
 
 # Hier angeben nach welchem Schema alte Archive gelöscht werden sollen.
-# Die Vorgabe behält alle Sicherungen des aktuellen Tages. Zusätzlich das aktuellste Archiv der 
+# Die Vorgabe behält alle Sicherungen des aktuellen Tages. Zusätzlich das aktuellste Archiv der
 # letzten 7 Sicherungstage, der letzten 4 Wochen sowie der letzten 12 Monate.
 pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
 
@@ -39,7 +39,7 @@ pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
 
 repopfad="$zielpfad"/"$repository"
 
-if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/external4TB' /proc/mounts
+if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/data' /proc/mounts
 then
     # check for root
     if [ $(id -u) -ne 0 ] && [ "$rootuser" == "ja" ]; then
@@ -49,7 +49,7 @@ then
 
     # Init borg-repo if absent
     if [ ! -d $repopfad ]; then
-    borg init --encryption=$verschluesselung $repopfad 
+    borg init --encryption=$verschluesselung $repopfad
     echo "Borg-Repository erzeugt unter $repopfad"
     fi
 
