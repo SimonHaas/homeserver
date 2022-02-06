@@ -38,15 +38,15 @@ services:
             - traefik.http.routers.gitlab.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
             - traefik.http.routers.gitlab.tls.certresolver=myresolver
             - traefik.http.routers.gitlab.entrypoints=websecure
-            - traefik.docker.network=traefik_public
+            - traefik.docker.network=traefik
         volumes:
             - ./data/config:/etc/gitlab/
             - ./data/logs:/var/log/gitlab/
             - ./data/data:/var/opt/gitlab/
             - /etc/localtime:/etc/localtime:ro
         networks:
-            - traefik_public
+            - traefik
 
 networks:
-    traefik_public:
-        name: traefik_public
+    traefik:
+        name: traefik

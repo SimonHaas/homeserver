@@ -13,7 +13,7 @@ services:
         volumes:
             - ./data:/data
         networks:
-            - traefik_public
+            - traefik
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.gogs.loadbalancer.server.port=3000"
@@ -22,5 +22,5 @@ services:
             - "traefik.http.routers.gogs.tls.certresolver=myresolver"
 
 networks:
-    traefik_public:
-        name: traefik_public
+    traefik:
+        name: traefik

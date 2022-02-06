@@ -9,7 +9,7 @@ services:
             - nextcloud-mariadb
             - nextcloud-redis
         networks:
-            - traefik_public
+            - traefik
         environment:
             - REDIS_HOST=nextcloud-redis
         volumes:
@@ -27,7 +27,7 @@ services:
         volumes:
             - ./data/nextcloud:/var/www/html:ro
         networks:
-            - traefik_public
+            - traefik
         labels:
             - traefik.frontend.headers.STSSeconds=315360000
             - "traefik.enable=true"
@@ -41,7 +41,7 @@ services:
         container_name: "nextcloud-mariadb"
         hostname: nextcloud-mariadb
         networks:
-            - traefik_public
+            - traefik
         volumes:
             - ./data/mariadb:/var/lib/mysql
         restart: always
@@ -53,7 +53,7 @@ services:
         restart: always
         container_name: nextcloud-redis
         networks:
-            - traefik_public
+            - traefik
         volumes:
             - ./data/redis:/data
 
@@ -62,7 +62,7 @@ services:
         container_name: onlyoffice
         restart: always
         networks: 
-            - traefik_public
+            - traefik
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
@@ -71,5 +71,5 @@ services:
             - "traefik.http.routers.onlyoffice.tls.certresolver=myresolver"
 
 networks:
-    traefik_public:
-        name: traefik_public
+    traefik:
+        name: traefik
