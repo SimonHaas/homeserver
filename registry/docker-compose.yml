@@ -4,24 +4,22 @@ services:
   registry:
     image: registry:2
     ports:
-      - "5000:5000"
+      - 5000:5000
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
     volumes:
-      - ../registry/data:/data
+      - ./data:/data
     restart: always
-    container_name: "registry"
-    networks:
-        - traefik_proxy
+    container_name: registry
+    networks: 
+        - traefik
     labels:
-        - "traefik.backend=registry"
-        - "traefik.frontend.rule=Host:registry.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=5000"
+        - "traefik.http.services.registry.loadbalancer.server.port=5000"
+        - "traefik.http.routers.registry.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.registry.entrypoints=websecure"
+        - "traefik.http.routers.registry.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik
