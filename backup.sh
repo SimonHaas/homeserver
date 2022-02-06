@@ -16,7 +16,7 @@ repository="homeserver"
 
 # Hier eine Liste mit den zu sichernden Verzeichnissen angeben
 # z.B. sicherung="/home/peter/Bilder /home/peter/Videos --exclude *.tmp"
-sicherung="/mnt/external4TB/docker"
+sicherung="/mnt/data"
 
 # Hier die Art der Verschlüsselung angeben
 # z.B. verschluesselung="none"
