@@ -62,5 +62,7 @@ arr+=("traefik2")
 
 for item in ${arr[*]}
 do
-    docker-compose -f ./$item/docker-compose.yml $1 $2 $3
+    cd $item
+    docker-compose $1 $2 $3
+    cd ..
 done
