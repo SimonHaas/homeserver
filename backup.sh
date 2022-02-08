@@ -4,7 +4,7 @@
 # https://borgbackup.readthedocs.io/en/stable/
 
 # sudo crontab -e
-# 0 0 * * *  /mnt/external4TB/docker/backup.sh >> /mnt/external4TB/docker/backup-logs.txt 2>&1
+# 0 0 * * *  /mnt/data/homeserver/backup.sh >> /mnt/data/homeserver/backup-logs.txt 2>&1
 
 # Hier Pfad zum Sicherungsmedium angeben.
 # z.B. zielpfad="/media/peter/HD_Backup"
@@ -39,7 +39,7 @@ pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
 
 repopfad="$zielpfad"/"$repository"
 
-if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/external4TB' /proc/mounts
+if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/data' /proc/mounts
 then
     # check for root
     if [ $(id -u) -ne 0 ] && [ "$rootuser" == "ja" ]; then
