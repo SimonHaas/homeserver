@@ -1,20 +1,18 @@
 version: "3.6"
 services:
     adminer:
-        container_name: adminer
         image: adminer
+        container_name: adminer
         restart: always
-        networks:
-        - traefik_proxy
+        networks: 
+            - traefik
         labels:
-        - "traefik.backend=adminer"
-        - "traefik.frontend.rule=Host:adminer.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=8080"
+            - "traefik.enable=true"
+            - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+            - "traefik.http.routers.adminer.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.adminer.entrypoints=websecure"
+            - "traefik.http.routers.adminer.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

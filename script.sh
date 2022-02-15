@@ -12,5 +12,5 @@ for service in ${services[*]}
 do
     cd services/$item
     docker-compose $1 $2 $3
-    cd ..
+    cd ../..
 done

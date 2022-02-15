@@ -6,16 +6,16 @@ services:
     container_name: diun
     command: serve
     volumes:
-      - "../diun/data:/data"
+      - "./data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
-      - "TZ=Europe/Berlin"
+      - TZ=${TZ}
       - "LOG_LEVEL=info"
       - "LOG_JSON=false"
       - "DIUN_WATCH_WORKERS=20"
       - "DIUN_WATCH_SCHEDULE=0 */6 * * *"
       - "DIUN_PROVIDERS_DOCKER=true"
       - "DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true"
-      - DIUN_NOTIF_GOTIFY_ENDPOINT=https://gotify.simon-haas.eu
-      - DIUN_NOTIF_GOTIFY_TOKEN=Aw2ucheOKrNylC2
+      - DIUN_NOTIF_GOTIFY_ENDPOINT=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      - DIUN_NOTIF_GOTIFY_TOKEN=${DIUN_NOTIF_GOTIFY_TOKEN}
     restart: unless-stopped

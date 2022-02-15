@@ -2,29 +2,29 @@ version: "3.6"
 services:
   bookstack:
     image: linuxserver/bookstack
-    container_name: bookstack
     environment:
       - PUID=1000
       - PGID=1000
       - DB_HOST=bookstack_db
-      - DB_USER=bookstack
-      - DB_PASS=yourdbpass
-      - DB_DATABASE=bookstackapp
-      - APP_URL=https://bookstack.simon-haas.eu
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_DATABASE=${DB_DATABASE}
+      - APP_URL=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
     volumes:
-      - ../bookstack/data/app:/config
-    #ports:
-    #  - 6875:80
-    restart: unless-stopped
+      - ./data/app:/config
     depends_on:
       - bookstack_db
-    networks:
-    - traefik_proxy
+    container_name: bookstack
+    restart: always
+    networks: 
+        - traefik
     labels:
-      - "traefik.backend=bookstack"
-      - "traefik.frontend.rule=Host:bookstack.simon-haas.eu"
-      - "traefik.enable=true"
-      - "traefik.port=80"
+        - "traefik.enable=true"
+        - "traefik.http.services.bookstack.loadbalancer.server.port=80"
+        - "traefik.http.routers.bookstack.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.bookstack.entrypoints=websecure"
+        - "traefik.http.routers.bookstack.tls.certresolver=myresolver"
+
 
   bookstack_db:
     image: linuxserver/mariadb
@@ -32,20 +32,17 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - MYSQL_ROOT_PASSWORD=yourdbpass
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - TZ=${TZ}
-      - MYSQL_DATABASE=bookstackapp
-      - MYSQL_USER=bookstack
-      - MYSQL_PASSWORD=yourdbpass
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
     volumes:
-      - ../bookstack/data/db:/config
+      - ./data/db:/config
     networks:
       - traefik_proxy
     restart: unless-stopped
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

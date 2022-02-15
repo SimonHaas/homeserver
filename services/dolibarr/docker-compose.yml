@@ -1,40 +1,38 @@
 version: "3.6"
 services:
     dolibarr:
-        container_name: dolibarr
         image: monogramm/docker-dolibarr
         volumes: 
-            - ./data/dolibarr/html:/var/www/html
-            - ./dolibarr/docs:/var/www/documents
+            - ./data/html:/var/www/html
+            - ./data/docs:/var/www/documents
         environment: 
             - DOLI_AUTO_CONFIGURE=''
+        container_name: dolibarr
         restart: always
-        networks:
-            - traefik_proxy
+        networks: 
+            - traefik
         labels:
-            - "traefik.backend=dolibarr"
-            - "traefik.frontend.rule=Host:dolibarr.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=80"
+            - "traefik.http.services.dolibarr.loadbalancer.server.port=80"
+            - "traefik.http.routers.dolibarr.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.dolibarr.entrypoints=websecure"
+            - "traefik.http.routers.dolibarr.tls.certresolver=myresolver"
 
     dolibarr-mariadb:
         image: mariadb
         container_name: "dolibarr-mariadb"
         hostname: dolibarr-mariadb
         networks:
-            - traefik_proxy
+            - traefik
         volumes:
             - ./data/mariadb:/var/lib/mysql
         restart: always
         environment:
-            - MYSQL_ROOT_PASSWORD=keinerweisdas
-            - MYSQL_PASSWORD=mysql
-            - MYSQL_DATABASE=dolibarr
-            - MYSQL_USER=dolibarr
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USER}
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

@@ -2,40 +2,38 @@ version: "3.6"
 services:
     fireflyiii:
         image: jc5x/firefly-iii:latest
-        container_name: fireflyiii
-        restart: always
-        networks:
-            - traefik_proxy
         volumes:
             # owner must be www-data, maybe change it manually
-            - ../fireflyiii/data/firefly/export:/var/www/firefly-iii/storage/export
-            - ../fireflyiii/data/firefly/upload:/var/www/firefly-iii/storage/upload
-            - ../fireflyiii/data/firefly/logs:/var/www/firefly-iii/storage/logs
+            - ./data/firefly/export:/var/www/firefly-iii/storage/export
+            - ./data/firefly/upload:/var/www/firefly-iii/storage/upload
+            - ./data/firefly/logs:/var/www/firefly-iii/storage/logs
         env_file: .env
+        container_name: fireflyiii
+        restart: always
+        networks: 
+            - traefik
         labels:
-            - "traefik.backend=firefly"
-            - "traefik.frontend.rule=Host:fireflyiii.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=8080"
+            - "traefik.http.services.fireflyiii.loadbalancer.server.port=8080"
+            - "traefik.http.routers.fireflyiii.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.fireflyiii.entrypoints=websecure"
+            - "traefik.http.routers.fireflyiii.tls.certresolver=myresolver"
 
     fireflyiii-mariadb:
         image: mariadb
-        container_name: "fireflyiii-mariadb"
+        container_name: fireflyiii-mariadb
         hostname: fireflyiii-mariadb
         networks:
-            - traefik_proxy
+            - traefik
         volumes:
-            - ../fireflyiii/data/mariadb:/var/lib/mysql
+            - ./data/mariadb:/var/lib/mysql
         restart: always
         environment:
-            - MYSQL_ROOT_PASSWORD=keinerweisdas
-            - MYSQL_PASSWORD=ne41o5C5XcF5HXVnWoqdBOdGCtUTk9wB58ocwSWHoDOnefN
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_DATABASE=firefly_iii
-            - MYSQL_USER=firefly
+            - MYSQL_USER=${DB_USER}
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik
