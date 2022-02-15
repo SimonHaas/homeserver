@@ -2,42 +2,40 @@ version: "3.6"
 services:
     clarkson:
         image: linuxserver/clarkson
-        container_name: clarkson
-        networks:
-            - traefik_proxy
         environment:
             - PUID=1000
             - PGID=1000
             - MYSQL_HOST=clarkson-mariadb
-            - MYSQL_USERNAME=clarkson_user
-            - MYSQL_PASSWORD=supersecretpassword
+            - MYSQL_USERNAME=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
             - ENABLE_REGISTRATIONS=true
             - TZ=${TZ}
-        restart: unless-stopped
+        container_name: clarkson
+        restart: always
+        networks: 
+            - traefik
         labels:
-            - "traefik.backend=clarkson"
-            - "traefik.frontend.rule=Host:clarkson.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=3000"
+            - "traefik.http.services.clarkson.loadbalancer.server.port=3000"
+            - "traefik.http.routers.clarkson.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.clarkson.entrypoints=websecure"
+            - "traefik.http.routers.clarkson.tls.certresolver=myresolver"
 
     clarkson-mariadb:
         image: mariadb
-        container_name: "clarkson-mariadb"
+        container_name: clarkson-mariadb
         hostname: clarkson-mariadb
-        networks:
-            - traefik_proxy
+        networks: 
+            - traefik
         volumes:
-            - ../clarkson/data/mariadb:/var/lib/mysql
+            - ./data/mariadb:/var/lib/mysql
         restart: always
         environment:
-            - MYSQL_ROOT_PASSWORD=keinerweisdas
-            - MYSQL_PASSWORD=supersecretpassword
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_DATABASE=clarkson
-            - MYSQL_USER=clarkson_user
+            - MYSQL_USER=${DB_USER}
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

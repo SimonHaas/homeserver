@@ -1,20 +1,19 @@
+TODO src
 version: "3.6"
 services:
-    etiketten:
-        container_name: cyberchef
+    cyberchef:
         image: registry.simon-haas.eu/cyberchef
+        container_name: cyberchef
         restart: always
-        networks:
-            - traefik_proxy
+        networks: 
+            - traefik
         labels:
-            - "traefik.backend=cyberchef"
-            - "traefik.frontend.rule=Host:cyberchef.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=80"
+            - "traefik.http.services.cyberchef.loadbalancer.server.port=80"
+            - "traefik.http.routers.cyberchef.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.cyberchef.entrypoints=websecure"
+            - "traefik.http.routers.cyberchef.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

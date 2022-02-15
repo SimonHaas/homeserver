@@ -1,33 +1,28 @@
-deprecated
 version: "3.6"
 services:
     airsonic:
-        image: linuxserver/airsonic
-        container_name: airsonic
-        networks:
-            - traefik_proxy
+        image: lscr.io/linuxserver/airsonic-advanced
         environment:
             - JAVA_OPTS=-Dserver.use-forward-headers=true
             - PUID=1000
             - PGID=1000
             - TZ=${TZ}
         volumes:
-            - ../airsonic/data/config:/config
-            - ../airsonic/data/music:/music
-            - ../airsonic/data/playlists:/playlists
-            - ../airsonic/data/podcasts:/podcasts
-            - ../airsonic/data/media:/media #optional
-            - ../airsonic/data/audiobooks:/audiobooks
-        restart: unless-stopped
+            - ./data/config:/config
+            - ./data/music:/music
+            - ./data/playlists:/playlists
+            - ./data/podcasts:/podcasts
+        container_name: airsonic
+        restart: always
+        networks: 
+            - traefik
         labels:
-            - "traefik.backend=airsonic"
-            - "traefik.frontend.rule=Host:airsonic.simon-haas.eu"
             - "traefik.enable=true"
-            - "traefik.port=4040"
+            - "traefik.http.services.airsonic.loadbalancer.server.port=4040"
+            - "traefik.http.routers.airsonic.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.airsonic.entrypoints=websecure"
+            - "traefik.http.routers.airsonic.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik
