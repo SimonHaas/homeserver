@@ -1,0 +1,30 @@
+# username: admin
+# password: (blank)
+
+version: "3.5"
+services:
+  motioneye:
+    image: ccrisan/motioneye:master-amd64
+    ports:
+      - "8081:8081"
+    #  - "8765:8765"
+    volumes:
+      - ../motioneye/data/etc_motioneye:/etc/motioneye
+      - ../motioneye/data/var_lib_motioneye:/var/lib/motioneye
+    container_name: motioneye
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=motioneye"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:motioneye.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=8765"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

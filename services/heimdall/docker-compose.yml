@@ -1,0 +1,29 @@
+version: "2.1"
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - ../heimdall/data/config:/config
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=heimdall"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:heimdall.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

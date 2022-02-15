@@ -1,0 +1,7 @@
+version: '3.5'
+
+services:
+    relay:
+        restart: unless-stopped
+        container_name: relay
+        build: .

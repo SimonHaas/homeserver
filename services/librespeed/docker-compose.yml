@@ -1,0 +1,22 @@
+version: "3.6"
+services:
+    librespeed:
+        image: adolfintel/speedtest
+        container_name: librespeed
+        restart: always
+        networks:
+        - traefik_proxy
+        environment:
+            - MODE=standalone
+        labels:
+        - "traefik.backend=speedtest"
+        - "traefik.frontend.rule=Host:speedtest.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

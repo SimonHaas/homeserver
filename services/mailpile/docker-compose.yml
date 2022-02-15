@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mailpile:
+    container_name: mailpile
+    image: rroemhild/mailpile
+    volumes:
+      - './data/mailpile:/root/.local/share/Mailpile'
+      - './data/gnupg:/root/.gnupg'
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=mailpile"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.rule=Host:mailpile.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=33411"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy

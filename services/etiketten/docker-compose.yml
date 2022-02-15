@@ -1,0 +1,18 @@
+version: "3.6"
+services:
+    etiketten:
+        container_name: etiketten
+        image: registry.simon-haas.eu/etiketten
+        restart: always
+        networks: 
+            - traefik
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.etiketten.loadbalancer.server.port=80"
+            - "traefik.http.routers.etiketten.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.etiketten.entrypoints=websecure"
+            - "traefik.http.routers.etiketten.tls.certresolver=myresolver"
+
+networks:
+    traefik:
+        name: traefik

@@ -1,0 +1,30 @@
+version: "3.6"
+services:
+  ytdl_material:
+    environment: 
+      ALLOW_CONFIG_MUTATIONS: 'true'
+    restart: always
+    volumes:
+      - ../youtube-dl/data/appdata:/app/appdata
+      - ../youtube-dl/data/audio:/app/audio
+      - ../youtube-dl/data/video:/app/video
+      - ../youtube-dl/data/subscriptions:/app/subscriptions
+      - ../youtube-dl/data/users:/app/users
+    #ports:
+    #  - "8998:17442"
+    image: tzahi12345/youtubedl-material:nightly
+    container_name: "youtube-dl"
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.backend=youtube-dl"
+      - "traefik.frontend.rule=Host:youtube-dl.simon-haas.eu"
+      - "traefik.enable=true"
+      - "traefik.port=17442"
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge

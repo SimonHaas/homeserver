@@ -1,68 +1,16 @@
 #!/bin/bash
 
-#arr+=("airsonic")
-#arr+=("bookstack")
-#arr+=("calibre-web")
-#arr+=("clarkson")
-#arr+=("cyberchef")
-#arr+=("diun")
-#arr+=("dolibarr")
-#arr+=("drone")
-arr+=("etiketten")
-#arr+=("filebrowser")
-#arr+=("fireflyiii")
-#arr+=("fittrackee")
-#arr+=("gauth")
-arr+=("gitlab")
-arr+=("gogs")
-#arr+=("gotify")
-#arr+=("grocy")
-#arr+=("guacamole")
-#arr+=("heimdall")
-#arr+=("hoppscotch")
-#arr+=("hrconvert2")
-#arr+=("jellyfin")
-#arr+=("joplin")
-#arr+=("keeweb")
-#arr+=("librespeed")
-#arr+=("mailpile")
-#arr+=("minecraft")
-#arr+=("minetest")
-#arr+=("monica")
-#arr+=("motioneye")
-arr+=("nextcloud")
-#arr+=("notea")
-#arr+=("odoo")
-#arr+=("onlyoffice")
-#arr+=("openproject")
-#arr+=("paperless")
-#arr+=("photoprism")
-#arr+=("pihole")
-#arr+=("portainer")
-#arr+=("public")
-#arr+=("rainloop")
-#arr+=("registry")
-#arr+=("samba")
-#arr+=("searx")
-#arr+=("syncserver") does not work
-arr+=("syncthing")
-#arr+=("traefik")
-arr+=("traefik2")
-#arr+=("traggo")
-#arr+=("transmission")
-#arr+=("trilium")
-#arr+=("uptimekuma")
-#arr+=("vpn") # disabled, so that backup script does not stop it, might cause problems when restarting
-#arr+=("webtop")
-#arr+=("wger")
-#arr+=("whoogle")
-#arr+=("wol")
-#arr+=("xbrowsersync")
-#arr+=("youtube-dl")
+if [ -f .env ]
+then
+  export $(cat .env | sed 's/#.*//g' | xargs)
+fi
 
-for item in ${arr[*]}
+servicesEnv="${SERVICES:-default_value}"
+IFS=',' read -r -a services <<< "$servicesEnv"
+
+for service in ${services[*]}
 do
-    cd $item
+    cd services/$item
     docker-compose $1 $2 $3
     cd ..
 done

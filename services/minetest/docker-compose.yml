@@ -1,0 +1,21 @@
+version: "3.6"
+services:
+    minetest:
+      image: linuxserver/minetest
+      container_name: minetest
+      networks:
+        - traefik_proxy
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=${TZ}
+        - CLI_ARGS="--server --worldname MyWorld --gameid minetest" #optional
+      volumes:
+        - ./data:/config/.minetest
+      ports:
+        - 30000:30000/udp
+      restart: unless-stopped
+        
+networks:
+    default:
+        driver: bridge
