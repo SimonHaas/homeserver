@@ -5,7 +5,7 @@ services:
     user: 0:0
     volumes:
       - ..:/srv
-      - ../filebrowser/filebrowser.db:/database.db # file must already exist
+      - ./data/filebrowser.db:/database.db # file must already exist (script to create it?)
     security_opt:
       - no-new-privileges:true #TODO also add for other services
     container_name: filebrowser

@@ -7,7 +7,7 @@ services:
       - PGID=1000
       - DB_HOST=bookstack_db
       - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - DB_PASS=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE}
       - APP_URL=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
     volumes:
@@ -36,7 +36,7 @@ services:
       - TZ=${TZ}
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./data/db:/config
     networks:
