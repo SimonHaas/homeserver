@@ -1,0 +1,27 @@
+version: "3.6"
+services:
+    calibre-web:
+        image: linuxserver/calibre-web
+        container_name: calibre-web
+        networks:
+            - traefik_proxy
+        volumes:
+            - ../calibre-web/data/config:/config
+            - ../calibre-web/data/books:/books
+        restart: unless-stopped
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=${TZ}
+        labels:
+            - "traefik.backend=calibre-web"
+            - "traefik.frontend.rule=Host:calibre-web.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=8083"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

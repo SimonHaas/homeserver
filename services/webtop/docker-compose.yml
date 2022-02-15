@@ -1,0 +1,20 @@
+version: "3.6"
+services:
+  webtop:
+    image: ghcr.io/linuxserver/webtop:ubuntu-mate
+    container_name: webtop
+    # privileged: true #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      #- SUBFOLDER=/ #optional
+    env_file:
+      - .env
+    volumes:
+      - ../webtop/data:/config
+      #- /var/run/docker.sock:/var/run/docker.sock #optional for docker in docker
+    ports:
+      - 3003:3000
+    shm_size: "1gb" #optional
+    restart: unless-stopped

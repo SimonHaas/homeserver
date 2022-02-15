@@ -1,0 +1,62 @@
+version: "3.6"
+services:
+    nextcloud:
+        container_name: nextcloud
+        restart: always
+        # docker-compose exec nextcloud chown -R www-data:root /var/www
+        build: ./src/fpm
+        depends_on: 
+            - nextcloud-mariadb
+            - nextcloud-redis
+        networks:
+            - traefik
+        environment:
+            - REDIS_HOST=nextcloud-redis
+        volumes:
+            - ./data/nextcloud:/var/www/html
+            #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
+            - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
+            - ./php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
+
+    web:
+        build: ./src/web
+        restart: always
+        links:
+            - nextcloud
+        container_name: nextcloud-web
+        volumes:
+            - ./data/nextcloud:/var/www/html:ro
+        networks:
+            - traefik
+        labels:
+            - traefik.frontend.headers.STSSeconds=315360000
+            - "traefik.enable=true"
+            - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+            - "traefik.http.routers.nextcloud.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.nextcloud.entrypoints=websecure"
+            - "traefik.http.routers.nextcloud.tls.certresolver=myresolver"
+
+    nextcloud-mariadb:
+        image: mariadb:10.5
+        container_name: "nextcloud-mariadb"
+        hostname: nextcloud-mariadb
+        networks:
+            - traefik
+        volumes:
+            - ./data/mariadb:/var/lib/mysql
+        restart: always
+        env_file: 
+            - .env
+
+    nextcloud-redis:
+        image: redis:alpine
+        restart: always
+        container_name: nextcloud-redis
+        networks:
+            - traefik
+        volumes:
+            - ./data/redis:/data
+
+networks:
+    traefik:
+        name: traefik

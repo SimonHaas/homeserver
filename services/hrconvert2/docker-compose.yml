@@ -1,0 +1,22 @@
+version: "3"
+services:
+  app:
+    image: dwaaan/hrconvert2-docker:latest
+    restart: always
+    volumes:
+      - ./config.php:/var/www/html/HRProprietary/HRConvert2/config.php
+    container_name: "hrconvert2"
+    networks:
+        - traefik_proxy
+    labels:
+        - "traefik.backend=hrconvert2"
+        - "traefik.frontend.rule=Host:hrconvert2.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

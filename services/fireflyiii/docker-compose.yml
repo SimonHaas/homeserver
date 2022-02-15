@@ -1,0 +1,41 @@
+version: "3.6"
+services:
+    fireflyiii:
+        image: jc5x/firefly-iii:latest
+        container_name: fireflyiii
+        restart: always
+        networks:
+            - traefik_proxy
+        volumes:
+            # owner must be www-data, maybe change it manually
+            - ../fireflyiii/data/firefly/export:/var/www/firefly-iii/storage/export
+            - ../fireflyiii/data/firefly/upload:/var/www/firefly-iii/storage/upload
+            - ../fireflyiii/data/firefly/logs:/var/www/firefly-iii/storage/logs
+        env_file: .env
+        labels:
+            - "traefik.backend=firefly"
+            - "traefik.frontend.rule=Host:fireflyiii.simon-haas.eu"
+            - "traefik.enable=true"
+            - "traefik.port=8080"
+
+    fireflyiii-mariadb:
+        image: mariadb
+        container_name: "fireflyiii-mariadb"
+        hostname: fireflyiii-mariadb
+        networks:
+            - traefik_proxy
+        volumes:
+            - ../fireflyiii/data/mariadb:/var/lib/mysql
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=keinerweisdas
+            - MYSQL_PASSWORD=ne41o5C5XcF5HXVnWoqdBOdGCtUTk9wB58ocwSWHoDOnefN
+            - MYSQL_DATABASE=firefly_iii
+            - MYSQL_USER=firefly
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge

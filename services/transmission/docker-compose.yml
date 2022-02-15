@@ -1,0 +1,37 @@
+version: "2.1"
+services:
+  transmission:
+    image: ghcr.io/linuxserver/transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
+      #- USER=${USER} #optional
+      #- PASS=${PASS} #optional
+      #- WHITELIST=iplist #optional
+      #- HOST_WHITELIST=dnsnane list #optional
+    volumes:
+      - ./data/config:/config
+      - ./data/downloads:/downloads
+      - ./data/watch:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: always
+    container_name: transmission
+    networks:
+        - traefik_proxy
+    labels:
+        - "traefik.backend=transmission"
+        - "traefik.frontend.rule=Host:transmission.simon-haas.eu"
+        - "traefik.enable=true"
+        - "traefik.port=9091"
+
+networks:
+    traefik_proxy:
+        external:
+            name: traefik_proxy
+    default:
+        driver: bridge
