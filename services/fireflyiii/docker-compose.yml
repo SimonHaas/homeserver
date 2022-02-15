@@ -29,10 +29,9 @@ services:
             - ./data/mariadb:/var/lib/mysql
         restart: always
         environment:
-            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
             - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_DATABASE=firefly_iii
-            - MYSQL_USER=${DB_USER}
+            - MYSQL_USER=${DB_USERNAME}
 
 networks:
     traefik:
