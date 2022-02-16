@@ -4,19 +4,17 @@ services:
         image: adolfintel/speedtest
         container_name: librespeed
         restart: always
+        security_opt:
+            - no-new-privileges:true
         networks:
-        - traefik_proxy
-        environment:
-            - MODE=standalone
+            - traefik
         labels:
-        - "traefik.backend=speedtest"
-        - "traefik.frontend.rule=Host:speedtest.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=80"
+            - "traefik.enable=true"
+            - "traefik.http.services.librespeed.loadbalancer.server.port=80"
+            - "traefik.http.routers.librespeed.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.librespeed.entrypoints=websecure"
+            - "traefik.http.routers.librespeed.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

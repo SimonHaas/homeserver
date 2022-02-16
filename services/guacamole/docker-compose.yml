@@ -2,23 +2,21 @@ version: "2"
 services:
   guacamole:
     image: oznu/guacamole
+    volumes:
+      - ./data/config:/config
     container_name: guacamole
     restart: always
-    volumes:
-      - ../guacamole/data/config:/config
-    #ports:
-    #  - 8080:8080
+    security_opt:
+        - no-new-privileges:true
     networks:
-        - traefik_proxy
+        - traefik
     labels:
-        - "traefik.backend=guacamole"
-        - "traefik.frontend.rule=Host:guacamole.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=8080"
+        - "traefik.http.services.guacamole.loadbalancer.server.port=8080"
+        - "traefik.http.routers.guacamole.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.guacamole.entrypoints=websecure"
+        - "traefik.http.routers.guacamole.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

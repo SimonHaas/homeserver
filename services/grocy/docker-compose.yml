@@ -2,28 +2,25 @@ version: "2.1"
 services:
   grocy:
     image: ghcr.io/linuxserver/grocy
-    container_name: grocy
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
     volumes:
       - ./data/config:/config
-    #ports:
-    #  - 9283:80
+    container_name: grocy
     restart: always
+    security_opt:
+        - no-new-privileges:true
     networks:
-      - traefik_proxy
+        - traefik
     labels:
-      - "traefik.backend=grocy"
-      #- "traefik.protocol=http"
-      - "traefik.frontend.rule=Host:grocy.simon-haas.eu"
-      - "traefik.enable=true"
-      - "traefik.port=80" 
+        - "traefik.enable=true"
+        - "traefik.http.services.grocy.loadbalancer.server.port=80"
+        - "traefik.http.routers.grocy.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.grocy.entrypoints=websecure"
+        - "traefik.http.routers.grocy.tls.certresolver=myresolver"
 
 networks:
-  traefik_proxy:
-      external:
-          name: traefik_proxy
-  default:
-      driver: bridge
+    traefik:
+        name: traefik

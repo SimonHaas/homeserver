@@ -1,25 +1,24 @@
 version: "3.6"
 services:
   gotify:
-    container_name: gotify
-    restart: unless-stopped
     image: gotify/server
     volumes:
       - ./data:/app/data
     environment:
-      - GOTIFY_SERVER_SSL_LETSENCRYPT_HOSTS=- gotify.simon-haas.eu
+      - GOTIFY_SERVER_SSL_LETSENCRYPT_HOSTS=- ${SUB_DOMAIN}.${SERVER_DOMAIN}
+    container_name: gotify
+    restart: always
+    security_opt:
+        - no-new-privileges:true
     networks:
-      - traefik_proxy
+        - traefik
     labels:
-      - "traefik.backend=gotify"
-      - "traefik.docker.network=web"
-      - "traefik.frontend.rule=Host:gotify.simon-haas.eu"
-      - "traefik.enable=true"
-      - "traefik.port=80"
+        - "traefik.enable=true"
+        - "traefik.http.services.gotify.loadbalancer.server.port=80"
+        - "traefik.http.routers.gotify.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.gotify.entrypoints=websecure"
+        - "traefik.http.routers.gotify.tls.certresolver=myresolver"
 
 networks:
-  traefik_proxy:
-    external:
-      name: traefik_proxy
-  default:
-    driver: bridge
+    traefik:
+        name: traefik

@@ -2,37 +2,32 @@ version: "2.1"
 services:
   jellyfin:
     image: ghcr.io/linuxserver/jellyfin
-    container_name: jellyfin
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Berlin
-      - JELLYFIN_PublishedServerUrl=jellyfin.simon-haas.eu #optional
+      - TZ=${TZ}
+      - JELLYFIN_PublishedServerUrl=${SUB_DOMAIN}.${SERVER_DOMAIN}
     volumes:
-      - ../jellyfin/data/library:/config # Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
-      # - ../jellyfin/data/tvseries:/data/tvshows # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
-      - ../samba/data/media/torrents:/data/movies # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
-      - ../samba/data/media/movies:/data/movies2 # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
-      - ../samba/data/media/tvseries:/data/tvseries # Media goes here. Add as many as needed e.g. /data/movies, /data/tv, etc.
-    # ports:
+      - ./data/config:/config
+      - ./data/data:/data
+      # ports:
       # - 8096:8096 # http
       # - 8920:8920 # optional https
       # - 7359:7359/udp #optional Allows clients to discover Jellyfin on the local network.
       # - 1900:1900/udp #optional Service discovery used by DNLA and clients.
-    restart: unless-stopped
+    container_name: jellyfin
+    restart: always
     security_opt:
-      - no-new-privileges:true
+        - no-new-privileges:true
     networks:
-        - traefik_proxy
+        - traefik
     labels:
-        - "traefik.backend=jellyfin"
-        - "traefik.frontend.rule=Host:jellyfin.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=8096"
+        - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+        - "traefik.http.routers.jellyfin.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.jellyfin.entrypoints=websecure"
+        - "traefik.http.routers.jellyfin.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik
