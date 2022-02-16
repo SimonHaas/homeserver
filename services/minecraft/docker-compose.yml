@@ -3,6 +3,8 @@ services:
     minecraft:
       container_name: minecraft
       restart: always
+      security_opt:
+          - no-new-privileges:true
       image: itzg/minecraft-server
       ports:
         - "25565:25565"

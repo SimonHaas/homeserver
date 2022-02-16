@@ -1,26 +1,26 @@
 version: "3.6"
 services:
     openproject:
-        container_name: openproject
-        image: openproject/community:11
-        restart: always
-        networks:
-          - traefik_proxy
+        image: openproject/community:12
         volumes:
           - ./data/pgdata:/var/openproject/pgdata
           - ./data/assets:/var/openproject/assets
         environment:
-          - SECRET_KEY_BASE=6idLyBBe428Xg3HiVr74mOLx1zbgnk0Q
+          - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+          - SERVER_HOSTNAME=${SUB_DOMAIN}.${SERVER_DOMAIN}
+        container_name: openproject
+        restart: always
+        networks: 
+            - traefik
+        security_opt:
+            - no-new-privileges:true
         labels:
-          - "traefik.backend=openproject"
-          - "traefik.frontend.rule=Host:openproject.simon-haas.eu"
-          - "traefik.enable=true"
-          - "traefik.port=80"
+            - "traefik.enable=true"
+            - "traefik.http.services.openproject.loadbalancer.server.port=80"
+            - "traefik.http.routers.openproject.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.openproject.entrypoints=websecure"
+            - "traefik.http.routers.openproject.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
-        
+    traefik:
+        name: traefik

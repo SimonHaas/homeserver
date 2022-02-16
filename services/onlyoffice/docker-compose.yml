@@ -1,11 +1,13 @@
 version: "3.6"
 services:
     onlyoffice:
-        image: onlyoffice/documentserver:6.3
+        image: onlyoffice/documentserver
         container_name: onlyoffice
         restart: always
         networks: 
             - traefik
+        security_opt:
+            - no-new-privileges:true
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
