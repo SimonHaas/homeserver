@@ -27,7 +27,7 @@ services:
             - traefik
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./letsencrypt:/letsencrypt
+            - ./data/letsencrypt:/letsencrypt
         env_file:
             - .env
         labels:
