@@ -8,6 +8,8 @@ services:
         environment: 
             - DOLI_AUTO_CONFIGURE=''
         container_name: dolibarr
+        security_opt:
+        - no-new-privileges:true
         restart: always
         networks: 
             - traefik

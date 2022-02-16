@@ -46,6 +46,8 @@ services:
             - /etc/localtime:/etc/localtime:ro
         networks:
             - traefik
+        security_opt:
+            - no-new-privileges:true
 
 networks:
     traefik:

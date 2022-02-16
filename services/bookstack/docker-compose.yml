@@ -15,6 +15,8 @@ services:
     depends_on:
       - bookstack_db
     container_name: bookstack
+    security_opt:
+      - no-new-privileges:true
     restart: always
     networks: 
         - traefik
@@ -39,8 +41,10 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./data/db:/config
+    security_opt:
+      - no-new-privileges:true
     networks:
-      - traefik_proxy
+      - traefik
     restart: unless-stopped
 
 networks:

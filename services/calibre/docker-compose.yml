@@ -10,6 +10,8 @@ services:
             - PGID=1000
             - TZ=${TZ}
         container_name: calibre
+        security_opt:
+            - no-new-privileges:true
         restart: always
         networks: 
             - traefik
