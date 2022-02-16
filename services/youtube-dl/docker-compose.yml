@@ -1,30 +1,28 @@
 version: "3.6"
 services:
-  ytdl_material:
+  youtubedl:
     environment: 
       ALLOW_CONFIG_MUTATIONS: 'true'
-    restart: always
     volumes:
-      - ../youtube-dl/data/appdata:/app/appdata
-      - ../youtube-dl/data/audio:/app/audio
-      - ../youtube-dl/data/video:/app/video
-      - ../youtube-dl/data/subscriptions:/app/subscriptions
-      - ../youtube-dl/data/users:/app/users
-    #ports:
-    #  - "8998:17442"
-    image: tzahi12345/youtubedl-material:nightly
-    container_name: "youtube-dl"
-    networks:
-      - traefik_proxy
+      - ./data/appdata:/app/appdata
+      - ./data/audio:/app/audio
+      - ./data/video:/app/video
+      - ./data/subscriptions:/app/subscriptions
+      - ./data/users:/app/users
+    image: tzahi12345/youtubedl-material:latest
+    container_name: youtubedl
+    restart: always
+    networks: 
+        - traefik
+    security_opt:
+        - no-new-privileges:true
     labels:
-      - "traefik.backend=youtube-dl"
-      - "traefik.frontend.rule=Host:youtube-dl.simon-haas.eu"
-      - "traefik.enable=true"
-      - "traefik.port=17442"
+        - "traefik.enable=true"
+        - "traefik.http.services.youtubedl.loadbalancer.server.port=17442"
+        - "traefik.http.routers.youtubedl.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.youtubedl.entrypoints=websecure"
+        - "traefik.http.routers.youtubedl.tls.certresolver=myresolver"
 
 networks:
-  traefik_proxy:
-    external:
-      name: traefik_proxy
-  default:
-    driver: bridge
+    traefik:
+        name: traefik

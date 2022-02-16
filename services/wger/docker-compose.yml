@@ -1,24 +1,27 @@
 version: "3.6"
 services:
   wger:
-    container_name: wger
     image: wger/apache
     volumes:
       - ./data/static:/home/wger/static
       - ./data/media:/home/wger/media
     env_file:
-      - ./prod.env
+      - .env
     depends_on:
       - db-wger
       - cache-wger
+    container_name: wger
     restart: always
-    networks:
-      - traefik_proxy
+    networks: 
+        - traefik
+    security_opt:
+        - no-new-privileges:true
     labels:
-      - "traefik.backend=wger"
-      - "traefik.frontend.rule=Host:wger.simon-haas.eu"
-      - "traefik.enable=true"
-      - "traefik.port=80"
+        - "traefik.enable=true"
+        - "traefik.http.services.wger.loadbalancer.server.port=80"
+        - "traefik.http.routers.wger.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.wger.entrypoints=websecure"
+        - "traefik.http.routers.wger.tls.certresolver=myresolver"
 
   db-wger:
     image: postgres:12.0-alpine
@@ -41,8 +44,5 @@ services:
       - 6379
         
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

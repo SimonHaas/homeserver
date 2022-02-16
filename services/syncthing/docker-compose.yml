@@ -9,12 +9,14 @@ services:
       - PGID=1000
       - TZ=${TZ}
     volumes:
-      - ../syncthing/data/appdata/config:/config
-      - ../syncthing/data/data:/data
+      - ./data/appdata/config:/config
+      - ./data/data:/data
     ports:
       - 22000:22000
       - 21027:21027/udp
     restart: unless-stopped
+    security_opt:
+        - no-new-privileges:true
     networks: 
         - traefik
     labels:

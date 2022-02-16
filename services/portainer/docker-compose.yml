@@ -2,22 +2,22 @@ version: "3.6"
 services:
     portainer:
       image: portainer/portainer
-      container_name: portainer
-      restart: always
-      networks:
-        - traefik_proxy
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
-        - ../portainer/data:/data
+        - ./data:/data
+      container_name: portainer
+      restart: always
+      networks: 
+          - traefik
+      security_opt:
+          - no-new-privileges:true
       labels:
-        - "traefik.backend=portainer"
-        - "traefik.frontend.rule=Host:portainer.simon-haas.eu"
-        - "traefik.enable=true"
-        - "traefik.port=9000"
-        
+          - "traefik.enable=true"
+          - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+          - "traefik.http.routers.portainer.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+          - "traefik.http.routers.portainer.entrypoints=websecure"
+          - "traefik.http.routers.portainer.tls.certresolver=myresolver"
+
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik

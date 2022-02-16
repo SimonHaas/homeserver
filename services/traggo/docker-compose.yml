@@ -2,26 +2,24 @@ version: "3.7"
 services:
   traggo:
     image: traggo/server:latest
-    #ports:
-    #  - 3030:3030
     environment:
-      TRAGGO_DEFAULT_USER_NAME: "admin"
-      TRAGGO_DEFAULT_USER_PASS: "mynewpassword"
+      TRAGGO_DEFAULT_USER_NAME: ${TRAGGO_DEFAULT_USER_NAME}
+      TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS}
     volumes:
       - ./data:/opt/traggo/data
+    container_name: traggo
     restart: always
-    container_name: "traggo"
-    networks:
-        - traefik_proxy
+    networks: 
+        - traefik
+    security_opt:
+        - no-new-privileges:true
     labels:
-        - "traefik.backend=traggo"
-        - "traefik.frontend.rule=Host:traggo.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=3030"
+        - "traefik.http.services.traggo.loadbalancer.server.port=3030"
+        - "traefik.http.routers.traggo.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.traggo.entrypoints=websecure"
+        - "traefik.http.routers.traggo.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik
