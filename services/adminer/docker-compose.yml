@@ -3,6 +3,8 @@ services:
     adminer:
         image: adminer
         container_name: adminer
+        security_opt:
+            - no-new-privileges:true
         restart: always
         networks: 
             - traefik

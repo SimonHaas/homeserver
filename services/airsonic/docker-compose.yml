@@ -13,6 +13,8 @@ services:
             - ./data/playlists:/playlists
             - ./data/podcasts:/podcasts
         container_name: airsonic
+        security_opt:
+            - no-new-privileges:true
         restart: always
         networks: 
             - traefik

@@ -1,3 +1,4 @@
+TODO database.db file must already exist (script to create it?)
 version: '3'
 services:
   filebrowser:
@@ -5,9 +6,9 @@ services:
     user: 0:0
     volumes:
       - ..:/srv
-      - ./data/filebrowser.db:/database.db # file must already exist (script to create it?)
+      - ./data/filebrowser.db:/database.db
     security_opt:
-      - no-new-privileges:true #TODO also add for other services
+      - no-new-privileges:true
     container_name: filebrowser
     restart: always
     networks: 

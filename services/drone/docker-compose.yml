@@ -11,6 +11,8 @@ services:
         - DRONE_SERVER_HOST=${SUB_DOMAIN}.${SERVER_DOMAIN}
         - DRONE_SERVER_PROTO=https
       container_name: drone
+      security_opt:
+        - no-new-privileges:true
       restart: always
       networks: 
           - traefik

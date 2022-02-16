@@ -1,7 +1,7 @@
 version: "3.6"
 services:
     fireflyiii:
-        image: jc5x/firefly-iii:latest
+        image: fireflyiii/core:latest
         volumes:
             # owner must be www-data, maybe change it manually
             - ./data/firefly/export:/var/www/firefly-iii/storage/export
@@ -9,6 +9,8 @@ services:
             - ./data/firefly/logs:/var/www/firefly-iii/storage/logs
         env_file: .env
         container_name: fireflyiii
+        security_opt:
+            - no-new-privileges:true
         restart: always
         networks: 
             - traefik
@@ -23,12 +25,15 @@ services:
         image: mariadb
         container_name: fireflyiii-mariadb
         hostname: fireflyiii-mariadb
+        security_opt:
+            - no-new-privileges:true
         networks:
             - traefik
         volumes:
             - ./data/mariadb:/var/lib/mysql
         restart: always
         environment:
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
             - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_DATABASE=firefly_iii
             - MYSQL_USER=${DB_USERNAME}

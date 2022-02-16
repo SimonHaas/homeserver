@@ -19,3 +19,5 @@ services:
       - DIUN_NOTIF_GOTIFY_ENDPOINT=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       - DIUN_NOTIF_GOTIFY_TOKEN=${DIUN_NOTIF_GOTIFY_TOKEN}
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
