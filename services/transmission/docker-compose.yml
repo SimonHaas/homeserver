@@ -6,11 +6,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
-      - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
-      #- USER=${USER} #optional
-      #- PASS=${PASS} #optional
-      #- WHITELIST=iplist #optional
-      #- HOST_WHITELIST=dnsnane list #optional
+      - TRANSMISSION_WEB_HOME=/combustion-release/
     volumes:
       - ./data/config:/config
       - ./data/downloads:/downloads
@@ -19,19 +15,19 @@ services:
       - 9091:9091
       - 51413:51413
       - 51413:51413/udp
-    restart: always
     container_name: transmission
-    networks:
-        - traefik_proxy
+    restart: always
+    networks: 
+        - traefik
+    security_opt:
+        - no-new-privileges:true
     labels:
-        - "traefik.backend=transmission"
-        - "traefik.frontend.rule=Host:transmission.simon-haas.eu"
         - "traefik.enable=true"
-        - "traefik.port=9091"
+        - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+        - "traefik.http.routers.transmission.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.transmission.entrypoints=websecure"
+        - "traefik.http.routers.transmission.tls.certresolver=myresolver"
 
 networks:
-    traefik_proxy:
-        external:
-            name: traefik_proxy
-    default:
-        driver: bridge
+    traefik:
+        name: traefik
