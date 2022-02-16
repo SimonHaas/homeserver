@@ -19,7 +19,7 @@ do
     cd ../..
 done
 
-customServicesEnv="${SERVICES:-default_value}"
+customServicesEnv="${CUSTOM_SERVICES:-default_value}"
 IFS=',' read -r -a customServices <<< "$customServicesEnv"
 
 for service in ${customServices[*]}
