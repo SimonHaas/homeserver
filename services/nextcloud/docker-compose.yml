@@ -14,7 +14,6 @@ services:
             - REDIS_HOST=nextcloud-redis
         volumes:
             - ./data/nextcloud:/var/www/html
-            #- ./fpm/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini
             - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
             - ./php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
