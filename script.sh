@@ -5,9 +5,9 @@ then
   export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
-domain="${DOMAIN:-default_value}"
+domain="${DOMAIN}"
 
-servicesEnv="${SERVICES:-default_value}"
+servicesEnv="${SERVICES}"
 IFS=',' read -r -a services <<< "$servicesEnv"
 
 for service in ${services[*]}
@@ -19,7 +19,7 @@ do
     cd ../..
 done
 
-customServicesEnv="${CUSTOM_SERVICES:-default_value}"
+customServicesEnv="${CUSTOM_SERVICES}"
 IFS=',' read -r -a customServices <<< "$customServicesEnv"
 
 for service in ${customServices[*]}
