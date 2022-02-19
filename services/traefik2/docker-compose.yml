@@ -43,7 +43,6 @@ services:
             - "traefik.http.routers.traefik.tls.certresolver=myresolver"
             - "traefik.http.routers.traefik.service=api@internal"
             - "traefik.http.routers.traefik.middlewares=traefik-auth"
-            - "traefik.http.middlewares.traefik-auth.basicauth.users=${BASIC_AUTH}"
 
             - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
             - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"

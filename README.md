@@ -1,39 +1,34 @@
-# Notes
+# Homeserver
+A robust and extensible homeserver setup without any magic.
 
-This is all located on an encrypted external hard drive.
+It is designed to be hosted and used only on your local network. Even though being only used on your local network it uses ```https``` via a wildcard certificate for everything to avoid browser security warnings and because some services do not work properly without TLS. You can still access from all around the world via a VPN.
 
-## Server-Umzug
+## Structure
+Each service is fully contained in a directory. Usually there are at least a ```docker-compose.yml``` and an ```.env.example``` file. All data is persistet in the service's ```data/``` direcrtory.
+Traefik is the reverse proxy for all the services. To start a service simply ```cp .env.example .env``` edit it to your likes, add the service name to the ```SERVICES``` variable in the root ```.env``` file and run ```./script.sh up -d```.
 
-### Nextcloud
+## Initial Setup
 
-``` shell
-sudo chown -R www-data:www-data nextcloud
+### Prerequisites
+- server running docker and docker-compose
+- domain (get a free one at https://www.freenom.com/)
+- DNS A-record wildcard pointing to your servers IP (e.g. 192.168.1.2)
+
+Not all DNS providers support wildcard A-records, https://www.digitalocean.com/ does. Sign up and point your domain's NS-records to digitalocean's nameservers. It is free.
+
+### Setup Traefik
 ```
-
-### Fireflyiii
-
-``` shell
-sudo chown -R www-data:www-data fireflyiii
+cp .env.example .env
+cd services/traefik2
+cp .env.example .env
 ```
+Change the ```DOMAIN``` in ```.env``` and edit ```SERVER_DOMAIN```, ```ACME_EMAIL``` and ```DO_AUTH_TOKEN``` in ```services/traefik2/.env```. You can get a ```DO_AUTH_TOKEN``` here https://cloud.digitalocean.com/account/api/tokens
 
-## Let's Encrypt
+To test if you can get a certificate from letsencrypt uncomment the line about the staging server in ```services/traefik2/docker-compose.yml```.
 
-To renew the wildcard-certificate simply run:
-
-``` shell
-sudo certbot certonly --manual --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory -d "*.simon-haas.eu"
+Run 
 ```
-
-## OpenVPN
-
-The VPN Server is on the not encrypted SD Card. So that it starts after a power outage. Then I can even connect remotely to unlock the hard drive and start the other services corretly.
-
-It will be located a /home/pi/docker
-
-## firefly
-
-The storage folder has to be owned by www-data.
-
-``` shell
-sudo chown -R www-data:www-data ./firefly_iii
-```
+docker network create traefik
+./script.sh up -d
+``` 
+wait till all images are pulled, build and a certificate retrieved. Then you can access nextcloud and gogs via your browser. If your browser warns you about an unknown certificate authority accept the risk because you know it is a staging certificate or maybe a self signed certificate from traefik. In the latter case you still need to wait a minute till your letsencrypt certificate is issued or you have an error somewhere. Check ```docker-compose logs -f traefik``` to view the logs. If everything worked alright, just comment out the one line in traefik's docker-compose.yml and run the script again to get a valid certificate.
