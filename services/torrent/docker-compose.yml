@@ -2,7 +2,7 @@ version: "3"
 services:
   vpn:
     image: ghcr.io/bubuntux/nordvpn
-    container_name: nordvpn
+    container_name: vpn
     cap_add:
       - NET_ADMIN
       - NET_RAW
@@ -14,18 +14,18 @@ services:
       - NETWORK=${NETWORK}
 # TODO reverse proxy with url
     ports:
-      - 8080:8080 # torrent
-      - 8686:8686 # lidarr
+      - 8080:8080 # qbittorrent default login: user=admin
       - 9117:9117 # jackett
       - 8191:8191 # flaresolverr
-      - 7878:7878 # radarr
-      - 8989:8989 # sonarr
+      - 8686:8686 # lidarr, music
+      - 7878:7878 # radarr, movies
+      - 8989:8989 # sonarr, series
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     security_opt:
       - no-new-privileges:true
 
-  torrent:
+  qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
     container_name: qbittorrent
     environment:
@@ -42,7 +42,7 @@ services:
       - vpn
     security_opt:
       - no-new-privileges:true
-      
+
   lidarr:
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
