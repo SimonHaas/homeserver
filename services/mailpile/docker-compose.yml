@@ -12,6 +12,7 @@ services:
     networks:
         - traefik
     labels:
+        - traefik.zone=private
         - "traefik.enable=true"
         - "traefik.http.services.mailpile.loadbalancer.server.port=33411"
         - "traefik.http.routers.mailpile.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -20,4 +21,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

@@ -28,6 +28,7 @@ services:
         networks:
             - traefik
         labels:
+            - traefik.zone=private
             - traefik.frontend.headers.STSSeconds=315360000
             - "traefik.enable=true"
             - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
@@ -58,4 +59,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

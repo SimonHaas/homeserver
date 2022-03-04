@@ -20,6 +20,7 @@ services:
     networks: 
         - traefik
     labels:
+        - traefik.zone=private
         - "traefik.enable=true"
         - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
         - "traefik.http.routers.syncthing.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -28,4 +29,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

@@ -37,6 +37,7 @@ services:
     networks: 
         - traefik
     labels:
+        - traefik.zone=private
         - "traefik.enable=true"
         - "traefik.http.services.whoogle.loadbalancer.server.port=5000"
         - "traefik.http.routers.whoogle.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -45,4 +46,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private
