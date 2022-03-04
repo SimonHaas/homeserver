@@ -16,6 +16,7 @@ services:
         networks: 
             - traefik
         labels:
+            - traefik.zone=private
             - "traefik.enable=true"
             - "traefik.http.services.calibre.loadbalancer.server.port=8083"
             - "traefik.http.routers.calibre.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -24,4 +25,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

@@ -4,7 +4,7 @@ services:
     traefik:
         restart: always
         image: "traefik:2.6"
-        container_name: traefik
+        container_name: traefik_private
         command:
             - "--log.level=DEBUG"
             - "--providers.docker=true"
@@ -31,6 +31,7 @@ services:
         env_file:
             - .env
         labels:
+            - traefik.zone=private
             - "traefik.enable=true"
             - "traefik.docker.network=traefik"
             - "traefik.http.routers.traefik.entrypoints=web"
@@ -52,4 +53,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

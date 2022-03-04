@@ -17,6 +17,7 @@ services:
       networks: 
           - traefik
       labels:
+          - traefik.zone=private
           - "traefik.enable=true"
           - "traefik.http.services.drone.loadbalancer.server.port=80"
           - "traefik.http.routers.drone.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -40,4 +41,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

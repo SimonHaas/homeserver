@@ -9,6 +9,7 @@ services:
         security_opt:
             - no-new-privileges:true
         labels:
+            - traefik.zone=private
             - "traefik.enable=true"
             - "traefik.http.services.rainloop.loadbalancer.server.port=8888"
             - "traefik.http.routers.rainloop.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -17,4 +18,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

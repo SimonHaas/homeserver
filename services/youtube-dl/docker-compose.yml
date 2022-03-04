@@ -17,6 +17,7 @@ services:
     security_opt:
         - no-new-privileges:true
     labels:
+        - traefik.zone=private
         - "traefik.enable=true"
         - "traefik.http.services.youtubedl.loadbalancer.server.port=17442"
         - "traefik.http.routers.youtubedl.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
@@ -25,4 +26,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private

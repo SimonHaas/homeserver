@@ -23,6 +23,7 @@ services:
         ports:
             - "2222:22"
         labels:
+            - traefik.zone=private
             - "traefik.enable=true"
             - "traefik.gitlab.frontend.rule=Host:${SUB_DOMAIN}.${SERVER_DOMAIN}"
             - "traefik.gitlab.port=80"
@@ -51,4 +52,4 @@ services:
 
 networks:
     traefik:
-        name: traefik
+        name: traefik_private
