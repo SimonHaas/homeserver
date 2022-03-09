@@ -46,7 +46,7 @@ services:
     security_opt:
         - no-new-privileges:true
     labels:
-        - traefik.zone=private
+        - custom.network=private
         - "traefik.enable=true"
         - "traefik.http.services.app123.loadbalancer.server.port=80"
         - "traefik.http.routers.app123.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"

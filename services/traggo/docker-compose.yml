@@ -14,7 +14,7 @@ services:
     security_opt:
         - no-new-privileges:true
     labels:
-        - traefik.zone=private
+        - custom.network=private
         - "traefik.enable=true"
         - "traefik.http.services.traggo.loadbalancer.server.port=3030"
         - "traefik.http.routers.traggo.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"

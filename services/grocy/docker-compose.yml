@@ -15,7 +15,7 @@ services:
     networks:
         - traefik
     labels:
-        - traefik.zone=private
+        - custom.network=private
         - "traefik.enable=true"
         - "traefik.http.services.grocy.loadbalancer.server.port=80"
         - "traefik.http.routers.grocy.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"

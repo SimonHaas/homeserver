@@ -14,7 +14,7 @@ services:
     networks:
         - traefik
     labels:
-        - traefik.zone=private
+        - custom.network=private
         - "traefik.enable=true"
         - "traefik.http.services.motioneye.loadbalancer.server.port=8765"
         - "traefik.http.routers.motioneye.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
