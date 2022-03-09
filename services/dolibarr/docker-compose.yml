@@ -14,7 +14,7 @@ services:
         networks: 
             - traefik
         labels:
-            - traefik.zone=private
+            - custom.network=private
             - "traefik.enable=true"
             - "traefik.http.services.dolibarr.loadbalancer.server.port=80"
             - "traefik.http.routers.dolibarr.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"

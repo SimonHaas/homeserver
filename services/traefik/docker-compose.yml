@@ -20,6 +20,7 @@ services:
             - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
             - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
             - --api.dashboard=true
+            - "--providers.docker.constraints=Label(`custom.network`,`private`)"
         ports:
             - "80:80"
             - "443:443"
@@ -31,9 +32,8 @@ services:
         env_file:
             - .env
         labels:
-            - traefik.zone=private
+            - custom.network=private
             - "traefik.enable=true"
-            - "traefik.docker.network=traefik"
             - "traefik.http.routers.traefik.entrypoints=web"
             - "traefik.http.routers.traefik.tls=true"
             - "traefik.http.routers.traefik.tls.domains[0].main=${SERVER_DOMAIN}"

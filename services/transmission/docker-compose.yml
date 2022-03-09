@@ -22,7 +22,7 @@ services:
     security_opt:
         - no-new-privileges:true
     labels:
-        - traefik.zone=private
+        - custom.network=private
         - "traefik.enable=true"
         - "traefik.http.services.transmission.loadbalancer.server.port=9091"
         - "traefik.http.routers.transmission.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"

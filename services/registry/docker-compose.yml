@@ -14,7 +14,7 @@ services:
     networks: 
         - traefik
     labels:
-        - traefik.zone=private
+        - custom.network=private
         - "traefik.enable=true"
         - "traefik.http.services.registry.loadbalancer.server.port=5000"
         - "traefik.http.routers.registry.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
