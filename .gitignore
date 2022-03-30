@@ -14,3 +14,4 @@ backup-proxmox-logs.txt
 nohup.out
 custom_services/*
 !custom_services/.gitignore
+cloudflared.deb
