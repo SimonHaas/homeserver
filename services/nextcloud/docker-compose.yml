@@ -28,13 +28,10 @@ services:
         networks:
             - traefik
         labels:
-            - custom.network=private
-            - traefik.frontend.headers.STSSeconds=315360000
-            - "traefik.enable=true"
-            - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
-            - "traefik.http.routers.nextcloud.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-            - "traefik.http.routers.nextcloud.entrypoints=websecure"
-            - "traefik.http.routers.nextcloud.tls.certresolver=myresolver"
+            my.zone: zone1
+            traefik.enable: true
+            traefik.http.routers.nextcloud.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+            raefik.http.routers.nextcloud.entrypoints: websecure
 
     nextcloud-mariadb:
         image: mariadb:10.5
@@ -59,4 +56,4 @@ services:
 
 networks:
     traefik:
-        name: traefik_private
+        name: zone1
