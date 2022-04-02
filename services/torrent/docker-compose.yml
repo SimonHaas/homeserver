@@ -14,7 +14,7 @@ services:
       - NETWORK=${NETWORK}
 # TODO reverse proxy with url
     ports:
-      - 8080:8080 # qbittorrent default login: user=admin
+      - 8080:8080 # qbittorrent admin/adminadmin
       - 9117:9117 # jackett
       - 8191:8191 # flaresolverr
       - 8686:8686 # lidarr, music
@@ -32,7 +32,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
-      - WEBUI_PORT=8080
+      - WEBUI_PORT=8080 # admin/adminadmin
     volumes:
       - ./data/qbittorrent/config:/config
       - ./data/qbittorrent/downloads:/downloads
