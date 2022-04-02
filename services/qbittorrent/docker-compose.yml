@@ -1,0 +1,18 @@
+version: "3"
+services:
+  qbittorrent:
+    image: ghcr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - WEBUI_PORT=8080 # admin/adminadmin
+    ports:
+      - 8080:8080
+    volumes:
+      - ./data/qbittorrent/config:/config
+      - ./data/qbittorrent/downloads:/downloads
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
