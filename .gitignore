@@ -1,5 +1,5 @@
-*/data/*
-*/repo/*
+services/*/data/
+services/*/repo/
 fullchain.pem
 privkey.pem
 acme.json
@@ -10,4 +10,8 @@ custom
 *.key
 *.crt
 backup-logs.txt
+backup-proxmox-logs.txt
 nohup.out
+custom_services/*
+!custom_services/.gitignore
+cloudflared.deb

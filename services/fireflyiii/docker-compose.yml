@@ -1,0 +1,44 @@
+version: "3.6"
+services:
+    fireflyiii:
+        image: fireflyiii/core:latest
+        volumes:
+            # owner must be www-data, maybe change it manually
+            - ./data/firefly/export:/var/www/firefly-iii/storage/export
+            - ./data/firefly/upload:/var/www/firefly-iii/storage/upload
+            - ./data/firefly/logs:/var/www/firefly-iii/storage/logs
+        env_file: .env
+        container_name: fireflyiii
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        networks: 
+            - traefik
+        labels:
+            - custom.network=private
+            - "traefik.enable=true"
+            - "traefik.http.services.fireflyiii.loadbalancer.server.port=8080"
+            - "traefik.http.routers.fireflyiii.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.fireflyiii.entrypoints=websecure"
+            - "traefik.http.routers.fireflyiii.tls.certresolver=myresolver"
+
+    fireflyiii-mariadb:
+        image: mariadb
+        container_name: fireflyiii-mariadb
+        hostname: fireflyiii-mariadb
+        security_opt:
+            - no-new-privileges:true
+        networks:
+            - traefik
+        volumes:
+            - ./data/mariadb:/var/lib/mysql
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=firefly_iii
+            - MYSQL_USER=${DB_USERNAME}
+
+networks:
+    traefik:
+        name: traefik_private

@@ -1,0 +1,25 @@
+version: "3.6"
+services:
+  gotify:
+    image: gotify/server
+    volumes:
+      - ./data:/app/data
+    environment:
+      - GOTIFY_SERVER_SSL_LETSENCRYPT_HOSTS=- ${SUB_DOMAIN}.${SERVER_DOMAIN}
+    container_name: gotify
+    restart: always
+    security_opt:
+        - no-new-privileges:true
+    networks:
+        - traefik
+    labels:
+        - custom.network=private
+        - "traefik.enable=true"
+        - "traefik.http.services.gotify.loadbalancer.server.port=80"
+        - "traefik.http.routers.gotify.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+        - "traefik.http.routers.gotify.entrypoints=websecure"
+        - "traefik.http.routers.gotify.tls.certresolver=myresolver"
+
+networks:
+    traefik:
+        name: traefik_private

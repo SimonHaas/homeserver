@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  diun:
+    image: crazymax/diun:latest
+    container_name: diun
+    command: serve
+    volumes:
+      - "./data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - TZ=${TZ}
+      - "LOG_LEVEL=info"
+      - "LOG_JSON=false"
+      - "DIUN_WATCH_WORKERS=20"
+      - "DIUN_WATCH_SCHEDULE=0 */6 * * *"
+      - "DIUN_PROVIDERS_DOCKER=true"
+      - "DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true"
+      - DIUN_NOTIF_GOTIFY_ENDPOINT=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      - DIUN_NOTIF_GOTIFY_TOKEN=${DIUN_NOTIF_GOTIFY_TOKEN}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

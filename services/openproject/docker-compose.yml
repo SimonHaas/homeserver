@@ -1,0 +1,27 @@
+version: "3.6"
+services:
+    openproject:
+        image: openproject/community:12
+        volumes:
+          - ./data/pgdata:/var/openproject/pgdata
+          - ./data/assets:/var/openproject/assets
+        environment:
+          - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+          - SERVER_HOSTNAME=${SUB_DOMAIN}.${SERVER_DOMAIN}
+        container_name: openproject
+        restart: always
+        networks: 
+            - traefik
+        security_opt:
+            - no-new-privileges:true
+        labels:
+            - custom.network=private
+            - "traefik.enable=true"
+            - "traefik.http.services.openproject.loadbalancer.server.port=80"
+            - "traefik.http.routers.openproject.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.openproject.entrypoints=websecure"
+            - "traefik.http.routers.openproject.tls.certresolver=myresolver"
+
+networks:
+    traefik:
+        name: traefik_private
