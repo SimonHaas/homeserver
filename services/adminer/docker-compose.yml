@@ -1,0 +1,21 @@
+version: "3.6"
+services:
+    adminer:
+        image: adminer
+        container_name: adminer
+        security_opt:
+            - no-new-privileges:true
+        restart: always
+        networks: 
+            - traefik
+        labels:
+            - custom.network=private
+            - "traefik.enable=true"
+            - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+            - "traefik.http.routers.adminer.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
+            - "traefik.http.routers.adminer.entrypoints=websecure"
+            - "traefik.http.routers.adminer.tls.certresolver=myresolver"
+
+networks:
+    traefik:
+        name: traefik_private

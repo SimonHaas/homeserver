@@ -1,0 +1,31 @@
+version: "3.6"
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    container_name: syncthing
+    hostname: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ./data/appdata/config:/config
+      - ./data/data:/data
+    ports:
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
+    security_opt:
+        - no-new-privileges:true
+    networks: 
+        - traefik
+    labels:
+        my.zone: zone1
+        traefik.enable: true
+        traefik.http.routers.syncthing.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+        traefik.http.routers.syncthing.entrypoints: websecure
+        traefik.http.services.syncthing.loadbalancer.server.port: 8384
+
+networks:
+    traefik:
+        name: zone1

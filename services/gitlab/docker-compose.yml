@@ -1,0 +1,52 @@
+version: '3.5'
+
+services:
+    gitlab:
+        restart: always
+        image: gitlab/gitlab-ce
+        container_name: gitlab
+        hostname: ${SUB_DOMAIN}.${SERVER_DOMAIN}
+        environment:
+            GITLAB_OMNIBUS_CONFIG: |
+                external_url 'https://${SUB_DOMAIN}.${SERVER_DOMAIN}'
+                nginx['listen_port'] = 80
+                nginx['listen_https'] = false
+                nginx['http2_enabled'] = false
+                gitlab_rails['gitlab_shell_ssh_port'] = 2222
+                nginx['proxy_set_headers'] = {
+                    "Host" => "$$http_host",
+                    "X-Real-IP" => "$$remote_addr",
+                    "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+                    "X-Forwarded-Proto" => "https",
+                    "X-Forwarded-Ssl" => "on"
+                }
+        ports:
+            - "2222:22"
+        labels:
+            my.zone: zone1
+            traefik.enable: true
+            traefik.gitlab.frontend.rule: Host:${SUB_DOMAIN}.${SERVER_DOMAIN}
+            traefik.gitlab.port: 80
+            traefik.frontend.entryPoints: websecure
+            traefik.port: 80
+            traefik.http.middlewares.gitlab-https-redirect.redirectscheme.scheme: https
+            traefik.http.routers.gitlab.middlewares: gitlab-https-redirect
+            traefik.http.services.gitlab.loadbalancer.server.port: 80
+            traefik.http.routers.gitlab.tls: true
+            traefik.http.routers.gitlab.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+            traefik.http.routers.gitlab.tls.certresolver: myresolver
+            traefik.http.routers.gitlab.entrypoints: websecure
+            traefik.docker.network: traefik
+        volumes:
+            - ./data/config:/etc/gitlab/
+            - ./data/logs:/var/log/gitlab/
+            - ./data/data:/var/opt/gitlab/
+            - /etc/localtime:/etc/localtime:ro
+        networks:
+            - traefik
+        security_opt:
+            - no-new-privileges:true
+
+networks:
+    traefik:
+        name: zone1

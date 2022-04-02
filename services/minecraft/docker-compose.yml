@@ -1,0 +1,14 @@
+version: "3.6"
+services:
+    minecraft:
+      container_name: minecraft
+      restart: always
+      security_opt:
+          - no-new-privileges:true
+      image: itzg/minecraft-server
+      ports:
+        - "25565:25565"
+      environment:
+        EULA: "TRUE"
+      volumes:
+        - "./data:/data"
