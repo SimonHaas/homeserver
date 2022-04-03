@@ -1,4 +1,4 @@
-version: "3"
+version: "3.6"
 services:
   qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
@@ -8,11 +8,21 @@ services:
       - PGID=1000
       - TZ=${TZ}
       - WEBUI_PORT=8080 # admin/adminadmin
-    ports:
-      - 8080:8080
     volumes:
       - ./data/qbittorrent/config:/config
       - ./data/qbittorrent/downloads:/downloads
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.qbittorrent.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.qbittorrent.entrypoints: websecure
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+networks:
+  traefik:
+    name: zone1
