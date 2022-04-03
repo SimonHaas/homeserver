@@ -1,0 +1,51 @@
+version: "2.1"
+
+services:
+  documize_db:
+    container_name: documize_db
+    image: postgres:12
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+       - ./data:/var/lib/postgresql/data
+    networks:
+       - traefik
+
+  documize:
+    container_name: documize
+    build: src/
+    depends_on:
+      documize_db:
+        condition: service_healthy
+    ports:
+      - 5001:5001
+    environment:
+      DOCUMIZEPORT: 5001
+      DOCUMIZEDB: host=documize_db port=5432 dbname=${POSTGRES_DB} user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} sslmode=disable
+      DOCUMIZEDBTYPE: postgresql
+      DOCUMIZESALT: ${DOCUMIZESALT}
+      DOCUMIZELOCATION: selfhost
+    security_opt:
+        - no-new-privileges:true
+    networks:
+        - traefik
+    labels:
+        my.zone: zone1
+        traefik.enable: true
+        traefik.http.routers.documize.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+        traefik.http.routers.documize.entrypoints: websecure
+        traefik.http.services.documize.loadbalancer.server.port: 5001
+
+networks:
+  traefik:
+    name: zone1
