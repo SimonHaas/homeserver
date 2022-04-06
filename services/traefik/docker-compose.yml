@@ -29,6 +29,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./data/letsencrypt:/letsencrypt
+            # - ./config.yml:/config.yml
         env_file:
             - .env
         labels:
@@ -38,10 +39,10 @@ services:
             traefik.http.routers.traefik.tls: true
             traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
             traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
-            traefik.http.routers.traefik.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+            traefik.http.routers.dashboard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+            traefik.http.routers.dashboard.service: api@internal
             traefik.http.routers.traefik.tls.certresolver: myresolver
             traefik.http.routers.traefik.service: api@internal
-            traefik.http.routers.traefik.middlewares: traefik-auth
             traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
             traefik.http.middlewares.redirect-to-https.redirectscheme.permanent: true
             traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
