@@ -1,0 +1,25 @@
+version: "3.6"
+services:
+  webnut:
+    image: teknologist/webnut
+    container_name: webnut
+    environment:
+      - UPS_HOST=${UPS_HOST}
+      - UPS_PORT=${UPS_PORT}
+      - UPS_USER=${UPS_USER}
+      - UPS_PASSWORD=${UPS_PASSWORD}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.webnut.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.webnut.entrypoints: websecure
+      traefik.http.services.webnut.loadbalancer.server.port: 6543
+
+networks:
+  traefik:
+    name: zone1
