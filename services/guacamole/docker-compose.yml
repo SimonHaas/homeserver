@@ -1,4 +1,4 @@
-version: "2"
+version: "3.6"
 services:
   guacamole:
     image: oznu/guacamole
@@ -11,13 +11,12 @@ services:
     networks:
         - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.guacamole.loadbalancer.server.port=8080"
-        - "traefik.http.routers.guacamole.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.guacamole.entrypoints=websecure"
-        - "traefik.http.routers.guacamole.tls.certresolver=myresolver"
+        my.zone: zone1
+        traefik.enable: true
+        traefik.http.routers.guacamole.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+        traefik.http.routers.guacamole.entrypoints: websecure
+        traefik.http.services.guacamole.loadbalancer.server.port: 8080 # guacadmin/guacadmin
 
 networks:
     traefik:
-        name: traefik_private
+        name: zone1
