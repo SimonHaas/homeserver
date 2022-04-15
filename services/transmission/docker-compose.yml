@@ -16,19 +16,18 @@ services:
       - 51413:51413
       - 51413:51413/udp
     container_name: transmission
-    restart: always
-    networks: 
-        - traefik
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
+    networks:
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-        - "traefik.http.routers.transmission.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.transmission.entrypoints=websecure"
-        - "traefik.http.routers.transmission.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.transmission.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.transmission.entrypoints: websecure
+      traefik.http.services.transmission.loadbalancer.server.port: 9091
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

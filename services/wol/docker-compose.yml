@@ -1,23 +1,22 @@
-version: '3'
+version: "3"
 services:
   wol:
     image: "dabondi/go-rest-wol"
     volumes:
       - ./config.csv:/app/computer.csv
     container_name: wol
-    restart: always
-    networks: 
-        - traefik
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
+    networks:
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.wol.loadbalancer.server.port=8080"
-        - "traefik.http.routers.wol.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.wol.entrypoints=websecure"
-        - "traefik.http.routers.wol.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.wol.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.wol.entrypoints: websecure
+      traefik.http.services.wol.loadbalancer.server.port: 8080
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

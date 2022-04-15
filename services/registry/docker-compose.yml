@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 services:
   registry:
@@ -7,20 +7,19 @@ services:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
     volumes:
       - ./data:/data
-    restart: always
     container_name: registry
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
-    networks: 
-        - traefik
+      - no-new-privileges:true
+    networks:
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.registry.loadbalancer.server.port=5000"
-        - "traefik.http.routers.registry.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.registry.entrypoints=websecure"
-        - "traefik.http.routers.registry.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.registry.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.registry.entrypoints: websecure
+      traefik.http.services.registry.loadbalancer.server.port: 5000
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

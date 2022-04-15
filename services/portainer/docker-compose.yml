@@ -1,24 +1,23 @@
 version: "3.6"
 services:
-    portainer:
-      image: portainer/portainer
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - ./data:/data
-      container_name: portainer
-      restart: always
-      networks: 
-          - traefik
-      security_opt:
-          - no-new-privileges:true
-      labels:
-          - custom.network=private
-          - "traefik.enable=true"
-          - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-          - "traefik.http.routers.portainer.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-          - "traefik.http.routers.portainer.entrypoints=websecure"
-          - "traefik.http.routers.portainer.tls.certresolver=myresolver"
+  portainer:
+    image: portainer/portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.portainer.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.portainer.entrypoints: websecure
+      traefik.http.services.portainer.loadbalancer.server.port: 9000
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

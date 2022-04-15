@@ -1,4 +1,4 @@
-version: "2.4"
+version: "3.6"
 
 services:
   whoogle:
@@ -13,37 +13,36 @@ services:
       - /var/lib/tor/:size=10M,uid=102,gid=102,mode=1700
       - /run/tor/:size=1M,uid=102,gid=102,mode=1700
     #environment: # Uncomment to configure environment variables
-      # Basic auth configuration, uncomment to enable
-      #- WHOOGLE_USER=<auth username>
-      #- WHOOGLE_PASS=<auth password>
-      # Proxy configuration, uncomment to enable
-      #- WHOOGLE_PROXY_USER=<proxy username>
-      #- WHOOGLE_PROXY_PASS=<proxy password>
-      #- WHOOGLE_PROXY_TYPE=<proxy type (http|https|socks4|socks5)
-      #- WHOOGLE_PROXY_LOC=<proxy host/ip>
-      # Site alternative configurations, uncomment to enable
-      # Note: If not set, the feature will still be available
-      # with default values.
-      #- WHOOGLE_ALT_TW=farside.link/nitter
-      #- WHOOGLE_ALT_YT=farside.link/invidious
-      #- WHOOGLE_ALT_IG=farside.link/bibliogram/u
-      #- WHOOGLE_ALT_RD=farside.link/libreddit
-      #- WHOOGLE_ALT_MD=farside.link/scribe
-      #- WHOOGLE_ALT_TL=lingva.ml
+    # Basic auth configuration, uncomment to enable
+    #- WHOOGLE_USER=<auth username>
+    #- WHOOGLE_PASS=<auth password>
+    # Proxy configuration, uncomment to enable
+    #- WHOOGLE_PROXY_USER=<proxy username>
+    #- WHOOGLE_PROXY_PASS=<proxy password>
+    #- WHOOGLE_PROXY_TYPE=<proxy type (http|https|socks4|socks5)
+    #- WHOOGLE_PROXY_LOC=<proxy host/ip>
+    # Site alternative configurations, uncomment to enable
+    # Note: If not set, the feature will still be available
+    # with default values.
+    #- WHOOGLE_ALT_TW=farside.link/nitter
+    #- WHOOGLE_ALT_YT=farside.link/invidious
+    #- WHOOGLE_ALT_IG=farside.link/bibliogram/u
+    #- WHOOGLE_ALT_RD=farside.link/libreddit
+    #- WHOOGLE_ALT_MD=farside.link/scribe
+    #- WHOOGLE_ALT_TL=lingva.ml
     container_name: whoogle
     restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
-    networks: 
-        - traefik
+      - no-new-privileges:true
+    networks:
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.whoogle.loadbalancer.server.port=5000"
-        - "traefik.http.routers.whoogle.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.whoogle.entrypoints=websecure"
-        - "traefik.http.routers.whoogle.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.whoogle.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoogle.entrypoints: websecure
+      traefik.http.services.whoogle.loadbalancer.server.port: 5000
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3.6"
 services:
   heimdall:
     image: lscr.io/linuxserver/heimdall
@@ -9,19 +9,18 @@ services:
     volumes:
       - ./data/config:/config
     container_name: heimdall
-    restart: always
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
     networks:
-        - traefik
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.heimdall.loadbalancer.server.port=80"
-        - "traefik.http.routers.heimdall.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.heimdall.entrypoints=websecure"
-        - "traefik.http.routers.heimdall.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.heimdall.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.heimdall.entrypoints: websecure
+      traefik.http.services.heimdall.loadbalancer.server.port: 80
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

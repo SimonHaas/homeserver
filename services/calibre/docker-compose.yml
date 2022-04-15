@@ -1,28 +1,27 @@
 version: "3.6"
 services:
-    calibre:
-        image: linuxserver/calibre-web
-        volumes:
-            - ./data/config:/config
-            - ./data/books:/books
-        environment:
-            - PUID=1000
-            - PGID=1000
-            - TZ=${TZ}
-        container_name: calibre
-        security_opt:
-            - no-new-privileges:true
-        restart: always
-        networks: 
-            - traefik
-        labels:
-            - custom.network=private
-            - "traefik.enable=true"
-            - "traefik.http.services.calibre.loadbalancer.server.port=8083"
-            - "traefik.http.routers.calibre.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-            - "traefik.http.routers.calibre.entrypoints=websecure"
-            - "traefik.http.routers.calibre.tls.certresolver=myresolver"
+  calibre:
+    image: linuxserver/calibre-web
+    volumes:
+      - ./data/config:/config
+      - ./data/books:/books
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    container_name: calibre
+    restart: unless-stopped
+    security_opt:
+        - no-new-privileges:true
+    networks:
+        - traefik
+    labels:
+        my.zone: zone1
+        traefik.enable: true
+        traefik.http.routers.calibre.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+        traefik.http.routers.calibre.entrypoints: websecure
+        traefik.http.services.calibre.loadbalancer.server.port: 8083
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1
