@@ -1,17 +1,17 @@
 version: "3.6"
 services:
-    minetest:
-      image: linuxserver/minetest
-      container_name: minetest
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=${TZ}
-        - CLI_ARGS="--server --worldname MyWorld --gameid minetest" #optional
-      volumes:
-        - ./data:/config/.minetest
-      ports:
-        - 30000:30000/udp
-      restart: always
-      security_opt:
-          - no-new-privileges:true
+  minetest:
+    image: linuxserver/minetest
+    container_name: minetest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - CLI_ARGS="--server --worldname MyWorld --gameid minetest" #optional
+    volumes:
+      - ./data:/config/.minetest
+    ports:
+      - 30000:30000/udp
+    restart: always
+    security_opt:
+      - no-new-privileges:true

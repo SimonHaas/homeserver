@@ -1,27 +1,27 @@
 version: "3.6"
 services:
-    gogs:
-        container_name: gogs
-        restart: always
-        image: gogs/gogs@sha256:6130c146f032f6d9bdc366a90590658f17d489e78db59feeaa82c0b7047beb91
-        ports:
-            - "10022:22"
-        environment:
-            - PUID=1000
-            - PGID=1000
-        volumes:
-            - ./data:/data
-        security_opt:
-            - no-new-privileges:true
-        networks:
-            - traefik
-        labels:
-            my.zone: zone1
-            traefik.enable: true
-            traefik.http.routers.gogs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-            traefik.http.routers.gogs.entrypoints: websecure
-            traefik.http.services.gogs.loadbalancer.server.port: 3000
+  gogs:
+    restart: always
+    image: gogs/gogs@sha256:6130c146f032f6d9bdc366a90590658f17d489e78db59feeaa82c0b7047beb91
+    ports:
+      - "10022:22"
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./data:/data
+    container_name: gogs
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.gogs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.gogs.entrypoints: websecure
+      traefik.http.services.gogs.loadbalancer.server.port: 3000
 
 networks:
-    traefik:
-        name: zone1
+  traefik:
+    name: zone1

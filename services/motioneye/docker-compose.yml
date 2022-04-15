@@ -1,26 +1,25 @@
 # username: admin
 # password: (blank)
 
-version: "3.5"
+version: "3.6"
 services:
   motioneye:
     image: ccrisan/motioneye:master-amd64
     volumes:
       - ./data/var_lib_motioneye:/var/lib/motioneye
     container_name: motioneye
-    restart: always
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
     networks:
-        - traefik
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.motioneye.loadbalancer.server.port=8765"
-        - "traefik.http.routers.motioneye.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.motioneye.entrypoints=websecure"
-        - "traefik.http.routers.motioneye.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.motioneye.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.motioneye.entrypoints: websecure
+      traefik.http.services.motioneye.loadbalancer.server.port: 8765
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

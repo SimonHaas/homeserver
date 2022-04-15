@@ -1,5 +1,16 @@
-version: '3.6'
+version: "3.6"
 services:
+  db:
+    container_name: ghost_db
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ./data/db:/var/lib/mysql
+    networks:
+      - traefik
+
   ghost:
     image: ghost:4-alpine
     restart: always
@@ -13,26 +24,15 @@ services:
       url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
     container_name: ghost
     security_opt:
-        - no-new-privileges:true
-    networks:
-        - traefik
-    labels:
-        my.zone: zone1
-        traefik.enable: true
-        traefik.http.routers.ghost.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-        traefik.http.routers.ghost.entrypoints: websecure
-
-  db:
-    container_name: ghost_db
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    volumes:
-      - ./data/db:/var/lib/mysql
+      - no-new-privileges:true
     networks:
       - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.ghost.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.ghost.entrypoints: websecure
 
 networks:
-    traefik:
-        name: zone1
+  traefik:
+    name: zone1

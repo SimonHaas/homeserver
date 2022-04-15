@@ -1,29 +1,5 @@
 version: "3.6"
 services:
-  wger:
-    image: wger/apache
-    volumes:
-      - ./data/static:/home/wger/static
-      - ./data/media:/home/wger/media
-    env_file:
-      - .env
-    depends_on:
-      - db-wger
-      - cache-wger
-    container_name: wger
-    restart: always
-    networks: 
-        - traefik
-    security_opt:
-        - no-new-privileges:true
-    labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.wger.loadbalancer.server.port=80"
-        - "traefik.http.routers.wger.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.wger.entrypoints=websecure"
-        - "traefik.http.routers.wger.tls.certresolver=myresolver"
-
   db-wger:
     image: postgres:12.0-alpine
     container_name: db-wger
@@ -43,7 +19,30 @@ services:
     image: redis:latest
     expose:
       - 6379
-        
+
+  wger:
+    image: wger/apache
+    volumes:
+      - ./data/static:/home/wger/static
+      - ./data/media:/home/wger/media
+    env_file:
+      - .env
+    depends_on:
+      - db-wger
+      - cache-wger
+    container_name: wger
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.wger.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.wger.entrypoints: websecure
+      traefik.http.services.syncthing.loadbalancer.server.port: 80
+
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1
