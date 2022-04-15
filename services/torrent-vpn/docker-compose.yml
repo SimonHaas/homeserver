@@ -1,17 +1,16 @@
 version: "3"
 services:
   vpn:
-    image: ghcr.io/bubuntux/nordvpn
+  # TEST: docker exec -it vpn curl ifconfig.me
+    image: ghcr.io/bubuntux/nordlynx
     container_name: vpn
     cap_add:
       - NET_ADMIN
-      - NET_RAW
     environment:
-      - USER=${USERNAME}
-      - PASS=${PASSWORD}
-      - CONNECT=${CONNECT}
-      - TECHNOLOGY=NordLynx
-      - NETWORK=${NETWORK}
+      - TZ=${TZ}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - NET_LOCAL=${NET_LOCAL}
+      - QUERY=filters\[country_id\]=${COUNTRY_ID}&filters\[servers_groups\]\[identifier\]=${SERVER_TYPE}
 # TODO reverse proxy with url
     ports:
       - 8080:8080 # qbittorrent admin/adminadmin
@@ -20,14 +19,12 @@ services:
       - 8686:8686 # lidarr, music
       - 7878:7878 # radarr, movies
       - 8989:8989 # sonarr, series
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
     security_opt:
       - no-new-privileges:true
 
   qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
-    container_name: qbittorrent
+    container_name: qbittorrent-vpn
     environment:
       - PUID=1000
       - PGID=1000
