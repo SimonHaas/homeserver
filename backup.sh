@@ -66,4 +66,6 @@ then
 
     # prune archives
     borg prune -v --list $repopfad --prefix '{hostname}-' $pruning
+else
+    echo "!!! DIRECTORIES NOT MOUNTED !!!"
 fi
