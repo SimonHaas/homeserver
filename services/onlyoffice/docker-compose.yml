@@ -11,9 +11,25 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.onlyoffice.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.onlyoffice.entrypoints: websecure
-      traefik.http.services.onlyoffice.loadbalancer.server.port: 80
+      traefik.http.routers.only-office.service: only-office
+      traefik.http.routers.only-office.entrypoints: web
+      traefik.http.routers.only-office.rule: Host("$SUB_DOMAIN.$SERVER_DOMAIN")
+      traefik.http.middlewares.https-office-redirect.redirectscheme.scheme: https
+      traefik.http.routers.only-office.middlewares: https-office-redirect
+      traefik.http.routers.only-office-secure.middlewares: oo-header
+      traefik.http.routers.only-office-secure.entrypoints: websecure
+      traefik.http.routers.only-office-secure.rule: Host("$SUB_DOMAIN.$SERVER_DOMAIN")
+      traefik.http.middlewares.onlyoffice-redirectregex.redirectregex.regex: ^http://(.*)
+      traefik.http.middlewares.onlyoffice-redirectregex.redirectregex.replacement: https://$$1
+      traefik.http.routers.only-office-secure.tls.certresolver: myresolver
+      traefik.http.services.only-office.loadbalancer.server.port: 80
+      traefik.http.middlewares.oo-header.headers.referrerPolicy: no-referrer
+      traefik.http.middlewares.oo-header.headers.stsSeconds: 31536000
+      traefik.http.middlewares.oo-header.headers.forceSTSHeader: true
+      traefik.http.middlewares.oo-header.headers.stsPreload: true
+      traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains: true
+      traefik.http.middlewares.oo-header.headers.browserXssFilter: true
+      traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto: https
 
 networks:
   traefik:
