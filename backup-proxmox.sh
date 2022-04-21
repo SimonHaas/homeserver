@@ -4,7 +4,7 @@
 # https://borgbackup.readthedocs.io/en/stable/
 
 # sudo crontab -e
-# 0 0 * * *  /root/backup.sh >> /root/backup-logs.txt 2>&1
+# 0 0 * * *  /root/backup-proxmox.sh >> /root/backup-logs.txt 2>&1
 
 # Hier Pfad zum Sicherungsmedium angeben.
 # z.B. zielpfad="/media/peter/HD_Backup"
