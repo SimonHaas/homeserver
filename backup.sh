@@ -4,7 +4,7 @@
 # https://borgbackup.readthedocs.io/en/stable/
 
 # sudo crontab -e
-# 0 0 * * *  /mnt/data/homeserver/backup.sh >> /mnt/data/homeserver/backup-logs.txt 2>&1
+# 0 0 * * * (time /bin/bash /mnt/data/homeserver/backup.sh) >> /mnt/data/homeserver/backup-logs.txt 2>&1
 
 # Hier Pfad zum Sicherungsmedium angeben.
 # z.B. zielpfad="/media/peter/HD_Backup"
