@@ -17,7 +17,7 @@ services:
     volumes:
       - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
     environment:
-      - NGINX_PROXMOX_IP=${IP}
+      - IP=${IP}
 
 networks:
   traefik:
