@@ -13,12 +13,27 @@ services:
       - no-new-privileges:true
     networks:
       - traefik
+
+  ui:
+    image: joxit/docker-registry-ui:latest
+    environment:
+      - DELETE_IMAGES=true
+      - REGISTRY_TITLE=My Private Docker Registry
+      - NGINX_PROXY_PASS_URL=http://registry:5000
+      - SINGLE_REGISTRY=true
+    depends_on: ["registry"]
+    container_name: registry-ui
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
     labels:
       my.zone: zone1
       traefik.enable: true
       traefik.http.routers.registry.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.registry.entrypoints: websecure
-      traefik.http.services.registry.loadbalancer.server.port: 5000
+      traefik.http.services.registry.loadbalancer.server.port: 80
 
 networks:
   traefik:
