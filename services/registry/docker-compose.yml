@@ -5,6 +5,7 @@ services:
     image: registry:2
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+      REGISTRY_STORAGE_DELETE_ENABLED: 'true'
     volumes:
       - ./data:/data
     container_name: registry
