@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   db:
     image: postgres:11-alpine
@@ -28,18 +28,17 @@ services:
       DB_NAME: wiki
     restart: unless-stopped
     container_name: wiki
-    networks: 
-        - traefik
     security_opt:
         - no-new-privileges:true
+    networks:
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.wiki.loadbalancer.server.port=3000"
-        - "traefik.http.routers.wiki.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.wiki.entrypoints=websecure"
-        - "traefik.http.routers.wiki.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.wikijs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      raefik.http.routers.wikijs.entrypoints: websecure
+      traefik.http.services.wikijs.loadbalancer.server.port: 3000
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1
