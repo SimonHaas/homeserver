@@ -1,0 +1,22 @@
+# docker run -t -d -p 127.0.0.1:9980:9980 -e "domain=ihre\\.domain\\.de" --name=COLLABORAOFFICE --restart always --cap-add MKNOD collabora/code
+
+version: "3.6"
+services:
+  collabora:
+    image: collabora/code
+    container_name: collabora
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.collabora.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.collabora.entrypoints: websecure
+      traefik.http.services.collabora.loadbalancer.server.port: 9980
+
+networks:
+  traefik:
+    name: zone1

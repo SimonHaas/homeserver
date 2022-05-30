@@ -1,21 +1,20 @@
 version: "3.6"
 services:
-    rainloop:
-        image: hardware/rainloop
-        container_name: rainloop
-        restart: always
-        networks: 
-            - traefik
-        security_opt:
-            - no-new-privileges:true
-        labels:
-            - custom.network=private
-            - "traefik.enable=true"
-            - "traefik.http.services.rainloop.loadbalancer.server.port=8888"
-            - "traefik.http.routers.rainloop.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-            - "traefik.http.routers.rainloop.entrypoints=websecure"
-            - "traefik.http.routers.rainloop.tls.certresolver=myresolver"
+  rainloop:
+    image: hardware/rainloop
+    container_name: rainloop
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.rainloop.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.rainloop.entrypoints: websecure
+      traefik.http.services.rainloop.loadbalancer.server.port: 8888
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

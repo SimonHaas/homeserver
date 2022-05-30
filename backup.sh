@@ -4,7 +4,7 @@
 # https://borgbackup.readthedocs.io/en/stable/
 
 # sudo crontab -e
-# 0 0 * * *  /mnt/data/homeserver/backup.sh >> /mnt/data/homeserver/backup-logs.txt 2>&1
+# 0 0 * * * (time /bin/bash /mnt/data/homeserver/backup.sh) >> /mnt/data/homeserver/backup-logs.txt 2>&1
 
 # Hier Pfad zum Sicherungsmedium angeben.
 # z.B. zielpfad="/media/peter/HD_Backup"
@@ -55,15 +55,17 @@ then
 
     # backup data
     SECONDS=0
-    ./script.sh stop
+    /mnt/data/homeserver/script.sh stop
     echo "Start der Sicherung $(date)."
 
     borg create --compression $kompression --exclude-caches --one-file-system -v --stats --progress \
                 $repopfad::'{hostname}-{now:%Y-%m-%d-%H%M%S}' $sicherung
 
     echo "Ende der Sicherung $(date). Dauer: $SECONDS Sekunden"
-    ./script.sh start
+    /mnt/data/homeserver/script.sh start
 
     # prune archives
     borg prune -v --list $repopfad --prefix '{hostname}-' $pruning
+else
+    echo "!!! DIRECTORIES NOT MOUNTED !!!"
 fi

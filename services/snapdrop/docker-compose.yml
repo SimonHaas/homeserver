@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 services:
   snapdrop:
     image: lscr.io/linuxserver/snapdrop
@@ -9,15 +9,15 @@ services:
       - TZ=${TZ}
     restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
     networks:
-        - traefik
+      - traefik
     labels:
-        my.zone: zone1
-        traefik.enable: true
-        traefik.http.routers.snapdrop.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-        traefik.http.routers.snapdrop.entrypoints: websecure
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.snapdrop.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.snapdrop.entrypoints: websecure
 
 networks:
-    traefik:
-        name: zone1
+  traefik:
+    name: zone1

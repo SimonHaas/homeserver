@@ -1,24 +1,23 @@
-version: '3'
+version: "3.6"
 services:
   mailpile:
     image: rroemhild/mailpile
     volumes:
-      - './data/mailpile:/root/.local/share/Mailpile'
-      - './data/gnupg:/root/.gnupg'
+      - "./data/mailpile:/root/.local/share/Mailpile"
+      - "./data/gnupg:/root/.gnupg"
     container_name: mailpile
-    restart: always
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
     networks:
-        - traefik
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.mailpile.loadbalancer.server.port=33411"
-        - "traefik.http.routers.mailpile.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.mailpile.entrypoints=websecure"
-        - "traefik.http.routers.mailpile.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.mailpile.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.mailpile.entrypoints: websecure
+      traefik.http.services.mailpile.loadbalancer.server.port: 33411
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1

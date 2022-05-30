@@ -1,8 +1,8 @@
 version: "3.6"
 services:
   youtubedl:
-    environment: 
-      ALLOW_CONFIG_MUTATIONS: 'true'
+    environment:
+      ALLOW_CONFIG_MUTATIONS: "true"
     volumes:
       - ./data/appdata:/app/appdata
       - ./data/audio:/app/audio
@@ -11,19 +11,18 @@ services:
       - ./data/users:/app/users
     image: tzahi12345/youtubedl-material:latest
     container_name: youtubedl
-    restart: always
-    networks: 
-        - traefik
+    restart: unless-stopped
     security_opt:
-        - no-new-privileges:true
+      - no-new-privileges:true
+    networks:
+      - traefik
     labels:
-        - custom.network=private
-        - "traefik.enable=true"
-        - "traefik.http.services.youtubedl.loadbalancer.server.port=17442"
-        - "traefik.http.routers.youtubedl.rule=Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)"
-        - "traefik.http.routers.youtubedl.entrypoints=websecure"
-        - "traefik.http.routers.youtubedl.tls.certresolver=myresolver"
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.youtubedl.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.youtubedl.entrypoints: websecure
+      traefik.http.services.youtubedl.loadbalancer.server.port: 17442
 
 networks:
-    traefik:
-        name: traefik_private
+  traefik:
+    name: zone1
