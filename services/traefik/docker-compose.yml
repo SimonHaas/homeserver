@@ -52,6 +52,30 @@ services:
       traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
       traefik.http.routers.redirs.entrypoints: web
       traefik.http.routers.redirs.middlewares: redirect-to-https
+      
+      traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
+      traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
+      traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
+
+  authelia:
+    image: ghcr.io/authelia/authelia
+    container_name: authelia
+    user: "1000:1000"
+    volumes:
+      - ./authelia:/config
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true 
+      traefik.http.routers.authelia.rule: Host(`login.${SERVER_DOMAIN}`)
+      traefik.http.routers.authelia.entrypoints: websecure
+      traefik.http.services.authelia.loadbalancer.server.port: 9091
+    expose:
+      - 9091
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
 
   whoami:
     image: containous/whoami
@@ -66,6 +90,21 @@ services:
       traefik.enable: true
       traefik.http.routers.whoami.rule: Host(`whoami.${SERVER_DOMAIN}`)
       traefik.http.routers.whoami.entrypoints: websecure
+
+  whoami-auth:
+    image: containous/whoami
+    container_name: whoami-auth
+    restart: unless-stopped
+    networks:
+      - traefik
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.whoami-auth.rule: Host(`whoami-auth.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoami-auth.entrypoints: websecure
+      traefik.http.routers.whoami-auth.middlewares: authelia@docker
 
 networks:
   traefik:
