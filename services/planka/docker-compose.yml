@@ -1,0 +1,55 @@
+version: "3.6"
+services:
+  planka:
+    image: ghcr.io/plankanban/planka:latest
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          ./start.sh &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 seconds...\";
+          sleep 5;
+        done; (exit $$s)"
+    restart: unless-stopped
+    volumes:
+      - ./data/user-avatars:/app/public/user-avatars
+      - ./data/project-background-images:/app/public/project-background-images
+      - ./data/attachments:/app/private/attachments
+    # ports:
+    #   - 3000:1337
+    environment:
+      - BASE_URL=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      - TRUST_PROXY=0
+      - DATABASE_URL=postgresql://postgres@postgres/planka
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - postgres
+    container_name: planka
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.planka.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`) # User: demo@demo.demo Password: demo
+      traefik.http.routers.planka.entrypoints: websecure
+      traefik.http.services.planka.loadbalancer.server.port: 1337
+
+  postgres:
+    container_name: planka_db
+    image: postgres:alpine
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=planka
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+networks:
+  traefik:
+    name: zone1
