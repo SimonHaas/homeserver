@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  memcached:
+    image: memcached:1-alpine
+    entrypoint: memcached -m 128M -I 4M # Limit to 128 MB Ram, 4M per entry, customize at free will.
+    container_name: cryptgeon_mem
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+  app:
+    image: cupcakearmy/cryptgeon:latest
+    depends_on:
+      - memcached
+    environment:
+      SIZE_LIMIT: 4M
+    container_name: cryptgeon
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.cryptgeon.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.cryptgeon.entrypoints: websecure
+      traefik.http.services.cryptgeon.loadbalancer.server.port: 5000
+
+networks:
+  traefik:
+    name: zone1
