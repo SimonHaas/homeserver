@@ -1,0 +1,36 @@
+version: "3.6"
+services:
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-abc}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    container_name: ledgersmb_db
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    volumes:
+      - ./data/pgdata:/var/lib/postgresql/data
+
+  ledgersmb:
+    depends_on:
+      - postgres
+    image: ghcr.io/ledgersmb/ledgersmb:1.9
+    environment:
+      LSMB_WORKERS: ${LSMB_WORKERS:-5}
+    container_name: ledgersmb
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.ledgersmb.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.ledgersmb.entrypoints: websecure
+      traefik.http.services.ledgersmb.loadbalancer.server.port: 5762
+
+networks:
+  traefik:
+    name: zone1
