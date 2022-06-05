@@ -13,7 +13,7 @@ IFS=',' read -r -a services <<< "$servicesEnv"
 for service in ${services[*]}
 do
     cd services/$service
-    docker-compose $1 $2 $3
+    docker compose $1 $2 $3
     cd ../..
 done
 
@@ -23,6 +23,6 @@ IFS=',' read -r -a customServices <<< "$customServicesEnv"
 for service in ${customServices[*]}
 do
     cd custom_services/$service
-    docker-compose $1 $2 $3
+    docker compose $1 $2 $3
     cd ../..
 done

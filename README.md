@@ -5,12 +5,12 @@ It is designed to be hosted and used only on your local network. Even though bei
 
 ## Structure
 Each service is fully contained in a directory. Usually there are at least a ```docker-compose.yml``` and an ```.env.example``` file. All data is persistet in the service's ```data/``` direcrtory.
-Traefik is the reverse proxy for all the services. To start a service simply ```cp .env.example .env``` edit it to your likes, add the service name to the ```SERVICES``` variable in the root ```.env``` file and run ```./script.sh up -d```. This script simply applies all passed parameters to ```docker-compose``` executed in each service`s directory specified in the ```.env``` file.
+Traefik is the reverse proxy for all the services. To start a service simply ```cp .env.example .env``` edit it to your likes, add the service name to the ```SERVICES``` variable in the root ```.env``` file and run ```./script.sh up -d```. This script simply applies all passed parameters to ```docker compose``` executed in each service`s directory specified in the ```.env``` file.
 
 ## Initial Setup
 
 ### Prerequisites
-- server running docker and docker-compose
+- server running docker
 - domain (get a free one at https://www.freenom.com/)
 - DNS A-record wildcard pointing to your servers IP (e.g. 192.168.1.2)
 
@@ -28,10 +28,10 @@ To test if you can get a certificate from letsencrypt uncomment the line about t
 
 Run 
 ```
-docker network create traefik_private
+docker network create zone1
 ./script.sh up -d
 ``` 
-wait till all images are pulled, build and a certificate retrieved. Then you can access nextcloud and gogs via your browser. If your browser warns you about an unknown certificate authority accept the risk because you know it is a staging certificate or maybe a self signed certificate from traefik. In the latter case you still need to wait a minute till your letsencrypt certificate is issued or you have an error somewhere. Check ```docker-compose logs -f traefik``` to view the logs of traefik. If everything worked alright, just comment out the one line in traefik's docker-compose.yml and run the script again to get a valid certificate.
+wait till all images are pulled, build and a certificate retrieved. Then you can access nextcloud and gogs via your browser. If your browser warns you about an unknown certificate authority accept the risk because you know it is a staging certificate or maybe a self signed certificate from traefik. In the latter case you still need to wait a minute till your letsencrypt certificate is issued or you have an error somewhere. Check ```docker compose logs -f traefik``` to view the logs of traefik. If everything worked alright, just comment out the one line in traefik's docker-compose.yml and run the script again to get a valid certificate.
 
 ## Customization
 
