@@ -1,0 +1,24 @@
+version: "3.6"
+services:
+  uptimekuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptimekuma
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    ports:
+      - 3001:3001
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.uptimekuma.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.uptimekuma.entrypoints: websecure
+      traefik.http.services.uptimekuma.loadbalancer.server.port: 3001
+
+networks:
+  traefik:
+    name: zone1
