@@ -1,0 +1,47 @@
+version: "3.6"
+services:
+  root_db:
+    image: postgres
+    container_name: nocodb_db
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: root_db
+    healthcheck:
+      test: pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 2s
+      retries: 10
+
+  nocodb:
+    depends_on:
+      root_db:
+        condition: service_healthy
+    image: nocodb/nocodb:latest
+    volumes:
+      - ./data/nocodb:/usr/app/data
+    environment:
+      NC_DB: "pg://root_db:5432?u=postgres&p=password&d=root_db"
+    container_name: nocodb
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.nocodb.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.nocodb.entrypoints: websecure
+      traefik.http.services.nocodb.loadbalancer.server.port: 8080
+
+networks:
+  traefik:
+    name: zone1

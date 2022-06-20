@@ -15,7 +15,7 @@ services:
       traefik.http.routers.proxmox.entrypoints: websecure
       traefik.http.services.proxmox.loadbalancer.server.port: 443
     volumes:
-      - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
+      - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     environment:
       - IP=${IP}
 
