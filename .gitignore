@@ -13,3 +13,4 @@ backup-logs.txt
 nohup.out
 custom_services/*
 !custom_services/.gitignore
+nginx.conf
