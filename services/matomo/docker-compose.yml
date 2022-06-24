@@ -1,0 +1,58 @@
+version: "3"
+services:
+  db:
+    container_name: matomo-db
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    image: mariadb
+    command: --max-allowed-packet=64MB
+    restart: unless-stopped
+    volumes:
+      - ./data/db:/var/lib/mysql
+    env_file:
+      - .env
+
+  app:
+    container_name: matomo-app
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    image: matomo:fpm-alpine
+    restart: unless-stopped
+    links:
+      - db
+    volumes:
+      # - ./config:/var/www/html/config:rw
+      # - ./logs:/var/www/html/logs
+      - ./data/app:/var/www/html
+    environment:
+      - MATOMO_DATABASE_HOST=db
+      - PHP_MEMORY_LIMIT=2048M
+    env_file:
+      - .env
+
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./data/app:/var/www/html:ro
+      # see https://github.com/matomo-org/matomo-nginx
+      - ./matomo.conf:/etc/nginx/conf.d/default.conf:ro
+    container_name: matomo
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.matomo.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.matomo.entrypoints: websecure
+      traefik.http.services.matomo.loadbalancer.server.port: 80
+
+networks:
+  traefik:
+    name: zone1
