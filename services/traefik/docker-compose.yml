@@ -24,6 +24,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
       - --api.dashboard=true
       - --providers.docker.constraints=Label(`my.zone`, `zone1`)
+      - --serverstransport.insecureskipverify=true
     ports:
       - "80:80"
       - "443:443"
