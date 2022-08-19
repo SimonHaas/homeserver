@@ -3,7 +3,7 @@ version: "3.6"
 services:
   traefik:
     restart: unless-stopped
-    image: "traefik:2.6"
+    image: "traefik:2.8"
     container_name: traefik
     command:
       - "--log.level=DEBUG"
@@ -25,11 +25,17 @@ services:
       - --api.dashboard=true
       - --providers.docker.constraints=Label(`my.zone`, `zone1`)
       - --serverstransport.insecureskipverify=true
+
+      # Enable Hub communication (open the port 9900 and 9901 by default)
+      - --experimental.hub=true
+      - --hub.tls.insecure=true
+      - --metrics.prometheus.addrouterslabels=true
     ports:
       - "80:80"
       - "443:443"
     networks:
       - traefik
+      - traefik-hub
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -57,6 +63,25 @@ services:
       traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
       traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
       traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
+
+  hub-agent:
+    image: ghcr.io/traefik/hub-agent-traefik:experimental
+    pull_policy: always
+    container_name: hub-agent
+    restart: "on-failure"
+    command:
+      - run
+      - --hub.token=${AGENT_TOKEN}
+      - --auth-server.advertise-url=http://hub-agent
+      - --traefik.host=traefik
+      - --traefik.tls.insecure=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - traefik
+    networks:
+      - traefik
+      - traefik-hub
 
   authelia:
     image: ghcr.io/authelia/authelia
@@ -110,3 +135,5 @@ services:
 networks:
   traefik:
     name: zone1
+  traefik-hub:
+    name: zone3

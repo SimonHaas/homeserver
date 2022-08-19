@@ -28,6 +28,8 @@ services:
     image: seafileltd/seafile-mc:latest
     container_name: seafile
     volumes:
+      - ./seafdav.conf:/opt/seatable/conf/seafdav.conf
+      - ./seafile.nginx.conf:/shared/nginx/conf/seafile.nginx.conf 
       - ./data/seafile:/shared   # Requested, specifies the path to Seafile data persistent store.
     environment:
       - DB_HOST=db
@@ -42,6 +44,8 @@ services:
       - db
       - memcached
     restart: unless-stopped
+    ports:
+      - 8088:8080
     security_opt:
         - no-new-privileges:true
     networks:
@@ -52,6 +56,12 @@ services:
         traefik.http.routers.seafile.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
         traefik.http.routers.seafile.entrypoints: websecure
         traefik.http.services.seafile.loadbalancer.server.port: 80
+
+        # traefik.webdav.frontend.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+        # traefik.webdav.port: 8080
+        # traefik.webdav.backend: seafileDav
+        # traefik.docker.network: proxy 
+        # traefik.webdav.frontend.rule: Host:${SUB_DOMAIN}.${SERVER_DOMAIN}/seafdav
 
 networks:
   traefik:

@@ -1,0 +1,40 @@
+version: '3'
+services:
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: ${SUB_DOMAIN}.${SERVER_DOMAIN}
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      #- ./data/config:/etc/netdata
+      #- ./data/lib:/var/lib/netdata
+      #- ./data/cache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.netdata.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.netdata.entrypoints: websecure
+      traefik.http.services.netdata.loadbalancer.server.port: 19999
+
+networks:
+  traefik:
+    name: zone1
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
