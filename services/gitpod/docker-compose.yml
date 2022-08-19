@@ -1,0 +1,30 @@
+# docker run -p 443:443 --privileged --name gitpod --rm -it  --mount type=volume,source=gitpod,destination=/var/gitpod eu.gcr.io/gitpod-core-dev/build/local-preview
+
+version: "3.6"
+services:
+  gitpod:
+    image: eu.gcr.io/gitpod-core-dev/build/local-preview
+    container_name: gitpod
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - ./data:/var/gitpod
+    # ports:
+    #   - 8088:443
+    environment:
+        - DOMAIN=${SUB_DOMAIN}.${SERVER_DOMAIN}
+    # security_opt:
+    #     - no-new-privileges:true
+    networks:
+        - traefik
+    labels:
+        my.zone: zone1
+        traefik.enable: true
+        traefik.http.routers.gitpod.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+        traefik.http.routers.gitpod.entrypoints: websecure
+        traefik.http.services.gitpod.loadbalancer.server.port: 443
+        traefik.http.services.gitpod.loadbalancer.server.scheme: https
+
+networks:
+  traefik:
+    name: zone1
