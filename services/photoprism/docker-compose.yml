@@ -103,8 +103,6 @@ services:
       # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
       - "./data/photoprism/import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - "./data/photoprism/storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
-      - ../syncthing/data/appdata/config/Kamera:/photoprism/import/Kamera
-      - ../syncthing/data/appdata/config/Camera:/photoprism/import/Camera
     networks:
       - traefik
     labels:
