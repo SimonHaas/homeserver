@@ -8,8 +8,8 @@ services:
       - TZ=${TZ}
       - JELLYFIN_PublishedServerUrl=${SUB_DOMAIN}.${SERVER_DOMAIN}
     volumes:
-      - ./data/config:/config
-      - ./data/data:/data
+      - ./config:/config
+      - ../arr-apps-vpn/data:/data
       # ports:
       # - 8096:8096 # http
       # - 8920:8920 # optional https

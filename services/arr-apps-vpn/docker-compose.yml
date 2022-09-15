@@ -1,0 +1,221 @@
+version: "3.6"
+services:
+  vpn:
+    # TEST: docker exec -it vpn curl ifconfig.me
+    image: ghcr.io/bubuntux/nordlynx
+    container_name: vpn
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - TZ=${TZ}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - NET_LOCAL=${NET_LOCAL}
+      - QUERY=filters\[country_id\]=${COUNTRY_ID}&filters\[servers_groups\]\[identifier\]=${SERVER_TYPE}
+    ports:
+      - 8191:8191 # flaresolverr
+      - 51413:51413 # transmission
+      - 51413:51413/udp # transmission
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.passHostHeader: true
+
+      traefik.http.routers.qbittorrent.rule: Host(`${SUB_DOMAIN_QBITTORRENT}.${SERVER_DOMAIN}`) # admin/adminadmin
+      traefik.http.routers.qbittorrent.entrypoints: websecure
+      traefik.http.routers.qbittorrent.service: qbittorrent
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+      traefik.http.routers.transmission.rule: Host(`${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}`)
+      traefik.http.routers.transmission.entrypoints: websecure
+      traefik.http.routers.transmission.service: transmission
+      traefik.http.services.transmission.loadbalancer.server.port: 9091
+
+      traefik.http.routers.lidarr.rule: Host(`${SUB_DOMAIN_LIDARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.lidarr.entrypoints: websecure
+      traefik.http.routers.lidarr.service: lidarr
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
+
+      traefik.http.routers.sonarr.rule: Host(`${SUB_DOMAIN_SONARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.sonarr.entrypoints: websecure
+      traefik.http.routers.sonarr.service: sonarr
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
+
+      traefik.http.routers.radarr.rule: Host(`${SUB_DOMAIN_RADARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.radarr.entrypoints: websecure
+      traefik.http.routers.radarr.service: radarr
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+      traefik.http.routers.jackett.rule: Host(`${SUB_DOMAIN_JACKETT}.${SERVER_DOMAIN}`)
+      traefik.http.routers.jackett.entrypoints: websecure
+      traefik.http.routers.jackett.service: jackett
+      traefik.http.services.jackett.loadbalancer.server.port: 9117
+
+      traefik.http.routers.readarr.rule: Host(`${SUB_DOMAIN_READARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.readarr.entrypoints: websecure
+      traefik.http.routers.readarr.service: readarr
+      traefik.http.services.readarr.loadbalancer.server.port: 8787
+
+      traefik.http.routers.prowlarr.rule: Host(`${SUB_DOMAIN_PROWLARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.service: prowlarr
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+
+  # qbittorrent:
+  #   image: ghcr.io/linuxserver/qbittorrent
+  #   container_name: qbittorrent
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=${TZ}
+  #     - WEBUI_PORT=8080 # admin/adminadmin
+  #   volumes:
+  #     - ./config/qbittorrent:/config
+  #     - ./data/qbittorrent:/downloads
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #   security_opt:
+  #     - no-new-privileges:true
+
+  transmission:
+    container_name: transmission
+    image: lscr.io/linuxserver/transmission:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=${TZ}
+    volumes:
+      - ./config/transmission:/config
+      - ./data/transmission:/downloads
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ./config/lidarr:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ./config/radarr:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ./config/sonarr:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+      
+  # TODO https://youtu.be/5rtGBwBuzQE?t=827
+  # jackett:
+  #   image: lscr.io/linuxserver/jackett
+  #   container_name: jackett
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=${TZ}
+  #     - AUTO_UPDATE=true
+  #   volumes:
+  #     - ./config/jackett:/config
+  #     - ./data:/data
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #   security_opt:
+  #     - no-new-privileges:true
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=${TZ}
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
+# curl -L -X POST 'http://192.168.1.2:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'
+
+  readarr:
+    container_name: readarr
+    image: lscr.io/linuxserver/readarr:develop
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=${TZ}
+    volumes:
+      - ./config/readarr:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:develop
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=Europe/Stockholm
+    volumes:
+      - ./config/prowlarr:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+
+networks:
+  traefik:
+    name: zone1
