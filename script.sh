@@ -5,24 +5,24 @@ then
   export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
-domain="${DOMAIN}"
+if [[ "$1" = "SERVICES" ]]
+then
+  servicesEnv="${SERVICES}"
+elif [[ "$1" = "KASM" ]]
+then
+  cd services/kasm
+  sudo bash kasm_release/bin/start
+  cd ../..
+  exit 0
+else
+  servicesEnv="${INFRASTRUCTURE}"
+fi
 
-servicesEnv="${SERVICES}"
 IFS=',' read -r -a services <<< "$servicesEnv"
 
 for service in ${services[*]}
 do
     cd services/$service
-    docker compose $1 $2 $3
-    cd ../..
-done
-
-customServicesEnv="${CUSTOM_SERVICES}"
-IFS=',' read -r -a customServices <<< "$customServicesEnv"
-
-for service in ${customServices[*]}
-do
-    cd custom_services/$service
-    docker compose $1 $2 $3
+    docker compose $2 $3
     cd ../..
 done
