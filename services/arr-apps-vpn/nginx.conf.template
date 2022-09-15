@@ -1,0 +1,15 @@
+server {
+    listen 80 default_server;
+    rewrite ^(.*) https://$host$1 permanent;
+}
+
+server {
+    listen 443;
+    server_name _;
+    proxy_redirect off;
+    location / {
+        autoindex on;
+        try_files $uri $uri/ =404;
+        root /data/www;
+    }
+}
