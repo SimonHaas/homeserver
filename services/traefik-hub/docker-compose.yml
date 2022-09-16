@@ -1,4 +1,4 @@
-version: "3.6"
+version: "3"
 
 services:
   hub-agent:
@@ -17,11 +17,19 @@ services:
     depends_on:
       - traefik
     networks:
-      - traefik
       - traefik-hub
 
-networks:
   traefik:
-    name: zone1
+    image: traefik:v2.8
+    container_name: traefik-hub
+    command:
+      # Enable Hub communication (open the port 9900 and 9901 by default)
+      - --experimental.hub=true
+      - --hub.tls.insecure=true
+      - --metrics.prometheus.addrouterslabels=true
+    networks:
+      - traefik-hub
+      
+networks:
   traefik-hub:
-    name: zone3
+    name: zone2

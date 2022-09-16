@@ -25,17 +25,11 @@ services:
       - --api.dashboard=true
       - --providers.docker.constraints=Label(`my.zone`, `zone1`)
       - --serverstransport.insecureskipverify=true
-
-      # Enable Hub communication (open the port 9900 and 9901 by default)
-      - --experimental.hub=true
-      - --hub.tls.insecure=true
-      - --metrics.prometheus.addrouterslabels=true
     ports:
       - "80:80"
       - "443:443"
     networks:
       - traefik
-      - traefik-hub
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -116,5 +110,3 @@ services:
 networks:
   traefik:
     name: zone1
-  traefik-hub:
-    name: zone3
