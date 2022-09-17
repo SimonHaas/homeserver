@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+    changedetection:
+      image: ghcr.io/dgtlmoon/changedetection.io
+      container_name: changedetection
+      hostname: changedetection
+      volumes:
+        - ./data:/datastore
+      environment:
+        - WEBDRIVER_URL=http://browser-chrome:4444/wd/hub
+      restart: unless-stopped
+      security_opt:
+          - no-new-privileges:true
+      networks:
+          - traefik
+      labels:
+          my.zone: zone1
+          traefik.enable: true
+          traefik.http.routers.changedetection.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+          traefik.http.routers.changedetection.entrypoints: websecure
+          traefik.http.services.changedetection.loadbalancer.server.port: 5000
+
+    browser-chrome:
+       hostname: browser-chrome
+       image: selenium/standalone-chrome:latest
+       environment:
+           - VNC_NO_PASSWORD=1
+           - SCREEN_WIDTH=1920
+           - SCREEN_HEIGHT=1080
+           - SCREEN_DEPTH=24
+       volumes:
+           # Workaround to avoid the browser crashing inside a docker container
+           # See https://github.com/SeleniumHQ/docker-selenium#quick-start
+           - /dev/shm:/dev/shm
+       restart: unless-stopped
+       networks:
+          - traefik
+
+networks:
+  traefik:
+    name: zone1
