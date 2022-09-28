@@ -21,6 +21,11 @@ services:
       traefik.http.routers.gogs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.gogs.entrypoints: websecure
       traefik.http.services.gogs.loadbalancer.server.port: 3000
+      homepage.group: Media
+      homepage.name: Gogs
+      homepage.icon: emby.png
+      homepage.href: https://gogs.simon-haas.eu
+      homepage.description: Git server
 
 networks:
   traefik:

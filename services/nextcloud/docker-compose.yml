@@ -16,6 +16,8 @@ services:
       - ./data/nextcloud:/var/www/html
       - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
       - ./php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
+    labels:
+      com.centurylinklabs.watchtower.monitor-only: true
 
   web:
     build: ./src/web
@@ -32,6 +34,11 @@ services:
       traefik.enable: true
       traefik.http.routers.nextcloud.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       raefik.http.routers.nextcloud.entrypoints: websecure
+      homepage.group: Media
+      homepage.name: Nextcloud
+      homepage.icon: emby.png
+      homepage.href: http://emby.home/
+      homepage.description: Nextcloud
 
   nextcloud-mariadb:
     image: mariadb:10.5
@@ -44,7 +51,8 @@ services:
     restart: always
     env_file:
       - .env
-
+    labels:
+      com.centurylinklabs.watchtower.monitor-only: true
   nextcloud-redis:
     image: redis:alpine
     restart: always
@@ -53,7 +61,8 @@ services:
       - traefik
     volumes:
       - ./data/redis:/data
-
+    labels:
+      com.centurylinklabs.watchtower.monitor-only: true
 networks:
   traefik:
     name: zone1

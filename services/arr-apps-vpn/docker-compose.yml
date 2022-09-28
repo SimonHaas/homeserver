@@ -7,14 +7,16 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - TZ=${TZ}
-      - PRIVATE_KEY=${PRIVATE_KEY}
-      - NET_LOCAL=${NET_LOCAL}
-      - QUERY=filters\[country_id\]=${COUNTRY_ID}&filters\[servers_groups\]\[identifier\]=${SERVER_TYPE}
+      DNS: 1.1.1.1,8.8.8.8
+      TZ: ${TZ}
+      PRIVATE_KEY: ${PRIVATE_KEY}
+      NET_LOCAL: ${NET_LOCAL}
+      QUERY: filters\[country_id\]=${COUNTRY_ID}&filters\[servers_groups\]\[identifier\]=${SERVER_TYPE}
     ports:
       - 8191:8191 # flaresolverr
       - 51413:51413 # transmission
       - 51413:51413/udp # transmission
+      - 9091:9091 # transmission web-ui
     security_opt:
       - no-new-privileges:true
     networks:
@@ -64,6 +66,41 @@ services:
       traefik.http.routers.prowlarr.service: prowlarr
       traefik.http.services.prowlarr.loadbalancer.server.port: 9696
 
+      traefik.http.routers.overseerr.rule: Host(`${SUB_DOMAIN_OVERSEERR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.overseerr.entrypoints: websecure
+      traefik.http.routers.overseerr.service: overseerr
+      traefik.http.services.overseerr.loadbalancer.server.port: 5055
+
+      traefik.http.routers.bevy.rule: Host(`${SUB_DOMAIN_BEVY}.${SERVER_DOMAIN}`)
+      traefik.http.routers.bevy.entrypoints: websecure
+      traefik.http.routers.bevy.service: bevy
+      traefik.http.services.bevy.loadbalancer.server.port: 8080
+
+      traefik.http.routers.bazarr.rule: Host(`${SUB_DOMAIN_BAZARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.bazarr.entrypoints: websecure
+      traefik.http.routers.bazarr.service: bazarr
+      traefik.http.services.bazarr.loadbalancer.server.port: 6767
+
+      traefik.http.routers.whisparr.rule: Host(`${SUB_DOMAIN_WHISPARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.whisparr.entrypoints: websecure
+      traefik.http.routers.whisparr.service: whisparr
+      traefik.http.services.whisparr.loadbalancer.server.port: 6969
+
+      traefik.http.routers.flood.rule: Host(`${SUB_DOMAIN_FLOOD}.${SERVER_DOMAIN}`)
+      traefik.http.routers.flood.entrypoints: websecure
+      traefik.http.routers.flood.service: flood
+      traefik.http.services.flood.loadbalancer.server.port: 3001
+
+      traefik.http.routers.mylar.rule: Host(`${SUB_DOMAIN_MYLAR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.mylar.entrypoints: websecure
+      traefik.http.routers.mylar.service: mylar
+      traefik.http.services.mylar.loadbalancer.server.port: 8090
+
+      traefik.http.routers.lazylibrarian.rule: Host(`lazylibrarian.${SERVER_DOMAIN}`)
+      traefik.http.routers.lazylibrarian.entrypoints: websecure
+      traefik.http.routers.lazylibrarian.service: lazylibrarian
+      traefik.http.services.lazylibrarian.loadbalancer.server.port: 5299
+
   # qbittorrent:
   #   image: ghcr.io/linuxserver/qbittorrent
   #   container_name: qbittorrent
@@ -97,8 +134,62 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+    labels:
+      - homepage.group=Media
+      - homepage.name=Transmission
+      - homepage.icon=emby.png
+      - homepage.href=http://emby.home/
+      - homepage.description=Torrent-Downloader
+      - homepage.widget.type=transmission
+      - homepage.widget.url=https://transmission.simon-haas.eu
 
-  lidarr:
+  # flood: # alternative torrent-downloader UI
+  #   container_name: flood
+  #   # hostname: flood
+  #   image: jesec/flood
+  #   user: 1000:1000
+  #   restart: unless-stopped
+  #   command: --port 3001 --allowedpath /data
+  #   environment:
+  #     HOME: /config
+  #   volumes:
+  #     - ./config/flood:/config # has to exist befor first start
+  #     - ./data:/data
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+
+  # lazylibrarian: # books
+  #   image: lscr.io/linuxserver/lazylibrarian:latest
+  #   container_name: lazylibrarian
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=${TZ}
+  #     - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+  #   volumes:
+  #     - ./config/lazylibrarian:/config
+  #     - ./data:/data
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+
+  # mylar3: # comics
+  #   image: lscr.io/linuxserver/mylar3:latest
+  #   container_name: mylar3
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #   volumes:
+  #     - ./config/mylar:/config
+  #     - ./data:/data
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+
+  lidarr: # music
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
     environment:
@@ -115,7 +206,7 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  radarr:
+  radarr: # movies
     image: lscr.io/linuxserver/radarr
     container_name: radarr
     environment:
@@ -132,7 +223,7 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  sonarr:
+  sonarr: # series
     image: lscr.io/linuxserver/sonarr
     container_name: sonarr
     environment:
@@ -168,23 +259,23 @@ services:
   #   security_opt:
   #     - no-new-privileges:true
 
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=${TZ}
-    restart: unless-stopped
-    network_mode: service:vpn
-    depends_on:
-      - vpn
-    security_opt:
-      - no-new-privileges:true
+  # flaresolverr:
+  #   image: ghcr.io/flaresolverr/flaresolverr:latest
+  #   container_name: flaresolverr
+  #   environment:
+  #     - LOG_LEVEL=${LOG_LEVEL:-info}
+  #     - LOG_HTML=${LOG_HTML:-false}
+  #     - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+  #     - TZ=${TZ}
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #   security_opt:
+  #     - no-new-privileges:true
 # curl -L -X POST 'http://192.168.1.2:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'
 
-  readarr:
+  readarr: # books
     container_name: readarr
     image: lscr.io/linuxserver/readarr:develop
     environment:
@@ -200,7 +291,7 @@ services:
     depends_on:
       - vpn
 
-  prowlarr:
+  prowlarr: # indexer
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:develop
     environment:
@@ -216,6 +307,60 @@ services:
     depends_on:
       - vpn
 
+  bazarr: # subtitles
+    container_name: bazarr
+    image: cr.hotio.dev/hotio/bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./config/bazarr:/config
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+
+  # whisparr: # porn
+  #   container_name: whisparr
+  #   image: cr.hotio.dev/hotio/whisparr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - UMASK=002
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ./config/whisparr:/config
+  #     - ./data:/data
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+
+  # overseerr: # works only with plex
+  #   image: sctx/overseerr:latest
+  #   container_name: overseerr
+  #   environment:
+  #     - LOG_LEVEL=debug
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ./config/overseerr:/app/config
+  #   restart: unless-stopped
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+
+  # bevy: # funktioniert nicht
+  #   container_name: bevy
+  #   image: zolland/bevy:latest
+  #   user: 1000:1000
+  #   restart: unless-stopped
+  #   environment:
+  #     - CONFIG_FILE=/etc/bevy/config.toml
+  #   volumes:
+  #     - ./config/bevy/config.toml:/etc/bevy/config.toml
+  #     - ./data/bevy/downloads:/downloads
   web:
     container_name: arr-nginx
     image: nginx

@@ -1,0 +1,29 @@
+version: "2.1"
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - CLI_ARGS= #optional
+    volumes:
+      - ./data/config:/config
+      - ./data/backups:/backups
+      - ./data/source:/source
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.duplicati.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.duplicati.entrypoints: websecure
+      traefik.http.services.duplicati.loadbalancer.server.port: 8200
+
+networks:
+  traefik:
+    name: zone1

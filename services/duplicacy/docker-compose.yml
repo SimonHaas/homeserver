@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  duplicacy:
+    container_name: duplicacy
+    hostname: duplicacy
+    image: cr.hotio.dev/hotio/duplicacy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./data/config:/config
+      - ./data/cache:/cache
+      - ./data/logs:/logs
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.duplicacy.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.duplicacy.entrypoints: websecure
+      traefik.http.services.duplicacy.loadbalancer.server.port: 3875
+
+networks:
+  traefik:
+    name: zone1

@@ -1,0 +1,33 @@
+version: "3"
+services:
+  watchyourlan:
+    image: aceberg/watchyourlan
+    network_mode: "host"        
+    restart: unless-stopped
+    volumes:
+    - ./data:/data
+    environment:
+      TZ: ${TZ}              # required: needs your TZ for correct time
+      IFACE: "ens18" # required: 1 or more interface
+      # IFACE: ${IFACE} # required: 1 or more interface
+      DBPATH: "/data/db.sqlite"         # optional, default: /data/db.sqlite
+      GUIIP: "0.0.0.0"                  # optional, default: localhost
+      GUIPORT: "8840"                   # optional, default: 8840
+      TIMEOUT: "120"                    # optional, time in seconds, default: 60
+      SHOUTRRR_URL: ""                  # optional, set url to notify
+      THEME: "darkly"                   # optional
+    # security_opt:
+    #   - no-new-privileges:true
+    container_name: watchyourlan
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.watchyourlan.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.watchyourlan.entrypoints: websecure
+      traefik.http.services.watchyourlan.loadbalancer.server.port: 8840
+
+networks:
+  traefik:
+    name: zone1

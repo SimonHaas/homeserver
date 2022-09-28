@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  homepage:
+    image: ghcr.io/benphelps/homepage:latest
+    container_name: homepage
+    user: 1000:1000 # Optional, change to your user and group IDs for permissions
+    volumes:
+      - ./config:/app/config # Make sure your local config directory exists before first start
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.homepage.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.homepage.entrypoints: websecure
+      traefik.http.services.homepage.loadbalancer.server.port: 3000
+
+networks:
+  traefik:
+    name: zone1

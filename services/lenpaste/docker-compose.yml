@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+  lenpaste:
+    image: git.lcomrade.su/root/lenpaste:latest
+    container_name: lenpaste
+    restart: always
+    environment:
+      # All parameters are optional
+      - LENPASTE_ADDRESS=:80                 # Set -address flag
+      - LENPASTE_DB_DRIVER=sqlite3           # Set -db-driver flag
+      - LENPASTE_DB_SOURCE=/home/docker/lenpaste/lenpaste.db # Set -db-source flag
+      - LENPASTE_DB_CLEANUP_PERIOD=3h        # Set -db-cleanup-period flag
+      - LENPASTE_ROBOTS_DISALLOW=false       # If true set -robots-disallow flag
+      - LENPASTE_TITLE_MAX_LENGTH=100        # Set -title-max-length flag. If 0 disable title, if -1 disable length limit.
+      - LENPASTE_BODY_MAX_LENGTH=10000       # Set -body-max-length flag. If -1 disable length limit. Can't be -1.
+      - LENPASTE_MAX_PASTE_LIFETIME=12h    # Set -max-paste-lifetime flag. Examples: 2d, 12h, 7m.
+      - LENPASTE_ADMIN_NAME=${LENPASTE_ADMIN_NAME}           # Set -admin-name flag.
+      - LENPASTE_ADMIN_MAIL=${LENPASTE_ADMIN_MAIL}                 # Set -admin-mail flag.
+    volumes:
+      - ./data:/data
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.lenpaste.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.lenpaste.entrypoints: websecure
+      traefik.http.services.lenpaste.loadbalancer.server.port: 80
+
+networks:
+  traefik:
+    name: zone1

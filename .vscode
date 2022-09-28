@@ -1,6 +1,7 @@
 {
     "search.exclude": {
         "**/.git": true,
-        "**/data": true
+        "**/data": true,
+        "services/arr-apps-vpn/config": true
     }
 }

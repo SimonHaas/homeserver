@@ -1,0 +1,34 @@
+version: "2.1"
+services:
+  emulatorjs:
+    image: lscr.io/linuxserver/emulatorjs:latest
+    container_name: emulatorjs
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ./config:/config
+      - ./data:/data
+    ports:
+      - 3000:3000
+      - 3008:80
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.emulatorjs-admin.rule: Host(`${SUB_DOMAIN_ADMIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.emulatorjs-admin.entrypoints: websecure
+      traefik.http.services.emulatorjs-admin.loadbalancer.server.port: 3000
+
+      traefik.http.routers.emulatorjs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.emulatorjs.entrypoints: websecure
+      traefik.http.services.emulatorjs.loadbalancer.server.port: 80
+
+networks:
+  traefik:
+    name: zone1

@@ -1,0 +1,26 @@
+version: '2.1'
+services:
+  trilium:
+    image: zadam/trilium
+    restart: always
+    environment:
+      - TRILIUM_DATA_DIR=/home/node/trilium-data
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/home/node/trilium-data
+    container_name: trilium
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.trilium.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.trilium.entrypoints: websecure
+      traefik.http.services.trilium.loadbalancer.server.port: 8080
+
+networks:
+  traefik:
+    name: zone1
