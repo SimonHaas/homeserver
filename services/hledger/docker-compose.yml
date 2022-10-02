@@ -1,0 +1,26 @@
+# docker run --rm -d -e HLEDGER_JOURNAL_FILE=/data/all.journal -v "$HOME/journals:/data" -p 5000:5000 --user $(id --user) dastapov/hledger
+
+version: "3.6"
+services:
+  hledger:
+    image: dastapov/hledger
+    environment:
+      - HLEDGER_JOURNAL_FILE=/data/all.journal
+    volumes:
+      - ./data:/data
+    container_name: hledger
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.hledger.rule: Host(`hledger.${SERVER_DOMAIN}`)
+      traefik.http.routers.hledger.entrypoints: websecure
+      traefik.http.services.hledger.loadbalancer.server.port: 5000
+
+networks:
+  traefik:
+    name: zone1
