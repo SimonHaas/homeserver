@@ -4,6 +4,8 @@ services:
     image: hardware/rainloop
     container_name: rainloop
     restart: unless-stopped
+    volumes:
+    - ./data:/rainloop/data
     security_opt:
       - no-new-privileges:true
     networks:

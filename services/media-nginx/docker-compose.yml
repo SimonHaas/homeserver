@@ -1,0 +1,25 @@
+version: "3.6"
+services:
+  web:
+    container_name: media-nginx
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
+      - ./data:/data/www:ro
+    environment:
+      - NGINX_HOST=media-nginx.${SERVER_DOMAIN}
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.media-nginx.rule: Host(`media-nginx.${SERVER_DOMAIN}`)
+      traefik.http.routers.media-nginx.entrypoints: websecure
+      traefik.http.routers.media-nginx.service: media-nginx
+      traefik.http.services.media-nginx.loadbalancer.server.port: 443
+
+networks:
+  traefik:
+    name: zone1

@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=cypht
+      - MYSQL_USER=cypht
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+
+  cypht:
+    image: sailfrog/cypht-docker:latest
+    volumes:
+      - ./data/users:/var/lib/hm3/users
+    environment:
+      - CYPHT_AUTH_USERNAME=admin
+      - CYPHT_AUTH_PASSWORD=${CYPHT_AUTH_PASSWORD}
+      - CYPHT_DB_CONNECTION_TYPE=host
+      - CYPHT_DB_HOST=db
+      - CYPHT_DB_NAME=cypht
+      - CYPHT_DB_USER=cypht
+      - CYPHT_DB_PASS=${MYSQL_PASSWORD}
+      - CYPHT_SESSION_TYPE=DB
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.cypht.rule: Host(`cypht.${SERVER_DOMAIN}`)
+      traefik.http.routers.cypht.entrypoints: websecure
+      traefik.http.services.cypht.loadbalancer.server.port: 80
+
+networks:
+  traefik:
+    name: zone1

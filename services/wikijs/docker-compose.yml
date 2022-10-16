@@ -6,19 +6,19 @@ services:
       POSTGRES_DB: wiki
       POSTGRES_PASSWORD: wikijsrocks
       POSTGRES_USER: wikijs
-    logging:
-      driver: "none"
+    # logging:
+    #   driver: "none"
     restart: unless-stopped
     volumes:
       - ./data:/var/lib/postgresql/data
-    container_name: wikijs_db
+    container_name: wikijsdb
     networks: 
         - traefik
 
   wikijs:
     image: ghcr.io/requarks/wiki:2
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
     environment:
       DB_TYPE: postgres
       DB_HOST: db
@@ -27,17 +27,17 @@ services:
       DB_PASS: wikijsrocks
       DB_NAME: wiki
     restart: unless-stopped
-    container_name: wiki
+    container_name: wikijs
     security_opt:
         - no-new-privileges:true
     networks:
       - traefik
     labels:
       my.zone: zone1
-      traefik.enable: true
-      traefik.http.routers.wikijs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      raefik.http.routers.wikijs.entrypoints: websecure
-      traefik.http.services.wikijs.loadbalancer.server.port: 3000
+      # traefik.enable: true
+      # traefik.http.routers.wikijs.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      # raefik.http.routers.wikijs.entrypoints: websecure
+      # traefik.http.services.wikijs.loadbalancer.server.port: 3000
 
 networks:
   traefik:

@@ -55,14 +55,14 @@ then
 
     # backup data
     SECONDS=0
-    /mnt/data/homeserver/script.sh SERVICES stop
+    /mnt/data/homeserver/script.sh SAVE_BACKUP stop
     echo "Start der Sicherung $(date)."
 
     borg create --compression $kompression --exclude-caches --one-file-system -v --stats --progress \
                 $repopfad::'{hostname}-{now:%Y-%m-%d-%H%M%S}' $sicherung
 
     echo "Ende der Sicherung $(date). Dauer: $SECONDS Sekunden"
-    /mnt/data/homeserver/script.sh SERVICES start
+    /mnt/data/homeserver/script.sh SAVE_BACKUP start
 
     # prune archives
     borg prune -v --list $repopfad --prefix '{hostname}-' $pruning

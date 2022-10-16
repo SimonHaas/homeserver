@@ -1,0 +1,30 @@
+version: "3"
+services:
+  fireshare:
+    container_name: fireshare
+    image: shaneisrael/fireshare:latest
+    volumes:
+      - ./data/data:/data
+      - ./data/processed:/processed
+      - ./data/videos:/videos
+    environment:
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - MINUTES_BETWEEN_VIDEO_SCANS=5
+      - PUID=1000
+      - PGID=1000
+    security_opt:
+        - no-new-privileges:true
+    networks:
+        - traefik
+    labels:
+        my.zone: zone1
+        traefik.enable: true
+        traefik.http.routers.fireshare.rule: Host(`fireshare.${SERVER_DOMAIN}`)
+        traefik.http.routers.fireshare.entrypoints: websecure
+        traefik.http.services.fireshare.loadbalancer.server.port: 80
+
+networks:
+  traefik:
+    name: zone1

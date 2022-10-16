@@ -66,10 +66,15 @@ services:
       traefik.http.routers.prowlarr.service: prowlarr
       traefik.http.services.prowlarr.loadbalancer.server.port: 9696
 
-      traefik.http.routers.overseerr.rule: Host(`${SUB_DOMAIN_OVERSEERR}.${SERVER_DOMAIN}`)
-      traefik.http.routers.overseerr.entrypoints: websecure
-      traefik.http.routers.overseerr.service: overseerr
-      traefik.http.services.overseerr.loadbalancer.server.port: 5055
+      # traefik.http.routers.overseerr.rule: Host(`overseerr.${SERVER_DOMAIN}`)
+      # traefik.http.routers.overseerr.entrypoints: websecure
+      # traefik.http.routers.overseerr.service: overseerr
+      # traefik.http.services.overseerr.loadbalancer.server.port: 5055
+   
+      traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.${SERVER_DOMAIN}`)
+      traefik.http.routers.jellyseerr.entrypoints: websecure
+      traefik.http.routers.jellyseerr.service: jellyseerr
+      traefik.http.services.jellyseerr.loadbalancer.server.port: 5055
 
       traefik.http.routers.bevy.rule: Host(`${SUB_DOMAIN_BEVY}.${SERVER_DOMAIN}`)
       traefik.http.routers.bevy.entrypoints: websecure
@@ -100,6 +105,11 @@ services:
       traefik.http.routers.lazylibrarian.entrypoints: websecure
       traefik.http.routers.lazylibrarian.service: lazylibrarian
       traefik.http.services.lazylibrarian.loadbalancer.server.port: 5299
+
+      traefik.http.routers.nzbget.rule: Host(`nzbget.${SERVER_DOMAIN}`)
+      traefik.http.routers.nzbget.entrypoints: websecure
+      traefik.http.routers.nzbget.service: nzbget
+      traefik.http.services.nzbget.loadbalancer.server.port: 6789
 
   # qbittorrent:
   #   image: ghcr.io/linuxserver/qbittorrent
@@ -159,35 +169,37 @@ services:
   #   depends_on:
   #     - vpn
 
-  # lazylibrarian: # books
-  #   image: lscr.io/linuxserver/lazylibrarian:latest
-  #   container_name: lazylibrarian
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=${TZ}
-  #     - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
-  #   volumes:
-  #     - ./config/lazylibrarian:/config
-  #     - ./data:/data
-  #   restart: unless-stopped
-  #   network_mode: service:vpn
-  #   depends_on:
-  #     - vpn
+  lazylibrarian: # books
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    container_name: lazylibrarian
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+    volumes:
+      - ./config/lazylibrarian:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+      - transmission
 
-  # mylar3: # comics
-  #   image: lscr.io/linuxserver/mylar3:latest
-  #   container_name: mylar3
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #   volumes:
-  #     - ./config/mylar:/config
-  #     - ./data:/data
-  #   restart: unless-stopped
-  #   network_mode: service:vpn
-  #   depends_on:
-  #     - vpn
+  mylar3: # comics
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./config/mylar:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+      - transmission
 
   lidarr: # music
     image: lscr.io/linuxserver/lidarr
@@ -203,6 +215,7 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+      - transmission
     security_opt:
       - no-new-privileges:true
 
@@ -220,6 +233,7 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+      - transmission
     security_opt:
       - no-new-privileges:true
 
@@ -237,42 +251,43 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+      - transmission
     security_opt:
       - no-new-privileges:true
       
   # TODO https://youtu.be/5rtGBwBuzQE?t=827
-  # jackett:
-  #   image: lscr.io/linuxserver/jackett
-  #   container_name: jackett
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=${TZ}
-  #     - AUTO_UPDATE=true
-  #   volumes:
-  #     - ./config/jackett:/config
-  #     - ./data:/data
-  #   restart: unless-stopped
-  #   network_mode: service:vpn
-  #   depends_on:
-  #     - vpn
-  #   security_opt:
-  #     - no-new-privileges:true
+  jackett: # indexer (API Support for your favorite torrent trackers) 
+    image: lscr.io/linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - AUTO_UPDATE=true
+    volumes:
+      - ./config/jackett:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
 
-  # flaresolverr:
-  #   image: ghcr.io/flaresolverr/flaresolverr:latest
-  #   container_name: flaresolverr
-  #   environment:
-  #     - LOG_LEVEL=${LOG_LEVEL:-info}
-  #     - LOG_HTML=${LOG_HTML:-false}
-  #     - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-  #     - TZ=${TZ}
-  #   restart: unless-stopped
-  #   network_mode: service:vpn
-  #   depends_on:
-  #     - vpn
-  #   security_opt:
-  #     - no-new-privileges:true
+  flaresolverr: # Proxy server to bypass Cloudflare protection 
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=${TZ}
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    security_opt:
+      - no-new-privileges:true
 # curl -L -X POST 'http://192.168.1.2:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'
 
   readarr: # books
@@ -290,6 +305,7 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+      - transmission
 
   prowlarr: # indexer
     container_name: prowlarr
@@ -321,66 +337,87 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+      - transmission
 
-  # whisparr: # porn
-  #   container_name: whisparr
-  #   image: cr.hotio.dev/hotio/whisparr
+  whisparr: # porn
+    container_name: whisparr
+    image: cr.hotio.dev/hotio/whisparr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./config/whisparr:/config
+      - ./data:/data
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+      - transmission
+
+  bevy: # torrent movie streaming
+    container_name: bevy
+    image: zolland/bevy:latest
+    user: 1000:1000
+    restart: unless-stopped
+    environment:
+      - CONFIG_FILE=/etc/bevy/config.toml
+    volumes:
+      - ./config/bevy/config.toml:/etc/bevy/config.toml
+      - ./data/bevy/downloads:/downloads
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+      - transmission
+
+  nzbget:
+    container_name: nzbget
+    image: cr.hotio.dev/hotio/nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./config/nzbget:/config
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+
+  jellyseerr: # media discovery
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+    volumes:
+      - ./config/jellyseerr:/app/config
+    restart: unless-stopped
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+      - transmission
+      - radarr
+      - sonarr
+
+  # overseerr:
+  #   image: lscr.io/linuxserver/overseerr:latest
+  #   container_name: overseerr
   #   environment:
   #     - PUID=1000
   #     - PGID=1000
-  #     - UMASK=002
   #     - TZ=${TZ}
   #   volumes:
-  #     - ./config/whisparr:/config
-  #     - ./data:/data
+  #     - ./config/overseer:/config
   #   restart: unless-stopped
   #   network_mode: service:vpn
   #   depends_on:
   #     - vpn
-
-  # overseerr: # works only with plex
-  #   image: sctx/overseerr:latest
-  #   container_name: overseerr
-  #   environment:
-  #     - LOG_LEVEL=debug
-  #     - TZ=${TZ}
-  #   volumes:
-  #     - ./config/overseerr:/app/config
-  #   restart: unless-stopped
-  #   network_mode: service:vpn
-  #   depends_on:
-  #     - vpn
-
-  # bevy: # funktioniert nicht
-  #   container_name: bevy
-  #   image: zolland/bevy:latest
-  #   user: 1000:1000
-  #   restart: unless-stopped
-  #   environment:
-  #     - CONFIG_FILE=/etc/bevy/config.toml
-  #   volumes:
-  #     - ./config/bevy/config.toml:/etc/bevy/config.toml
-  #     - ./data/bevy/downloads:/downloads
-  web:
-    container_name: arr-nginx
-    image: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
-      - ./data:/data/www:ro
-    environment:
-      - NGINX_HOST=${SUB_DOMAIN_NGINX}.${SERVER_DOMAIN}
-    security_opt:
-      - no-new-privileges:true
-    networks:
-      - traefik
-    labels:
-      my.zone: zone1
-      traefik.enable: true
-      traefik.http.routers.nginx.rule: Host(`${SUB_DOMAIN_NGINX}.${SERVER_DOMAIN}`)
-      traefik.http.routers.nginx.entrypoints: websecure
-      traefik.http.routers.nginx.service: nginx
-      traefik.http.services.nginx.loadbalancer.server.port: 443
-
+  #     - transmission
+  #     - radarr
+  #     - sonarr
 networks:
   traefik:
     name: zone1

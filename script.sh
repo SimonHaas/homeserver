@@ -5,9 +5,9 @@ then
   export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
-if [[ "$1" = "SERVICES" ]]
+if [[ "$1" = "SAVE_BACKUP" ]]
 then
-  servicesEnv="${SERVICES}"
+  servicesEnv="${SAVE_BACKUP}"
 elif [[ "$1" = "KASM" ]]
 then
   cd services/kasm
@@ -15,7 +15,7 @@ then
   cd ../..
   exit 0
 else
-  servicesEnv="${INFRASTRUCTURE}"
+  servicesEnv="${ACTIVE_SERVICES}"
 fi
 
 IFS=',' read -r -a services <<< "$servicesEnv"

@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  roundcubemail:
+    image: roundcube/roundcubemail:latest
+    container_name: roundcubemail
+    restart: unless-stopped
+    volumes:
+      - ./data/www:/var/www/html
+      - ./data/db/sqlite:/var/roundcube/db
+    environment:
+      - ROUNDCUBEMAIL_DB_TYPE=sqlite
+      - ROUNDCUBEMAIL_SKIN=elastic
+      - ROUNDCUBEMAIL_DEFAULT_HOST=tls://${ROUNDCUBEMAIL_DEFAULT_HOST} # imap server
+      - ROUNDCUBEMAIL_SMTP_SERVER=tls://${ROUNDCUBEMAIL_SMTP_SERVER} # smtp server
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.roundcube.rule: Host(`roundcube.${SERVER_DOMAIN}`)
+      traefik.http.routers.roundcube.entrypoints: websecure
+      traefik.http.services.roundcube.loadbalancer.server.port: 80
+
+networks:
+  traefik:
+    name: zone1

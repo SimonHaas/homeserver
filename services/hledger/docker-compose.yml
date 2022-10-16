@@ -4,8 +4,10 @@ version: "3.6"
 services:
   hledger:
     image: dastapov/hledger
+    user: "1000"
     environment:
       - HLEDGER_JOURNAL_FILE=/data/all.journal
+      - HLEDGER_BASE_URL=https://hledger.${SERVER_DOMAIN}/
     volumes:
       - ./data:/data
     container_name: hledger
@@ -19,6 +21,7 @@ services:
       traefik.enable: true
       traefik.http.routers.hledger.rule: Host(`hledger.${SERVER_DOMAIN}`)
       traefik.http.routers.hledger.entrypoints: websecure
+      traefik.http.routers.hledger.middlewares: authelia@docker
       traefik.http.services.hledger.loadbalancer.server.port: 5000
 
 networks:

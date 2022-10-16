@@ -4,7 +4,7 @@ services:
     container_name: nextcloud
     restart: always
     # docker-compose exec nextcloud chown -R www-data:root /var/www
-    build: ./src/fpm
+    image: nextcloud:24.0.3-fpm
     depends_on:
       - nextcloud-mariadb
       - nextcloud-redis
@@ -14,19 +14,27 @@ services:
       - REDIS_HOST=nextcloud-redis
     volumes:
       - ./data/nextcloud:/var/www/html
-      - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl
-      - ./php.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
-    labels:
-      com.centurylinklabs.watchtower.monitor-only: true
+
+  cron:
+    container_name: nextcloud-cron
+    image: nextcloud:fpm-alpine
+    restart: always
+    volumes_from:
+      - nextcloud
+    entrypoint: /cron.sh
+    depends_on:
+      - nextcloud-mariadb
+      - nextcloud-redis
 
   web:
-    build: ./src/web
+    image: nginx
     restart: always
     links:
       - nextcloud
     container_name: nextcloud-web
     volumes:
-      - ./data/nextcloud:/var/www/html:ro
+      - ./data/nextcloud:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - traefik
     labels:
@@ -51,8 +59,7 @@ services:
     restart: always
     env_file:
       - .env
-    labels:
-      com.centurylinklabs.watchtower.monitor-only: true
+
   nextcloud-redis:
     image: redis:alpine
     restart: always
@@ -61,8 +68,7 @@ services:
       - traefik
     volumes:
       - ./data/redis:/data
-    labels:
-      com.centurylinklabs.watchtower.monitor-only: true
+
 networks:
   traefik:
     name: zone1

@@ -1,0 +1,36 @@
+http:
+  services:
+    whoami:
+      loadBalancer:
+        servers:
+        - url: "http://whoami:80"
+    traggo:
+      loadBalancer:
+        servers:
+        - url: "http://traggo:3030"    
+    wikijs:
+      loadBalancer:
+        servers:
+        - url: "http://wikijs:3000"
+  routers:
+    whoami:
+      rule: Host(`whoami.simon-haas.eu`)
+      entryPoints:
+        - "websecure"
+      middlewares:
+        - ondemand-whoami@docker
+      service: "whoami"
+    traggo:
+      rule: Host(`traggo.simon-haas.eu`)
+      entryPoints:
+        - "websecure"
+      middlewares:
+        - ondemand-traggo@docker
+      service: "traggo"
+    wikijs:
+      rule: Host(`wikijs.simon-haas.eu`)
+      entryPoints:
+        - "websecure"
+      middlewares:
+        - ondemand-wikijs@docker
+      service: "wikijs"
