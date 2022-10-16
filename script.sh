@@ -23,6 +23,6 @@ IFS=',' read -r -a services <<< "$servicesEnv"
 for service in ${services[*]}
 do
     cd services/$service
-    docker compose $2 $3
+    docker compose $2 $3 $4 $5
     cd ../..
 done
