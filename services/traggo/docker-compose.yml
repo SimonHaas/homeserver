@@ -15,10 +15,10 @@ services:
       - traefik
     labels:
       my.zone: zone1
-      # traefik.enable: true
-      # traefik.http.routers.traggo.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      # traefik.http.routers.traggo.entrypoints: websecure
-      # traefik.http.services.traggo.loadbalancer.server.port: 3030
+      traefik.enable: true
+      traefik.http.routers.traggo.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.traggo.entrypoints: websecure
+      traefik.http.services.traggo.loadbalancer.server.port: 3030
 
 networks:
   traefik:

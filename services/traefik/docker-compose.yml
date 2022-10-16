@@ -89,79 +89,34 @@ services:
     environment:
       - TZ=${TZ}
 
-  ondemand:
-    image: ghcr.io/acouvreur/traefik-ondemand-service
-    command: 
-      - --swarmMode=false
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-    container_name: ondemand
-    labels:
-      - my.zone=zone1
-      - traefik.enable=true
-      - traefik.http.services.ondemand.loadbalancer.server.port=10000
-
-      - traefik.http.middlewares.ondemand-whoami.plugin.traefik-ondemand-plugin.name=whoami
-      - traefik.http.middlewares.ondemand-whoami.plugin.traefik-ondemand-plugin.serviceUrl=http://ondemand:10000
-      - traefik.http.middlewares.ondemand-whoami.plugin.traefik-ondemand-plugin.timeout=1m
-
-      - traefik.http.middlewares.ondemand-traggo.plugin.traefik-ondemand-plugin.name=traggo
-      - traefik.http.middlewares.ondemand-traggo.plugin.traefik-ondemand-plugin.serviceUrl=http://ondemand:10000
-      - traefik.http.middlewares.ondemand-traggo.plugin.traefik-ondemand-plugin.timeout=1m
-
-      # - traefik.http.middlewares.ondemand-wikijs.plugin.traefik-ondemand-plugin.names=[wikijs,wikijs_db]
-      - traefik.http.middlewares.ondemand-wikijs.plugin.traefik-ondemand-plugin.names=wikijs,test
-      - traefik.http.middlewares.ondemand-wikijs.plugin.traefik-ondemand-plugin.serviceUrl=http://ondemand:10000
-      - traefik.http.middlewares.ondemand-wikijs.plugin.traefik-ondemand-plugin.timeout=1m
-    networks:
-      - traefik
-
   whoami:
     image: containous/whoami
     container_name: whoami
-    labels:
-      - my.zone=zone1
+    restart: unless-stopped
     networks:
       - traefik
-
-
-
-  test:
-    image: postgres:11-alpine
-    environment:
-      POSTGRES_DB: wiki
-      POSTGRES_PASSWORD: wikijsrocks
-      POSTGRES_USER: wikijs
-    # logging:
-    #   driver: "none"
-    restart: unless-stopped
-    volumes:
-      - ./data-wikijs:/var/lib/postgresql/data
-    container_name: test
-    networks: 
-        - traefik
-
-  wikijs:
-    image: ghcr.io/requarks/wiki:2
-    depends_on:
-      - test
-    environment:
-      DB_TYPE: postgres
-      DB_HOST: test
-      DB_PORT: 5432
-      DB_USER: wikijs
-      DB_PASS: wikijsrocks
-      DB_NAME: wiki
-    restart: unless-stopped
-    container_name: wikijs
     security_opt:
-        - no-new-privileges:true
-    networks:
-      - traefik
+      - no-new-privileges:true
     labels:
       my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.whoami.rule: Host(`whoami.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoami.entrypoints: websecure
 
-
+  whoami-auth:
+    image: containous/whoami
+    container_name: whoami-auth
+    restart: unless-stopped
+    networks:
+      - traefik
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.whoami-auth.rule: Host(`whoami-auth.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoami-auth.entrypoints: websecure
+      traefik.http.routers.whoami-auth.middlewares: authelia@docker
 
 networks:
   traefik:
