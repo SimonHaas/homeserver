@@ -26,3 +26,6 @@ do
     docker compose $2 $3 $4 $5
     cd ../..
 done
+
+# TODO option ALL to start everything
+# TODO refactor into functions

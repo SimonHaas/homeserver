@@ -37,7 +37,7 @@ services:
       - SEAFILE_ADMIN_EMAIL=${SEAFILE_ADMIN_EMAIL} # Specifies Seafile admin user, default is 'me@example.com'.
       - SEAFILE_ADMIN_PASSWORD=${SEAFILE_ADMIN_PASSWORD}     # Specifies Seafile admin password, default is 'asecret'.
       - SEAFILE_SERVER_LETSENCRYPT=false   # Whether to use https or not.
-      - SEAFILE_SERVER_HOSTNAME=${SUB_DOMAIN}.${SERVER_DOMAIN} # Specifies your host name if https is enabled.
+      - SEAFILE_SERVER_HOSTNAME=seafile.${SERVER_DOMAIN} # Specifies your host name if https is enabled.
       # https://forum.seafile.com/t/cant-upload-download-files-with-android-client/4047/5
     depends_on:
       - db
@@ -50,11 +50,16 @@ services:
     networks:
         - traefik
     labels:
-        my.zone: zone1
-        traefik.enable: true
-        traefik.http.routers.seafile.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-        traefik.http.routers.seafile.entrypoints: websecure
-        traefik.http.services.seafile.loadbalancer.server.port: 80
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.seafile.rule: Host(`seafile.${SERVER_DOMAIN}`)
+      traefik.http.routers.seafile.entrypoints: websecure
+      traefik.http.services.seafile.loadbalancer.server.port: 80
+      homepage.group: Media
+      homepage.name: Seafile
+      homepage.icon: seafile
+      homepage.href: https://seafile.${SERVER_DOMAIN}
+      homepage.description: File cloud
 
 networks:
   traefik:

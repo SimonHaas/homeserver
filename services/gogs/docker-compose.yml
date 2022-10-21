@@ -23,8 +23,8 @@ services:
       traefik.http.services.gogs.loadbalancer.server.port: 3000
       homepage.group: Media
       homepage.name: Gogs
-      homepage.icon: emby.png
-      homepage.href: https://gogs.simon-haas.eu
+      homepage.icon: gogs
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Git server
 
 networks:

@@ -1,5 +1,6 @@
 # For configuration options and examples, please see:
 # https://github.com/benphelps/homepage/wiki/Docker-Integration
 
-my-local-docker:
-  socket: /var/run/docker.sock
+docker:
+  host: dockerproxy
+  port: 2375

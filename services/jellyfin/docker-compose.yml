@@ -6,7 +6,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
-      - JELLYFIN_PublishedServerUrl=${SUB_DOMAIN}.${SERVER_DOMAIN}
+      - JELLYFIN_PublishedServerUrl=jellyfin.${SERVER_DOMAIN}
     volumes:
       - ./data/config:/config
       - ../arr-apps-vpn/data:/data
@@ -24,9 +24,14 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.jellyfin.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.jellyfin.rule: Host(`jellyfin.${SERVER_DOMAIN}`)
       traefik.http.routers.jellyfin.entrypoints: websecure
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
+      homepage.group: Media
+      homepage.name: Jellyfin
+      homepage.icon: jellyfin
+      homepage.href: https://jellyfin.${SERVER_DOMAIN}
+      homepage.description: Media streaming
 
 networks:
   traefik:

@@ -26,42 +26,42 @@ services:
       traefik.enable: true
       traefik.passHostHeader: true
 
-      traefik.http.routers.qbittorrent.rule: Host(`${SUB_DOMAIN_QBITTORRENT}.${SERVER_DOMAIN}`) # admin/adminadmin
+      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.${SERVER_DOMAIN}`) # admin/adminadmin
       traefik.http.routers.qbittorrent.entrypoints: websecure
       traefik.http.routers.qbittorrent.service: qbittorrent
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 
-      traefik.http.routers.transmission.rule: Host(`${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}`)
+      traefik.http.routers.transmission.rule: Host(`transmission.${SERVER_DOMAIN}`)
       traefik.http.routers.transmission.entrypoints: websecure
       traefik.http.routers.transmission.service: transmission
       traefik.http.services.transmission.loadbalancer.server.port: 9091
 
-      traefik.http.routers.lidarr.rule: Host(`${SUB_DOMAIN_LIDARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.lidarr.rule: Host(`lidarr.${SERVER_DOMAIN}`)
       traefik.http.routers.lidarr.entrypoints: websecure
       traefik.http.routers.lidarr.service: lidarr
       traefik.http.services.lidarr.loadbalancer.server.port: 8686
 
-      traefik.http.routers.sonarr.rule: Host(`${SUB_DOMAIN_SONARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.sonarr.rule: Host(`sonarr.${SERVER_DOMAIN}`)
       traefik.http.routers.sonarr.entrypoints: websecure
       traefik.http.routers.sonarr.service: sonarr
       traefik.http.services.sonarr.loadbalancer.server.port: 8989
 
-      traefik.http.routers.radarr.rule: Host(`${SUB_DOMAIN_RADARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.radarr.rule: Host(`radarr.${SERVER_DOMAIN}`)
       traefik.http.routers.radarr.entrypoints: websecure
       traefik.http.routers.radarr.service: radarr
       traefik.http.services.radarr.loadbalancer.server.port: 7878
 
-      traefik.http.routers.jackett.rule: Host(`${SUB_DOMAIN_JACKETT}.${SERVER_DOMAIN}`)
+      traefik.http.routers.jackett.rule: Host(`jackett.${SERVER_DOMAIN}`)
       traefik.http.routers.jackett.entrypoints: websecure
       traefik.http.routers.jackett.service: jackett
       traefik.http.services.jackett.loadbalancer.server.port: 9117
 
-      traefik.http.routers.readarr.rule: Host(`${SUB_DOMAIN_READARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.readarr.rule: Host(`readarr.${SERVER_DOMAIN}`)
       traefik.http.routers.readarr.entrypoints: websecure
       traefik.http.routers.readarr.service: readarr
       traefik.http.services.readarr.loadbalancer.server.port: 8787
 
-      traefik.http.routers.prowlarr.rule: Host(`${SUB_DOMAIN_PROWLARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.${SERVER_DOMAIN}`)
       traefik.http.routers.prowlarr.entrypoints: websecure
       traefik.http.routers.prowlarr.service: prowlarr
       traefik.http.services.prowlarr.loadbalancer.server.port: 9696
@@ -76,27 +76,27 @@ services:
       traefik.http.routers.jellyseerr.service: jellyseerr
       traefik.http.services.jellyseerr.loadbalancer.server.port: 5055
 
-      traefik.http.routers.bevy.rule: Host(`${SUB_DOMAIN_BEVY}.${SERVER_DOMAIN}`)
+      traefik.http.routers.bevy.rule: Host(`bevy.${SERVER_DOMAIN}`)
       traefik.http.routers.bevy.entrypoints: websecure
       traefik.http.routers.bevy.service: bevy
       traefik.http.services.bevy.loadbalancer.server.port: 8080
 
-      traefik.http.routers.bazarr.rule: Host(`${SUB_DOMAIN_BAZARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.bazarr.rule: Host(`bazarr.${SERVER_DOMAIN}`)
       traefik.http.routers.bazarr.entrypoints: websecure
       traefik.http.routers.bazarr.service: bazarr
       traefik.http.services.bazarr.loadbalancer.server.port: 6767
 
-      traefik.http.routers.whisparr.rule: Host(`${SUB_DOMAIN_WHISPARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.whisparr.rule: Host(`whisparr.${SERVER_DOMAIN}`)
       traefik.http.routers.whisparr.entrypoints: websecure
       traefik.http.routers.whisparr.service: whisparr
       traefik.http.services.whisparr.loadbalancer.server.port: 6969
 
-      traefik.http.routers.flood.rule: Host(`${SUB_DOMAIN_FLOOD}.${SERVER_DOMAIN}`)
+      traefik.http.routers.flood.rule: Host(`flood.${SERVER_DOMAIN}`)
       traefik.http.routers.flood.entrypoints: websecure
       traefik.http.routers.flood.service: flood
       traefik.http.services.flood.loadbalancer.server.port: 3001
 
-      traefik.http.routers.mylar.rule: Host(`${SUB_DOMAIN_MYLAR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.mylar.rule: Host(`mylar.${SERVER_DOMAIN}`)
       traefik.http.routers.mylar.entrypoints: websecure
       traefik.http.routers.mylar.service: mylar
       traefik.http.services.mylar.loadbalancer.server.port: 8090
@@ -145,13 +145,13 @@ services:
     depends_on:
       - vpn
     labels:
-      - homepage.group=Media
-      - homepage.name=Transmission
-      - homepage.icon=emby.png
-      - homepage.href=http://emby.home/
-      - homepage.description=Torrent-Downloader
-      - homepage.widget.type=transmission
-      - homepage.widget.url=https://transmission.simon-haas.eu
+      homepage.group: Arr
+      homepage.name: Transmission
+      homepage.icon: transmission
+      homepage.href: https://${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}
+      homepage.description: Torrent downloader
+      homepage.widget.type: transmission
+      homepage.widget.url: https://${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}
 
   # flood: # alternative torrent-downloader UI
   #   container_name: flood
@@ -185,6 +185,12 @@ services:
     depends_on:
       - vpn
       - transmission
+    labels:
+      homepage.group: Arr
+      homepage.name: Lazylibrarian
+      homepage.icon: lazylibrarian
+      homepage.href: https://lazylibrarian.${SERVER_DOMAIN}
+      homepage.description: Books
 
   mylar3: # comics
     image: lscr.io/linuxserver/mylar3:latest
@@ -200,6 +206,12 @@ services:
     depends_on:
       - vpn
       - transmission
+    labels:
+      homepage.group: Arr
+      homepage.name: Mylar
+      homepage.icon: mylar
+      homepage.href: https://mylar.${SERVER_DOMAIN}
+      homepage.description: Comics
 
   lidarr: # music
     image: lscr.io/linuxserver/lidarr
@@ -218,6 +230,12 @@ services:
       - transmission
     security_opt:
       - no-new-privileges:true
+    labels:
+      homepage.group: Arr
+      homepage.name: Lidarr
+      homepage.icon: lidarr
+      homepage.href: https://lidarr.${SERVER_DOMAIN}
+      homepage.description: Music
 
   radarr: # movies
     image: lscr.io/linuxserver/radarr
@@ -236,6 +254,12 @@ services:
       - transmission
     security_opt:
       - no-new-privileges:true
+    labels:
+      homepage.group: Arr
+      homepage.name: Radarr
+      homepage.icon: radarr
+      homepage.href: https://radarr.${SERVER_DOMAIN}
+      homepage.description: Movies
 
   sonarr: # series
     image: lscr.io/linuxserver/sonarr
@@ -254,7 +278,13 @@ services:
       - transmission
     security_opt:
       - no-new-privileges:true
-      
+    labels:
+      homepage.group: Arr
+      homepage.name: Sonarr
+      homepage.icon: sonarr
+      homepage.href: https://sonarr.${SERVER_DOMAIN}
+      homepage.description: Series
+
   # TODO https://youtu.be/5rtGBwBuzQE?t=827
   jackett: # indexer (API Support for your favorite torrent trackers) 
     image: lscr.io/linuxserver/jackett
@@ -273,6 +303,12 @@ services:
       - vpn
     security_opt:
       - no-new-privileges:true
+    labels:
+      homepage.group: Arr
+      homepage.name: Jackett
+      homepage.icon: jackett
+      homepage.href: https://jackett.${SERVER_DOMAIN}
+      homepage.description: Indexer
 
   flaresolverr: # Proxy server to bypass Cloudflare protection 
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -306,6 +342,12 @@ services:
     depends_on:
       - vpn
       - transmission
+    labels:
+      homepage.group: Arr
+      homepage.name: Readarr
+      homepage.icon: readarr
+      homepage.href: https://readarr.${SERVER_DOMAIN}
+      homepage.description: Books
 
   prowlarr: # indexer
     container_name: prowlarr
@@ -322,6 +364,12 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+    labels:
+      homepage.group: Arr
+      homepage.name: Prowlarr
+      homepage.icon: prowlarr
+      homepage.href: https://prowlarr.${SERVER_DOMAIN}
+      homepage.description: Indexer
 
   bazarr: # subtitles
     container_name: bazarr
@@ -338,7 +386,13 @@ services:
     depends_on:
       - vpn
       - transmission
-
+    labels:
+      homepage.group: Arr
+      homepage.name: Bazarr
+      homepage.icon: bazarr
+      homepage.href: https://bazarr.${SERVER_DOMAIN}
+      homepage.description: Subtitles
+  
   whisparr: # porn
     container_name: whisparr
     image: cr.hotio.dev/hotio/whisparr
@@ -355,21 +409,33 @@ services:
     depends_on:
       - vpn
       - transmission
+    labels:
+      homepage.group: Arr
+      homepage.name: Whisparr
+      homepage.icon: whisparr
+      homepage.href: https://whisparr.${SERVER_DOMAIN}
+      homepage.description: Porn
 
-  bevy: # torrent movie streaming
-    container_name: bevy
-    image: zolland/bevy:latest
-    user: 1000:1000
-    restart: unless-stopped
-    environment:
-      - CONFIG_FILE=/etc/bevy/config.toml
-    volumes:
-      - ./config/bevy/config.toml:/etc/bevy/config.toml
-      - ./data/bevy/downloads:/downloads
-    network_mode: service:vpn
-    depends_on:
-      - vpn
-      - transmission
+  # bevy: # torrent movie streaming
+  #   container_name: bevy
+  #   image: zolland/bevy:latest
+  #   user: 1000:1000
+  #   restart: unless-stopped
+  #   environment:
+  #     - CONFIG_FILE=/etc/bevy/config.toml
+  #   volumes:
+  #     - ./config/bevy/config.toml:/etc/bevy/config.toml
+  #     - ./data/bevy/downloads:/downloads
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #     - transmission
+  #   labels:
+  #     homepage.group: Arr
+  #     homepage.name: Bevy
+  #     homepage.icon: bevy
+  #     homepage.href: https://bevy.${SERVER_DOMAIN}
+  #     homepage.description: Torrent movie streaming
 
   nzbget:
     container_name: nzbget
@@ -385,6 +451,12 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
+    labels:
+      homepage.group: Arr
+      homepage.name: Nzbget
+      homepage.icon: nzbget
+      homepage.href: https://nzbget.${SERVER_DOMAIN}
+      homepage.description: usenet downloader
 
   jellyseerr: # media discovery
     image: fallenbagel/jellyseerr:latest
@@ -401,6 +473,12 @@ services:
       - transmission
       - radarr
       - sonarr
+    labels:
+      homepage.group: Arr
+      homepage.name: Jellyseerr
+      homepage.icon: jellyseerr
+      homepage.href: https://jellyseerr.${SERVER_DOMAIN}
+      homepage.description: Media discovery
 
   # overseerr:
   #   image: lscr.io/linuxserver/overseerr:latest

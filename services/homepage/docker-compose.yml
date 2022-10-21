@@ -6,7 +6,8 @@ services:
     user: 1000:1000 # Optional, change to your user and group IDs for permissions
     volumes:
       - ./config:/app/config # Make sure your local config directory exists before first start
-      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=dockerproxy
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -18,6 +19,37 @@ services:
       traefik.http.routers.homepage.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.homepage.entrypoints: websecure
       traefik.http.services.homepage.loadbalancer.server.port: 3000
+
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:latest
+    container_name: dockerproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+      - POST=0
+      - IMAGES=1
+    networks:
+      - traefik
+    restart: unless-stopped
+
+  # whoami:
+  #   image: containous/whoami
+  #   container_name: whoami-homepage
+  #   restart: unless-stopped
+  #   networks:
+  #     - traefik
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   labels:
+  #     my.zone: zone1
+  #     traefik.enable: true
+  #     traefik.http.routers.whoami-homepage.rule: Host(`whoami-homepage.${SERVER_DOMAIN}`)
+  #     traefik.http.routers.whoami-homepage.entrypoints: websecure
+  #     homepage.group: Test
+  #     homepage.name: Whoami
+  #     homepage.href: https://whoami-homepage.${SERVER_DOMAIN}
+  #     homepage.description: Whoami
 
 networks:
   traefik:

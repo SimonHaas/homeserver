@@ -44,8 +44,8 @@ services:
       raefik.http.routers.nextcloud.entrypoints: websecure
       homepage.group: Media
       homepage.name: Nextcloud
-      homepage.icon: emby.png
-      homepage.href: http://emby.home/
+      homepage.icon: nextcloud
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Nextcloud
 
   nextcloud-mariadb:
