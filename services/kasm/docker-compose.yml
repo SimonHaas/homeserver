@@ -14,6 +14,11 @@ services:
       traefik.http.routers.kasm.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.kasm.entrypoints: websecure
       traefik.http.services.kasm.loadbalancer.server.port: 443
+      homepage.group: Infrastructure
+      homepage.name: Kasm
+      homepage.icon: kasm
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Kasm container streaming
     volumes:
       - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
 

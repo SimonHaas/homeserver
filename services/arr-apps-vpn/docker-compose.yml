@@ -282,8 +282,11 @@ services:
       homepage.group: Arr
       homepage.name: Sonarr
       homepage.icon: sonarr
-      homepage.href: https://sonarr.${SERVER_DOMAIN}
+      homepage.href: https://${SUB_DOMAIN_SONARR}.${SERVER_DOMAIN}
       homepage.description: Series
+      homepage.widget.type: sonarr
+      homepage.widget.url: https://${SUB_DOMAIN_SONARR}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY_SONARR}
 
   # TODO https://youtu.be/5rtGBwBuzQE?t=827
   jackett: # indexer (API Support for your favorite torrent trackers) 

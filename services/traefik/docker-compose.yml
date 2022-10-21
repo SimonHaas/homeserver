@@ -68,7 +68,14 @@ services:
       traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
       traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
       traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
-
+      
+      homepage.group: Infrastructure
+      homepage.name: Traefik
+      homepage.icon: traefik
+      homepage.href: https://traefik.${SERVER_DOMAIN}
+      homepage.description: Reverse Proxy
+      homepage.widget.type: traefik
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
   authelia:
     image: ghcr.io/authelia/authelia
     container_name: authelia

@@ -11,9 +11,18 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.proxmox.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.proxmox.rule: Host(`proxmox.${SERVER_DOMAIN}`)
       traefik.http.routers.proxmox.entrypoints: websecure
       traefik.http.services.proxmox.loadbalancer.server.port: 443
+      homepage.group: Infrastructure
+      homepage.name: Proxmox
+      homepage.icon: proxmox
+      homepage.href: https://proxmox.${SERVER_DOMAIN}
+      homepage.description: Hypervisor
+      homepage.widget.type: pihole
+      homepage.widget.url: https://${IP}:8006
+      homepage.widget.username: ${API_TOKEN_ID}
+      homepage.widget.password: ${API_TOKEN_SECRET}
     volumes:
       - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     environment:

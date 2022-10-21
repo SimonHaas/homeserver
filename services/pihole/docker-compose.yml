@@ -30,7 +30,15 @@ services:
       traefik.http.services.pihole.loadbalancer.server.port: 80
       traefik.http.routers.pihole.middlewares: "pihole-admin"
       traefik.http.middlewares.pihole-admin.addprefix.prefix: "/admin"
-
+      homepage.group: Infrastructure
+      homepage.name: Pihole
+      homepage.icon: pihole
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.descriptioon: DNS server
+      homepage.widget.type: pihole
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+      homepage.widget.proxy: false
+      
 networks:
   traefik:
     name: zone1

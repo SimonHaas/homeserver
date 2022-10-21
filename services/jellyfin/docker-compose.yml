@@ -32,6 +32,9 @@ services:
       homepage.icon: jellyfin
       homepage.href: https://jellyfin.${SERVER_DOMAIN}
       homepage.description: Media streaming
+      homepage.widget.type: jellyfin
+      homepage.widget.url: https://jellyfin.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}
 
 networks:
   traefik:

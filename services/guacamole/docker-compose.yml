@@ -13,9 +13,14 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.guacamole.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.guacamole.rule: Host(`guacamole.${SERVER_DOMAIN}`)
       traefik.http.routers.guacamole.entrypoints: websecure
       traefik.http.services.guacamole.loadbalancer.server.port: 8080 # guacadmin/guacadmin
+      homepage.group: Infrastructure
+      homepage.name: Guacamole
+      homepage.icon: guacamole
+      homepage.href: https://guacamole.${SERVER_DOMAIN}
+      homepage.description: Remote Desktop Client
 
 networks:
   traefik:

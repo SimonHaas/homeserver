@@ -6,6 +6,9 @@ services:
     user: 1000:1000 # Optional, change to your user and group IDs for permissions
     volumes:
       - ./config:/app/config # Make sure your local config directory exists before first start
+      - /mnt/data:/mnt/data:ro
+      - /mnt/backup:/mnt/backup:ro
+      - /mnt/bigdata:/mnt/bigdata:ro
     environment:
       - DOCKER_HOST=dockerproxy
     restart: unless-stopped

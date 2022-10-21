@@ -19,6 +19,11 @@ services:
       traefik.http.routers.webnut.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.webnut.entrypoints: websecure
       traefik.http.services.webnut.loadbalancer.server.port: 6543
+      homepage.group: Infrastructure
+      homepage.name: Webnut
+      homepage.icon: webnut
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Webnut
 
 networks:
   traefik:

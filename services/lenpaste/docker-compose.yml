@@ -31,6 +31,10 @@ services:
       traefik.http.routers.lenpaste.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.lenpaste.entrypoints: websecure
       traefik.http.services.lenpaste.loadbalancer.server.port: 80
+      homepage.group: Infrastructure
+      homepage.name: Lenpaste
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Pastebin
 
 networks:
   traefik:
