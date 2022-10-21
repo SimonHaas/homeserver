@@ -2,7 +2,7 @@ version: "3.6"
 services:
   gogs:
     restart: always
-    image: gogs/gogs@sha256:6130c146f032f6d9bdc366a90590658f17d489e78db59feeaa82c0b7047beb91
+    image: gogs/gogs:0.12.10
     ports:
       - "10022:22"
     environment:
