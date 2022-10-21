@@ -236,6 +236,9 @@ services:
       homepage.icon: lidarr
       homepage.href: https://lidarr.${SERVER_DOMAIN}
       homepage.description: Music
+      homepage.widget.type: lidarr
+      homepage.widget.url: https://${SUB_DOMAIN_LIDARR}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY_LIDARR}
 
   radarr: # movies
     image: lscr.io/linuxserver/radarr
@@ -260,6 +263,9 @@ services:
       homepage.icon: radarr
       homepage.href: https://radarr.${SERVER_DOMAIN}
       homepage.description: Movies
+      homepage.widget.type: radarr
+      homepage.widget.url: https://${SUB_DOMAIN_RADARR}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY_RADARR}
 
   sonarr: # series
     image: lscr.io/linuxserver/sonarr
@@ -351,6 +357,9 @@ services:
       homepage.icon: readarr
       homepage.href: https://readarr.${SERVER_DOMAIN}
       homepage.description: Books
+      homepage.widget.type: readarr
+      homepage.widget.url: https://${SUB_DOMAIN_READARR}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY_READARR}
 
   prowlarr: # indexer
     container_name: prowlarr
@@ -395,7 +404,10 @@ services:
       homepage.icon: bazarr
       homepage.href: https://bazarr.${SERVER_DOMAIN}
       homepage.description: Subtitles
-  
+      homepage.widget.type: bazarr
+      homepage.widget.url: https://${SUB_DOMAIN_BAZARR}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY_BAZARR}
+
   whisparr: # porn
     container_name: whisparr
     image: cr.hotio.dev/hotio/whisparr
@@ -460,6 +472,10 @@ services:
       homepage.icon: nzbget
       homepage.href: https://nzbget.${SERVER_DOMAIN}
       homepage.description: usenet downloader
+      homepage.widget.type: nzbget
+      homepage.widget.url: https://${SUB_DOMAIN_NZBGET}.${SERVER_DOMAIN}
+      homepage.widget.username: ${USERNAME_NZBGET}
+      homepage.widget.password: ${PASSWORD_NZBGET}
 
   jellyseerr: # media discovery
     image: fallenbagel/jellyseerr:latest
@@ -482,23 +498,10 @@ services:
       homepage.icon: jellyseerr
       homepage.href: https://jellyseerr.${SERVER_DOMAIN}
       homepage.description: Media discovery
+      homepage.widget.type: jellyseerr
+      homepage.widget.url: https://${SUB_DOMAIN_JELLYSEERR}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY_JELLYSEERR}
 
-  # overseerr:
-  #   image: lscr.io/linuxserver/overseerr:latest
-  #   container_name: overseerr
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=${TZ}
-  #   volumes:
-  #     - ./config/overseer:/config
-  #   restart: unless-stopped
-  #   network_mode: service:vpn
-  #   depends_on:
-  #     - vpn
-  #     - transmission
-  #     - radarr
-  #     - sonarr
 networks:
   traefik:
     name: zone1
