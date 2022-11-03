@@ -1,0 +1,28 @@
+version: "3.6"
+services:
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./data:/var/lib/grafana
+    user: "1000"
+    container_name: grafana
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.grafana.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.grafana.entrypoints: websecure
+      traefik.http.services.grafana.loadbalancer.server.port: 3000
+      homepage.group: Infrastructure
+      homepage.name: Grafana
+      homepage.icon: grafana
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Beautiful dashboards
+
+networks:
+  traefik:
+    name: zone1

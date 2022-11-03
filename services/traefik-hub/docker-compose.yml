@@ -2,7 +2,7 @@ version: "3"
 
 services:
   hub-agent:
-    image: ghcr.io/traefik/hub-agent-traefik:experimental
+    image: ghcr.io/traefik/hub-agent-traefik:v1.0.0
     pull_policy: always
     container_name: hub-agent
     restart: "on-failure"

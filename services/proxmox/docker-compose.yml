@@ -11,13 +11,13 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.proxmox.rule: Host(`proxmox.${SERVER_DOMAIN}`)
+      traefik.http.routers.proxmox.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.proxmox.entrypoints: websecure
       traefik.http.services.proxmox.loadbalancer.server.port: 443
       homepage.group: Infrastructure
       homepage.name: Proxmox
       homepage.icon: proxmox
-      homepage.href: https://proxmox.${SERVER_DOMAIN}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Hypervisor
       homepage.widget.type: pihole
       homepage.widget.url: https://${IP}:8006
@@ -27,6 +27,39 @@ services:
       - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     environment:
       - IP=${IP}
+
+  influxdb:
+    container_name: influxdb
+    image: influxdb
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb2
+      - ./data/influx-config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${DOCKER_INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+      - DOCKER_INFLUXDB_INIT_RETENTION=${DOCKER_INFLUXDB_INIT_RETENTION}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.influxdb.rule: Host(`${SUB_DOMAIN_INFLUXDB}.${SERVER_DOMAIN}`)
+      traefik.http.routers.influxdb.entrypoints: websecure
+      traefik.http.services.influxdb.loadbalancer.server.port: 8086
+      homepage.group: Infrastructure
+      homepage.name: Influxdb-Proxmox
+      homepage.icon: influxdb
+      homepage.href: https://${SUB_DOMAIN_INFLUXDB}.${SERVER_DOMAIN}
+      homepage.description: Metrics DB for Proxmox
 
 networks:
   traefik:

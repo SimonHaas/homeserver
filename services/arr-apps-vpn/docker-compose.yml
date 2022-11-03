@@ -393,6 +393,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ./config/bazarr:/config
+      - ./data:/data
     restart: unless-stopped
     network_mode: service:vpn
     depends_on:

@@ -1,0 +1,28 @@
+version: "3"
+services:
+  kavita:
+    image: kizaing/kavita:latest
+    container_name: kavita
+    volumes:
+      - ./data/manga:/manga
+      - ./data/config:/kavita/config
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.kavita.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.kavita.entrypoints: websecure
+      traefik.http.services.kavita.loadbalancer.server.port: 5000
+      homepage.group: Media
+      homepage.name: Kavita
+      homepage.icon: kavita
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Reading
+
+networks:
+  traefik:
+    name: zone1

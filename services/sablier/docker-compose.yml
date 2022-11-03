@@ -1,0 +1,24 @@
+# docker run -d --name nginx nginx
+# docker stop nginx
+# docker run -v /var/run/docker.sock:/var/run/docker.sock -p 10000:10000 ghcr.io/acouvreur/sablier:latest --swarmode=false
+# curl 'http://localhost:10000/?name=nginx&timeout=1m'
+
+version: "3"
+
+services:
+  sablier:
+    image: ghcr.io/acouvreur/sablier:latest
+    container_name: sablier
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 10000:10000
+    command:
+      - --swarmMode=false
+
+  nginx:
+    image: nginx
+    container_name: sablier-nginx
+    ports:
+      - 8088:80

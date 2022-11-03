@@ -1,7 +1,7 @@
 version: "3.6"
 services:
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data:/data
@@ -17,6 +17,15 @@ services:
       traefik.http.routers.portainer.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.portainer.entrypoints: websecure
       traefik.http.services.portainer.loadbalancer.server.port: 9000
+      homepage.group: Infrastructure
+      homepage.name: Portainer
+      homepage.icon: portaner
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Container management
+      homepage.widget.type: portainer
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.env: ${WIDGET_ENV}
+      homepage.widget.key: ${WIDGET_KEY}
 
 networks:
   traefik:

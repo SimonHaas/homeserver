@@ -1,7 +1,7 @@
 version: "3.6"
 services:
   drone-runner:
-    image: drone/drone-runner-docker:1
+    image: drone/drone-runner-docker
     container_name: runner
     restart: always
     ports:
@@ -16,7 +16,7 @@ services:
       - DRONE_RUNNER_NAME=drone-runner
 
   drone:
-    image: drone/drone:1
+    image: drone/drone
     volumes:
       - ./data:/data
     environment:

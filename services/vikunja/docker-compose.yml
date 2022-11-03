@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  db:
+    container_name: vikunja_db
+    image: mariadb:10
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: vikunja
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: vikunja
+    volumes:
+      - ./data/db:/var/lib/mysql
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+
+  api:
+    container_name: vikunja_api
+    image: vikunja/api
+    environment:
+      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+      VIKUNJA_DATABASE_TYPE: mysql
+      VIKUNJA_DATABASE_USER: vikunja
+      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SERVICE_JWTSECRET}
+      VIKUNJA_SERVICE_FRONTENDURL: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+    volumes:
+      - ./data/files:/app/vikunja/files
+    depends_on:
+      - db
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.vikunja-api.rule: Host(`${SUB_DOMAIN_API}.${SERVER_DOMAIN}`)
+      traefik.http.routers.vikunja-api.entrypoints: websecure
+      traefik.http.services.vikunja-api.loadbalancer.server.port: 3456
+
+  frontend:
+    container_name: vikunja_frontend
+    image: vikunja/frontend
+    environment:
+      VIKUNJA_API_URL: https://${SUB_DOMAIN_API}.${SERVER_DOMAIN}/api/v1
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.vikunja.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.vikunja.entrypoints: websecure
+      traefik.http.services.vikunja.loadbalancer.server.port: 80
+      homepage.group: Media
+      homepage.name: Vikunja
+      homepage.icon: vikunja
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Monitoring tool
+
+networks:
+  traefik:
+    name: zone1
