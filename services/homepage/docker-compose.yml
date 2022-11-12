@@ -9,6 +9,7 @@ services:
       - /mnt/data:/mnt/data:ro
       - /mnt/backup:/mnt/backup:ro
       - /mnt/bigdata:/mnt/bigdata:ro
+      - /mnt/ssd2:/mnt/ssd2:ro
     environment:
       - DOCKER_HOST=dockerproxy
     restart: unless-stopped

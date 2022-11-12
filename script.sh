@@ -11,7 +11,7 @@ then
 elif [[ "$1" = "KASM" ]]
 then
   cd services/kasm
-  sudo bash kasm_release/bin/start
+  sudo bash kasm_release/bin/$2
   cd ../..
   exit 0
 else
