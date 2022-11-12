@@ -1,0 +1,40 @@
+version: "2"
+services:
+  adguard:
+    image: adguard/adguardhome
+    container_name: adguard
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 784:784/udp
+      - 853:853/tcp
+      - 3000:3000/tcp
+      # - 80:80/tcp
+      # - 443:443/tcp
+    volumes:
+      - ./data/workdir:/opt/adguardhome/work
+      - ./data/confdir:/opt/adguardhome/conf
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.adguard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.adguard.entrypoints: websecure
+      traefik.http.services.adguard.loadbalancer.server.port: 80
+      homepage.group: Infrastructure
+      homepage.name: Adguard
+      homepage.icon: adguard-home
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.descriptioon: DNS server
+      homepage.widget.type: adguard
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+      homepage.widget.username: ${USERNAME}
+      homepage.widget.password: ${PASSWORD}
+
+networks:
+  traefik:
+    name: zone1
