@@ -76,6 +76,23 @@ services:
       homepage.description: Reverse Proxy
       homepage.widget.type: traefik
       homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+
+  traefik-certs-dumper:
+    image: ldez/traefik-certs-dumper:v2.8.1
+    container_name: cert-dumper
+    entrypoint: sh -c '
+      apk add jq
+      ; while ! [ -e /data/acme.json ]
+      || ! [ `jq ".[] | .Certificates | length" /data/acme.json` != 0 ]; do
+      sleep 1
+      ; done
+      && traefik-certs-dumper file --version v2 --watch
+      --source /data/acme.json --dest /data/certs --domain-subdir --crt-ext=.pem --key-ext=.pem --post-hook "sh /hook.sh"'
+    volumes:
+      - ./data/letsencrypt:/data
+      - ./hook.sh:/hook.sh
+    restart: unless-stopped
+
   authelia:
     image: ghcr.io/authelia/authelia
     container_name: authelia

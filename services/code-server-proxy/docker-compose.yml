@@ -2,7 +2,6 @@ version: "3.6"
 services:
   code-server:
     image: nginx
-    container_name: code-server-proxy
     restart: always
     security_opt:
       - no-new-privileges:true
@@ -14,6 +13,11 @@ services:
       traefik.http.routers.code-server.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.code-server.entrypoints: websecure
       traefik.http.services.code-server.loadbalancer.server.port: 443
+      homepage.group: Media
+      homepage.name: dev-VM
+      homepage.icon: codeserver
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: dev-VM mit codeserver
     volumes:
       - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     environment:

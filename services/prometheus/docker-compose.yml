@@ -35,37 +35,6 @@ services:
     networks:
       - traefik
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.45.0 # latest tag is not updated...
-                                            # https://github.com/google/cadvisor/issues/3066    
-                                            # To manual check versions: https://github.com/google/cadvisor/releases      
-    container_name: cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    devices:
-      - /dev/kmsg
-    command:
-      - '-housekeeping_interval=10s'
-      - '-docker_only=true'
-    restart: unless-stopped
-    networks:
-      - traefik
-    labels:
-      my.zone: zone1
-      traefik.enable: true
-      traefik.http.routers.cadvisor.rule: Host(`${SUB_DOMAIN_CADVISOR}.${SERVER_DOMAIN}`)
-      traefik.http.routers.cadvisor.entrypoints: websecure
-      traefik.http.services.cadvisor.loadbalancer.server.port: 8080
-      homepage.group: Infrastructure
-      homepage.name: Cadvisor
-      homepage.icon: cadvisor
-      homepage.href: https://${SUB_DOMAIN_CADVISOR}.${SERVER_DOMAIN}
-      homepage.description: Collecting statistics from docker containers
-
 networks:
   traefik:
     name: zone1
