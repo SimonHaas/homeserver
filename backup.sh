@@ -4,7 +4,7 @@
 # https://borgbackup.readthedocs.io/en/stable/
 
 # sudo crontab -e
-# 0 0 * * * (time /bin/bash /mnt/data/homeserver/backup.sh) >> /mnt/data/homeserver/backup-logs.txt 2>&1
+# 0 0 * * * (time /bin/bash /mnt/ssd2/homeserver/backup.sh) >> /mnt/ssd2/homeserver/backup-logs.txt 2>&1
 
 # Hier Pfad zum Sicherungsmedium angeben.
 # z.B. zielpfad="/media/peter/HD_Backup"
@@ -16,7 +16,7 @@ repository="homeserver"
 
 # Hier eine Liste mit den zu sichernden Verzeichnissen angeben
 # z.B. sicherung="/home/peter/Bilder /home/peter/Videos --exclude *.tmp"
-sicherung="/mnt/data/homeserver"
+sicherung="/mnt/ssd2/homeserver"
 
 # Hier die Art der Verschlüsselung angeben
 # z.B. verschluesselung="none"
@@ -39,7 +39,7 @@ pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
 
 repopfad="$zielpfad"/"$repository"
 
-if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/data' /proc/mounts
+if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/ssd2' /proc/mounts
 then
     # check for root
     if [ $(id -u) -ne 0 ] && [ "$rootuser" == "ja" ]; then
@@ -53,16 +53,15 @@ then
     echo "Borg-Repository erzeugt unter $repopfad"
     fi
 
-    # backup data
     SECONDS=0
-    /mnt/data/homeserver/script.sh SAVE_BACKUP stop
+    /mnt/ssd2/homeserver/script.sh SAVE_BACKUP stop
     echo "Start der Sicherung $(date)."
 
     borg create --compression $kompression --exclude-caches --one-file-system -v --stats --progress \
                 $repopfad::'{hostname}-{now:%Y-%m-%d-%H%M%S}' $sicherung
 
     echo "Ende der Sicherung $(date). Dauer: $SECONDS Sekunden"
-    /mnt/data/homeserver/script.sh SAVE_BACKUP start
+    /mnt/ssd2/homeserver/script.sh SAVE_BACKUP start
 
     # prune archives
     borg prune -v --list $repopfad --prefix '{hostname}-' $pruning
