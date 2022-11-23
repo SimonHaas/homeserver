@@ -1,0 +1,26 @@
+version: "3.6"
+services:
+  webmap:
+    image: "reborntc/webmap"
+    volumes:
+      - ./data:/opt/xml
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.webmap.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.webmap.entrypoints: websecure
+      traefik.http.services.webmap.loadbalancer.server.port: 8000
+      homepage.group: Infrastructure
+      homepage.name: WebMap
+      homepage.icon: webmap
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: A Web Dashbord for Nmap XML Report 
+
+networks:
+  traefik:
+    name: zone1

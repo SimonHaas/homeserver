@@ -1,0 +1,35 @@
+version: "2"
+
+services:
+  agendav:
+    image: ghcr.io/nagimov/agendav-docker:latest
+    environment:
+      - AGENDAV_SERVER_NAME=127.0.0.1
+      - AGENDAV_TITLE=Welcome to Example Agendav Server
+      - AGENDAV_FOOTER=Hosted by Example Company
+      - AGENDAV_ENC_KEY=my_encrypt10n_k3y
+      - AGENDAV_CALDAV_SERVER=https://baikal.example.com/cal.php
+      - AGENDAV_CALDAV_PUBLIC_URL=https://baikal.example.com
+      - AGENDAV_TIMEZONE=UTC
+      - AGENDAV_LANG=en
+      - AGENDAV_LOG_DIR=/tmp/
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.agendav.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.agendav.entrypoints: websecure
+      traefik.http.services.agendav.loadbalancer.server.port: 80
+      homepage.group: Media
+      homepage.name: agendav
+      homepage.icon: agendav
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: calendar UI
+
+networks:
+  traefik:
+    name: zone1

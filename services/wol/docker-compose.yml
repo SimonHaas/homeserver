@@ -21,6 +21,7 @@ services:
       homepage.icon: wol
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: wol-service
+      
 networks:
   traefik:
     name: zone1

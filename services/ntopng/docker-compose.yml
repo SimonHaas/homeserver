@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  ntopng:
+    image: vimagick/ntopng
+    command: --community -d /var/lib/ntopng -i ${NIC} -r 127.0.0.1:6379@0 -w 0.0.0.0:${PORT}
+    volumes:
+      - ./data:/var/lib/ntopng
+    network_mode: host
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    # networks:
+    #   - traefik
+    labels:
+    #   my.zone: zone1
+    #   traefik.enable: true
+    #   traefik.http.routers.ntopng.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+    #   traefik.http.routers.ntopng.entrypoints: websecure
+    #   traefik.http.services.ntopng.loadbalancer.server.port: 8000
+      homepage.group: Infrastructure
+      homepage.name: ntopng
+      homepage.icon: ntopng
+      homepage.href: http://${IP}:${PORT}
+      homepage.description: Web-based Traffic and Security Network Traffic Monitoring 
+
+  redis:
+    image: redis:alpine
+    command: --save 900 1
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+#     networks:
+#       - traefik
+
+# networks:
+#   traefik:
+#     name: zone1

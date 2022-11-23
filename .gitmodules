@@ -1,0 +1,3 @@
+[submodule "services/crater/crater"]
+	path = services/crater/crater
+	url = https://github.com/crater-invoice/crater

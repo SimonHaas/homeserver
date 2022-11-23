@@ -1,0 +1,38 @@
+version: "2"
+services:
+  app:
+    image: machines/filestash
+    environment:
+      - APPLICATION_URL=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      # - GDRIVE_CLIENT_ID=<gdrive_client>
+      # - GDRIVE_CLIENT_SECRET=<gdrive_secret>
+      # - DROPBOX_CLIENT_ID=<dropbox_key>
+      - ONLYOFFICE_URL=http://onlyoffice
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.filestash.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.filestash.entrypoints: websecure
+      traefik.http.services.filestash.loadbalancer.server.port: 8334
+      homepage.group: Infrastructure
+      homepage.name: filestash
+      homepage.icon: filestash
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: unified interface for cloud storage
+
+  onlyoffice:
+    image: onlyoffice/documentserver
+    restart: always
+    security_opt:
+      - seccomp:unconfined
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    name: zone1
