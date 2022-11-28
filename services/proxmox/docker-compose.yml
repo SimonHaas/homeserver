@@ -19,7 +19,7 @@ services:
       homepage.icon: proxmox
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Hypervisor
-      homepage.widget.type: pihole
+      homepage.widget.type: proxmox
       homepage.widget.url: https://${IP}:8006
       homepage.widget.username: ${API_TOKEN_ID}
       homepage.widget.password: ${API_TOKEN_SECRET}
