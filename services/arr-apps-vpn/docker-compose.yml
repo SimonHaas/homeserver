@@ -127,7 +127,7 @@ services:
   #   volumes:
   #     - ./config/qbittorrent:/config
   #     - ./data/qbittorrent:/downloads
-  #   restart: unless-stopped
+  #   restart: always
   #   network_mode: service:vpn
   #   depends_on:
   #     - vpn
@@ -145,7 +145,7 @@ services:
     volumes:
       - ./config/transmission:/config
       - ./data/transmission:/downloads
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -163,7 +163,7 @@ services:
   #   # hostname: flood
   #   image: jesec/flood
   #   user: 1000:1000
-  #   restart: unless-stopped
+  #   restart: always
   #   command: --port 3001 --allowedpath /data
   #   environment:
   #     HOME: /config
@@ -185,7 +185,7 @@ services:
     volumes:
       - ./config/lazylibrarian:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -206,7 +206,7 @@ services:
     volumes:
       - ./config/mylar:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -228,7 +228,7 @@ services:
     volumes:
       - ./config/lidarr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -255,7 +255,7 @@ services:
     volumes:
       - ./config/radarr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -282,7 +282,7 @@ services:
     volumes:
       - ./config/sonarr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -311,7 +311,7 @@ services:
     volumes:
       - ./config/jackett:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -332,7 +332,7 @@ services:
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
       - TZ=${TZ}
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -351,7 +351,7 @@ services:
     volumes:
       - ./config/readarr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -377,7 +377,7 @@ services:
     volumes:
       - ./config/prowlarr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -399,7 +399,7 @@ services:
     volumes:
       - ./config/bazarr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -425,7 +425,7 @@ services:
     volumes:
       - ./config/whisparr:/config
       - ./data:/data
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -441,7 +441,7 @@ services:
   #   container_name: bevy
   #   image: zolland/bevy:latest
   #   user: 1000:1000
-  #   restart: unless-stopped
+  #   restart: always
   #   environment:
   #     - CONFIG_FILE=/etc/bevy/config.toml
   #   volumes:
@@ -468,7 +468,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ./config/nzbget:/config
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -491,7 +491,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ./config/jellyseerr:/app/config
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -510,14 +510,14 @@ services:
 
   vpncheckerVpn:
     image: registry.simon-haas.eu/docker-vpn-checker-vpn
-    restart: unless-stopped
+    restart: always
     network_mode: service:vpn
     depends_on:
       - vpn
 
   vpncheckerNonvpn:
     image: registry.simon-haas.eu/docker-vpn-checker-nonvpn
-    restart: unless-stopped
+    restart: always
     networks:
       - traefik
     depends_on:
