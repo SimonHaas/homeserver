@@ -1,0 +1,43 @@
+version: "2.1"
+services:
+  healthchecks:
+    image: lscr.io/linuxserver/healthchecks:latest
+    container_name: healthchecks
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - SITE_ROOT=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      - SITE_NAME=${SITE_NAME}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
+      - SUPERUSER_EMAIL=${SUPERUSER_EMAIL}
+      - SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
+      - REGENERATE_SETTINGS=${REGENERATE_SETTINGS} #optional
+      - SITE_LOGO_URL=${SITE_LOGO_URL} #optional
+      - APPRISE_ENABLED=${APPRISE_ENABLED} #optional
+    volumes:
+      - ./data:/config
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.healthchecks.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.healthchecks.entrypoints: websecure
+      traefik.http.services.healthchecks.loadbalancer.server.port: 8000
+      homepage.group: Infrastructure
+      homepage.name: healthchecks
+      homepage.icon: healthchecks
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: healthcheck for cron jobs
+
+networks:
+  traefik:
+    name: zone1
