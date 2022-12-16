@@ -1,15 +1,25 @@
 version: "3"
 services:
   pialert:
+    container_name: pialert
     image: "jokobsk/pi.alert:latest"      
     network_mode: "host"        
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./data/config:/home/pi/pialert/config
-      - ./data/db:/home/pi/pialert/db
-      - ./data/log:/home/pi/pialert/log
+      - ./data/db/pialert.db:/home/pi/pialert/db/pialert.db
+      # (optional) map an empty file with the name 'setting_darkmode' if you want to force the dark mode on container rebuilt
+      - ./data/db/setting_darkmode:/home/pi/pialert/db/setting_darkmode
+      # (optional) useful for debugging if you have issues setting up the container
+      - ./data/logs:/home/pi/pialert/front/log
     environment:
       - TZ=${TZ}
       - PORT=${PORT}
       - HOST_USER_ID=${HOST_USER_ID}
       - HOST_USER_GID=${HOST_USER_GID}
+    labels:
+      homepage.group: Infrastructure
+      homepage.name: pialert
+      homepage.icon: pialaert
+      homepage.href: http://${IP}:${PORT}
+      homepage.description: network device monitoring
