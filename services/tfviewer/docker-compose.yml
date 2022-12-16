@@ -1,0 +1,29 @@
+# docker run -d -e TZ=<your timezone> -v <persisting data folder>:/data -p 8080:8080 danielalvsaaker/tf-viewer
+version: "3.6"
+services:
+  tfviewer:
+    image: danielalvsaaker/tf-viewer
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.tfviewer.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.tfviewer.entrypoints: websecure
+      traefik.http.services.tfviewer.loadbalancer.server.port: 8080
+      homepage.group: Media
+      homepage.name: tfviewer
+      homepage.icon: tfviewer
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: tf-viewer
+
+networks:
+  traefik:
+    name: zone1
