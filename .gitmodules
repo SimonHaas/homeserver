@@ -1,3 +1,6 @@
 [submodule "services/crater/crater"]
 	path = services/crater/crater
 	url = https://github.com/crater-invoice/crater
+[submodule "services/fittrackee/docker-fittrackee"]
+	path = services/fittrackee/docker-fittrackee
+	url = https://github.com/SamR1/docker-fittrackee.git

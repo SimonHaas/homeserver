@@ -1,36 +1,42 @@
-version: "3.6"
 services:
-  db-wger:
-    image: postgres:12.0-alpine
-    container_name: db-wger
-    volumes:
-      - ./data/db:/var/lib/postgresql/data/
-    expose:
-      - 5432
-    restart: always
-    environment:
-      - POSTGRES_USER=wger
-      - POSTGRES_PASSWORD=wger
-      - POSTGRES_DB=wger
-
-  cache-wger:
-    container_name: cache-wger
-    restart: always
-    image: redis:latest
-    expose:
-      - 6379
-
-  wger:
-    image: wger/apache
+  web:
+    image: wger/server:latest
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    env_file:
+      - ./.env
     volumes:
       - ./data/static:/home/wger/static
       - ./data/media:/home/wger/media
-    env_file:
-      - .env
+    ports:
+      - "8000"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8000
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+
+  nginx:
+    image: nginx:stable
     depends_on:
-      - db-wger
-      - cache-wger
-    container_name: wger
+      - web
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./data/static:/wger/static:ro
+      - ./data/media:/wger/media:ro
+    healthcheck:
+      test: service nginx status
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -41,7 +47,48 @@ services:
       traefik.enable: true
       traefik.http.routers.wger.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.wger.entrypoints: websecure
-      traefik.http.services.syncthing.loadbalancer.server.port: 80
+      traefik.http.services.wger.loadbalancer.server.port: 80
+      homepage.group: Media
+      homepage.name: wger
+      homepage.icon: wger
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: workout tracker
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=wger
+      - POSTGRES_PASSWORD=wger
+      - POSTGRES_DB=wger
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    healthcheck:
+      test: pg_isready -U wger
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+
+  cache:
+    image: redis
+    expose:
+      - 6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
 
 networks:
   traefik:
