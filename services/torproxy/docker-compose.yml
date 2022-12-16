@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  torproxy:
+    image: dperson/torproxy
+    restart: unless-stopped
+    ports:
+      - 8118:8118 # http proxy
+      - 9050:9050 # socks proxy
+    security_opt:
+      - no-new-privileges:true
