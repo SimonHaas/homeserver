@@ -14,6 +14,9 @@ services:
       - no-new-privileges:true
     networks:
       - traefik
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+
 
   fittrackee:
     build:
@@ -44,6 +47,7 @@ services:
       homepage.icon: fittrackee
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: outdoor fitness tracker
+      com.centurylinklabs.watchtower.enable: false
 
   redis:
     image: "redis:latest"
