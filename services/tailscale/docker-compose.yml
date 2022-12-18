@@ -1,12 +1,16 @@
-version: "3.6"
+version: "2.4"
 services:
   tailscale:
-    image: tailscale/tailscale
-    container_name: tailscale
-    hostname: homeserver
-    volumes:
-      - /var/lib:/var/lib
-      - /dev/net/tun:/dev/net/tun
-    restart: unless-stopped
     privileged: true
-    command: /bin/sh -c "tailscaled && tailscale up --authkey=$KEY --advertise-exit-node --advertise-routes=$ROUTES"
+    hostname: tailscale
+    network_mode: "host"
+    container_name: tailscale
+    image: tailscale/tailscale:latest
+    volumes:
+      - "/opt/appdata/tailscale/var_lib:/var/lib"
+      - "/dev/net/tun:/dev/net/tun"
+    cap_add:
+      - net_admin
+      - sys_module
+    command: tailscaled
+    restart: unless-stopped
