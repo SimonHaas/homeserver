@@ -1,0 +1,20 @@
+---
+version: "2.1"
+services:
+  openssh-server:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: openssh-server
+    hostname: openssh-server #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - SUDO_ACCESS=false #optional
+      - PASSWORD_ACCESS=true #optional
+      - USER_PASSWORD=***REMOVED*** #optional
+      - USER_NAME=simon.haas #optional
+    volumes:
+      - ./data/config:/config
+    ports:
+      - 2223:2222
+    restart: unless-stopped
