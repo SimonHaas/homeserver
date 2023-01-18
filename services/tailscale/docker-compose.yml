@@ -2,9 +2,8 @@ version: "2.4"
 services:
   tailscale:
     privileged: true
-    hostname: tailscale
+    hostname: tailscale-homeserver
     network_mode: "host"
-    container_name: tailscale
     image: tailscale/tailscale:latest
     volumes:
       - "/opt/appdata/tailscale/var_lib:/var/lib"
