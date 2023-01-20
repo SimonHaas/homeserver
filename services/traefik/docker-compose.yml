@@ -9,112 +9,98 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      # - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      # - "--entrypoints.websecure.address=:443"
-      # - "--entrypoints.websecure.http.tls.certResolver=myresolver"
-      # - "--certificatesresolvers.myresolver.acme.storage=letsencrypt/acme.json"
-      # - "--certificatesResolvers.myresolver.acme.email=${ACME_EMAIL}"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls.certResolver=myresolver"
+      - "--certificatesresolvers.myresolver.acme.storage=letsencrypt/acme.json"
+      - "--certificatesResolvers.myresolver.acme.email=${ACME_EMAIL}"
       # - "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      # - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
-      # - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=${DNS_CHALLENGE_PROVIDER}"
-      # - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
-      # - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
+      - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
+      - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=${DNS_CHALLENGE_PROVIDER}"
+      - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
       - --api=true
       - --api.insecure=true
       - --api.dashboard=true
       - --providers.docker.constraints=Label(`my.zone`, `zone1`)
       - --serverstransport.insecureskipverify=true
-
-      # - --experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp
-      # - --experimental.plugins.cloudflarewarp.version=v1.3.3
-    # ports:
-    #   - "80:80"
-    #   - "443:443"
+      - --experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp
+      - --experimental.plugins.cloudflarewarp.version=v1.3.3
+    ports:
+      - "80:80"
+      - "443:443"
     networks:
       - traefik
     security_opt:
       - no-new-privileges:true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      # - ./data/letsencrypt:/letsencrypt
+      - ./data/letsencrypt:/letsencrypt
     env_file:
       - .env
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.traefik.entrypoints: web
-      # traefik.http.routers.traefik.tls: true
-      # traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
-      # traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
+      traefik.http.routers.traefik.entrypoints: websecure
+      traefik.http.routers.traefik.tls: true
+      traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
+      traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
+      traefik.http.routers.traefik.tls.certresolver: myresolver
+      traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.dashboard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.dashboard.service: api@internal
-      # traefik.http.routers.traefik.tls.certresolver: myresolver
-      traefik.http.routers.traefik.service: api@internal
-      # traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
-      # traefik.http.middlewares.redirect-to-https.redirectscheme.permanent: true
-      # traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
-      # traefik.http.routers.redirs.entrypoints: web
-      # traefik.http.routers.redirs.middlewares: redirect-to-https
-      
-      # traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
-      # traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
-      # traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+      traefik.http.middlewares.redirect-to-https.redirectscheme.permanent: true
+      traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
+      traefik.http.routers.redirs.entrypoints: web
+      traefik.http.routers.redirs.middlewares: redirect-to-https
+      traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
+      traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
+      traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
+      traefik.http.middlewares.my-cloudflarewarp.plugin.cloudflarewarp.disableDefault: false
+      homepage.group: Infrastructure
+      homepage.name: Traefik
+      homepage.icon: traefik
+      homepage.href: https://traefik.${SERVER_DOMAIN}
+      homepage.description: Reverse Proxy
+      homepage.widget.type: traefik
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
 
-      # traefik.http.middlewares.my-cloudflarewarp.plugin.cloudflarewarp.disableDefault: false
+  traefik-certs-dumper:
+    image: ldez/traefik-certs-dumper:v2.8.1
+    entrypoint: sh -c '
+      apk add jq
+      ; while ! [ -e /data/acme.json ]
+      || ! [ `jq ".[] | .Certificates | length" /data/acme.json` != 0 ]; do
+      sleep 1
+      ; done
+      && traefik-certs-dumper file --version v2 --watch
+      --source /data/acme.json --dest /data/certs --domain-subdir --crt-ext=.pem --key-ext=.pem --post-hook "sh /hook.sh"'
+    volumes:
+      - ./data/letsencrypt:/data
+      - ./hook.sh:/hook.sh
+    restart: unless-stopped
 
-  # http:
-  #   middlewares:
-  #       my-cloudflarewarp:
-  #           plugin:
-  #               cloudflarewarp:
-  #                   disableDefault: "false"
-  #                   trustip:
-  #                       - 2400:cb00::/32
-
-      
-      # homepage.group: Infrastructure
-      # homepage.name: Traefik
-      # homepage.icon: traefik
-      # homepage.href: https://traefik.${SERVER_DOMAIN}
-      # homepage.description: Reverse Proxy
-      # homepage.widget.type: traefik
-      # homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
-
-  # traefik-certs-dumper:
-  #   image: ldez/traefik-certs-dumper:v2.8.1
-  #   entrypoint: sh -c '
-  #     apk add jq
-  #     ; while ! [ -e /data/acme.json ]
-  #     || ! [ `jq ".[] | .Certificates | length" /data/acme.json` != 0 ]; do
-  #     sleep 1
-  #     ; done
-  #     && traefik-certs-dumper file --version v2 --watch
-  #     --source /data/acme.json --dest /data/certs --domain-subdir --crt-ext=.pem --key-ext=.pem --post-hook "sh /hook.sh"'
-  #   volumes:
-  #     - ./data/letsencrypt:/data
-  #     - ./hook.sh:/hook.sh
-  #   restart: unless-stopped
-
-  # authelia:
-  #   image: ghcr.io/authelia/authelia
-  #   user: "1000:1000"
-  #   volumes:
-  #     - ./authelia:/config
-  #   networks:
-  #     - traefik
-  #   labels:
-  #     my.zone: zone1
-  #     traefik.enable: true 
-  #     traefik.http.routers.authelia.rule: Host(`login.${SERVER_DOMAIN}`)
-  #     traefik.http.routers.authelia.entrypoints: websecure
-  #     traefik.http.services.authelia.loadbalancer.server.port: 9091
-  #   expose:
-  #     - 9091
-  #   restart: unless-stopped
-  #   environment:
-  #     - TZ=${TZ}
+  authelia:
+    image: ghcr.io/authelia/authelia
+    user: "1000:1000"
+    volumes:
+      - ./authelia:/config
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true 
+      traefik.http.routers.authelia.rule: Host(`login.${SERVER_DOMAIN}`)
+      traefik.http.routers.authelia.entrypoints: websecure
+      traefik.http.services.authelia.loadbalancer.server.port: 9091
+    expose:
+      - 9091
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
 
   whoami:
     image: containous/whoami
@@ -127,30 +113,21 @@ services:
       my.zone: zone1
       traefik.enable: true
       traefik.http.routers.whoami.rule: Host(`whoami.${SERVER_DOMAIN}`)
-      traefik.http.routers.whoami.entrypoints: web
+      traefik.http.routers.whoami.entrypoints: websecure
 
-  # whoami-auth:
-  #   image: containous/whoami
-  #   restart: unless-stopped
-  #   networks:
-  #     - traefik
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   labels:
-  #     my.zone: zone1
-  #     traefik.enable: true
-  #     traefik.http.routers.whoami-auth.rule: Host(`whoami-auth.${SERVER_DOMAIN}`)
-  #     traefik.http.routers.whoami-auth.entrypoints: websecure
-  #     traefik.http.routers.whoami-auth.middlewares: authelia@docker
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    restart: 'unless-stopped'
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    networks: 
+  whoami-auth:
+    image: containous/whoami
+    restart: unless-stopped
+    networks:
       - traefik
-    command: tunnel --no-autoupdate run
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.whoami-auth.rule: Host(`whoami-auth.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoami-auth.entrypoints: websecure
+      traefik.http.routers.whoami-auth.middlewares: authelia@docker
 
 networks:
   traefik:
