@@ -48,6 +48,10 @@ If you have you a own website or you want to host a service which is not listed 
 
 Because all user data is mounted to the filesystem you can backup everything simply by backing up this folder. You can use your own solution or use the ```./backup.sh``` script. It assumes that this homeserver-folder lives under ```/mnt/data``` and you want to back it up to ```/mnt/backup```.
 
+## Publish
+
+If you want to publish some services to the internet take a look at [services/cloudflared](./services/cloudflared).
+
 ## docker-compose.yml template
 
 ```
