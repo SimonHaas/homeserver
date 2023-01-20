@@ -14,7 +14,8 @@ If you are the only person who needs access to your homeserver while not being a
 6. Once your Tunnel is created you can configure it. Go to 'Public Hostnames' and add a service you would like to publish.
 7. Enter the subdomain like 'nextcloud' and select your Domain.
 8. Under Type select 'HTTPS' and as URL 'traefik'.
-9. Under 'Additional application settings' -> 'TLS' -> enable 'No TLS Verify'
+9. Under 'Additional application settings' -> 'TLS' -> enable 'No TLS Verify'.
+   1.  I do not understand why this step is neccessary but without it, it does not work. If you have a deeper understanding, please let me know.
 10. Click 'Save hostname'
 11. Now everyone can access your locally hosted service via the internet.
 12. Add a hostname for every service you want to publish.
