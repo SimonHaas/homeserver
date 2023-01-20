@@ -28,10 +28,12 @@ services:
       my.zone: zone1
       traefik.enable: true
       traefik.http.routers.nextcloud.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.nextcloud.entrypoints: web
-      # traefik.http.routers.nextcloud.middlewares: "nginx@docker,nginx-red@docker" # source: https://github.com/azonictechnophile/nextcloud_on_docker/blob/4255c29e58f485ae1bad7f0ade61bb99b09e8c21/roles/docker_container/tasks/nginx.yml#L46
+      traefik.http.routers.nextcloud.entrypoints: websecure
+      traefik.http.routers.nextcloud.middlewares: "nginx@docker,nginx-red@docker" # source: https://github.com/azonictechnophile/nextcloud_on_docker/blob/4255c29e58f485ae1bad7f0ade61bb99b09e8c21/roles/docker_container/tasks/nginx.yml#L46
+      traefik.http.routers.nextcloud.tls: "true"
+      traefik.http.routers.nextcloud.tls.certresolver: "default"
       traefik.http.middlewares.nginx.headers.referrerPolicy: "no-referrer"
-      # traefik.http.middlewares.nginx.headers.SSLRedirect: "true"
+      traefik.http.middlewares.nginx.headers.SSLRedirect: "true"
       traefik.http.middlewares.nginx.headers.STSSeconds: "315360000"
       traefik.http.middlewares.nginx.headers.browserXSSFilter: "true"
       traefik.http.middlewares.nginx.headers.contentTypeNosniff: "true"
@@ -39,9 +41,9 @@ services:
       traefik.http.middlewares.nginx.headers.STSIncludeSubdomains: "true"
       traefik.http.middlewares.nginx.headers.STSPreload: "true"
       traefik.http.middlewares.nginx.headers.customFrameOptionsValue: "SAMEORIGIN"
-      # traefik.http.middlewares.nginx-red.redirectregex.permanent: "true"
-      # traefik.http.middlewares.nginx-red.redirectregex.regex: "https://(.*)/.well-known/(card|cal)dav"
-      # traefik.http.middlewares.nginx-red.redirectregex.replacement: "https://${SUB_DOMAIN}.${SERVER_DOMAIN}/remote.php/dav"
+      traefik.http.middlewares.nginx-red.redirectregex.permanent: "true"
+      traefik.http.middlewares.nginx-red.redirectregex.regex: "https://(.*)/.well-known/(card|cal)dav"
+      traefik.http.middlewares.nginx-red.redirectregex.replacement: "https://${SUB_DOMAIN}.${SERVER_DOMAIN}/remote.php/dav"
       homepage.group: Media
       homepage.name: Nextcloud
       homepage.icon: nextcloud
