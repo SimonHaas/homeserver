@@ -22,3 +22,8 @@ password
 go to ADMIN -> ZONES -> edit the default zone
 set "Upstream Auth Address" to kasm.example.com
 set "Proxy Port" to 443
+
+## usage with ./script.sh
+
+./script.sh KASM start
+./script.sh KASM stop

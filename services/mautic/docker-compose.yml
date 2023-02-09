@@ -1,0 +1,57 @@
+version: '2'
+
+services:
+
+  mauticdb:
+    restart: always
+    image: percona/percona-server:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecret
+    command:
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    networks:
+      - traefik
+
+  mautic:
+    restart: always
+    image: mautic/mautic:latest
+    links:
+      - mauticdb:mysql
+    depends_on:
+      - mauticdb
+    ports:
+      - 8080:80
+    volumes:
+      - mautic_data:/var/www/html
+    environment:
+      - MAUTIC_DB_HOST=mauticdb
+      - MYSQL_PORT_3306_TCP=3306
+      - MAUTIC_DB_USER=root
+      - MAUTIC_DB_PASSWORD=mysecret
+      - MAUTIC_DB_NAME=mautic
+      - MAUTIC_RUN_CRON_JOBS=true
+      - MAUTIC_TRUSTED_PROXIES=0.0.0.0/0
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.mautic.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.mautic.entrypoints: websecure
+      traefik.http.services.mautic.loadbalancer.server.port: 80
+      homepage.group: Infrastructure
+      homepage.name: mautic
+      homepage.icon: mautic
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Open-Source Marketing Automation
+      
+networks:
+  traefik:
+    name: zone1
+volumes:
+  mysql_data:
+    driver: local
+  mautic_data:
+    driver: local
