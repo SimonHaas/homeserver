@@ -1,7 +1,6 @@
 version: "3.6"
 services:
   nextcloud:
-    container_name: nextcloud
     restart: always
     # docker-compose exec nextcloud chown -R www-data:root /var/www
     image: nextcloud:fpm
@@ -20,7 +19,6 @@ services:
     restart: always
     links:
       - nextcloud
-    container_name: nextcloud-web
     volumes:
       - ./data/nextcloud:/var/www/html
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -54,7 +52,6 @@ services:
 
   nextcloud-mariadb:
     image: mariadb:10.5
-    container_name: "nextcloud-mariadb"
     hostname: nextcloud-mariadb
     networks:
       - traefik
@@ -67,7 +64,6 @@ services:
   nextcloud-redis:
     image: redis:alpine
     restart: always
-    container_name: nextcloud-redis
     networks:
       - traefik
     volumes:

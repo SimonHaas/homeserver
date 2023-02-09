@@ -4,7 +4,6 @@ services:
   traefik:
     restart: unless-stopped
     image: "traefik:2.8"
-    container_name: traefik
     command:
       - "--log.level=DEBUG"
       - "--providers.docker=true"
@@ -17,24 +16,18 @@ services:
       - "--entrypoints.websecure.http.tls.certResolver=myresolver"
       - "--certificatesresolvers.myresolver.acme.storage=letsencrypt/acme.json"
       - "--certificatesResolvers.myresolver.acme.email=${ACME_EMAIL}"
-      #- "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # - "--certificatesResolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesResolvers.myresolver.acme.dnsChallenge=true"
       - "--certificatesResolvers.myresolver.acme.dnschallenge.provider=${DNS_CHALLENGE_PROVIDER}"
       - "--certificatesResolvers.myresolver.acme.dnschallenge.resolvers=8.8.4.4:53,8.8.8.8:53"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=0"
+      - --api=true
+      - --api.insecure=true
       - --api.dashboard=true
       - --providers.docker.constraints=Label(`my.zone`, `zone1`)
       - --serverstransport.insecureskipverify=true
-
-      - --api=true
-      - --api.insecure=true
-      # - --pilot.token=$TRAEFIK_PILOT_TOKEN
-      - --experimental.plugins.traefik-ondemand-plugin.moduleName=github.com/acouvreur/traefik-ondemand-plugin
-      - --experimental.plugins.traefik-ondemand-plugin.version=v1.3.0
-      # - --providers.docker=true
-      - --providers.file.filename=/etc/traefik/dynamic-config.yml
-      # - --entrypoints.http.address=:80
-      # - --entrypoints.https.address=:443
+      - --experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp
+      - --experimental.plugins.cloudflarewarp.version=v1.3.3
     ports:
       - "80:80"
       - "443:443"
@@ -45,30 +38,28 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/letsencrypt:/letsencrypt
-      - ./dynamic-config.yml:/etc/traefik/dynamic-config.yml
     env_file:
       - .env
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.traefik.entrypoints: web
+      traefik.http.routers.traefik.entrypoints: websecure
       traefik.http.routers.traefik.tls: true
       traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
       traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
-      traefik.http.routers.dashboard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.dashboard.service: api@internal
       traefik.http.routers.traefik.tls.certresolver: myresolver
       traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.dashboard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.dashboard.service: api@internal
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
       traefik.http.middlewares.redirect-to-https.redirectscheme.permanent: true
       traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
       traefik.http.routers.redirs.entrypoints: web
       traefik.http.routers.redirs.middlewares: redirect-to-https
-      
       traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
       traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
       traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
-      
+      traefik.http.middlewares.my-cloudflarewarp.plugin.cloudflarewarp.disableDefault: false
       homepage.group: Infrastructure
       homepage.name: Traefik
       homepage.icon: traefik
@@ -79,7 +70,6 @@ services:
 
   traefik-certs-dumper:
     image: ldez/traefik-certs-dumper:v2.8.1
-    container_name: cert-dumper
     entrypoint: sh -c '
       apk add jq
       ; while ! [ -e /data/acme.json ]
@@ -95,7 +85,6 @@ services:
 
   authelia:
     image: ghcr.io/authelia/authelia
-    container_name: authelia
     user: "1000:1000"
     volumes:
       - ./authelia:/config
@@ -115,7 +104,6 @@ services:
 
   whoami:
     image: containous/whoami
-    container_name: whoami
     restart: unless-stopped
     networks:
       - traefik
@@ -129,7 +117,6 @@ services:
 
   whoami-auth:
     image: containous/whoami
-    container_name: whoami-auth
     restart: unless-stopped
     networks:
       - traefik
