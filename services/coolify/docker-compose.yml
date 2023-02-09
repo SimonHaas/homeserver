@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  coolify:
+    image: coollabsio/coolify:${TAG:-latest}
+    restart: always
+    container_name: coolify
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
+    volumes:
+      - ./data/backup:/app/backups
+      - ./data/db:/app/db
+      - ./data/logs:/app/logs
+      - ./data/ssl:/app/ssl
+      - ./data/acme:/etc/traefik/acme
+      - ./data/letsencrypt:/etc/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - .env
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.coolify.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.coolify.entrypoints: websecure
+      traefik.http.services.coolify.loadbalancer.server.port: 3000
+      homepage.group: Infrastructure
+      homepage.name: coolify
+      homepage.icon: coolify
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Self hosted heroku alternative
+
+  fluent-bit:
+    image: coollabsio/coolify-fluent-bit:1.0.0
+    container_name: coolify-fluentbit
+    volumes:
+      - ./data/logs:/app/logs
+    networks:
+      - traefik
+      
+networks:
+  traefik:
+    name: zone1
