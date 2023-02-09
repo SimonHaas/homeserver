@@ -5,7 +5,9 @@ It is designed to be hosted and used only on your local network. Even though bei
 
 ## Structure
 Each service is fully contained in a directory. Usually there are at least a ```docker-compose.yml``` and an ```.env.example``` file. All data is persistet in the service's ```data/``` direcrtory.
-Traefik is the reverse proxy for all the services. To start a service simply ```cp .env.example .env``` edit it to your likes, add the service name to the ```SERVICES``` variable in the root ```.env``` file and run ```./script.sh up -d```. This script simply applies all passed parameters to ```docker compose``` executed in each service`s directory specified in the ```.env``` file.
+Traefik is the reverse proxy for all the services. To start a service simply ```cp .env.example .env``` edit it to your likes, add the service name to the ```ACTIVE_SERVICES``` variable in the root ```.env``` file and run ```./script.sh ACTIVE_SERVICES up -d```. This script simply applies all passed parameters to ```docker compose``` executed in each service`s directory specified in the ```.env``` file.
+
+Services specified under ```SAVE_BACKUP``` will be stopped by the ```./backup.sh``` script before doing a backup and started again when the backup is finished.
 
 ## Initial Setup
 

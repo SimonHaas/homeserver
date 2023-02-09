@@ -8,6 +8,9 @@ fi
 if [[ "$1" = "SAVE_BACKUP" ]]
 then
   servicesEnv="${SAVE_BACKUP}"
+elif [[ "$1" = "ACTIVE_SERVICES" ]]
+then
+  servicesEnv="${ACTIVE_SERVICES}"
 elif [[ "$1" = "KASM" ]]
 then
   cd services/kasm
@@ -15,7 +18,11 @@ then
   cd ../..
   exit 0
 else
-  servicesEnv="${ACTIVE_SERVICES}"
+  echo 'not supported, run one of the following (with options like docker compose):'
+  echo './script.sh ACTIVE_SERVICES up -d'
+  echo './script.sh SAVE_BACKUP stop'
+  echo 'OR:'
+  echo './script.sh KASM start'
 fi
 
 IFS=',' read -r -a services <<< "$servicesEnv"
