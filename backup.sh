@@ -16,7 +16,7 @@ repository="homeserver"
 
 # Hier eine Liste mit den zu sichernden Verzeichnissen angeben
 # z.B. sicherung="/home/peter/Bilder /home/peter/Videos --exclude *.tmp"
-sicherung="/mnt/ssd2/homeserver"
+sicherung="/mnt/data/homeserver"
 
 # Hier die Art der Verschlüsselung angeben
 # z.B. verschluesselung="none"
@@ -39,7 +39,7 @@ pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
 
 repopfad="$zielpfad"/"$repository"
 
-if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/ssd2' /proc/mounts
+if grep -qs '/mnt/backup' /proc/mounts && grep -qs '/mnt/data' /proc/mounts
 then
     # check for root
     if [ $(id -u) -ne 0 ] && [ "$rootuser" == "ja" ]; then
@@ -54,14 +54,14 @@ then
     fi
 
     SECONDS=0
-    /mnt/ssd2/homeserver/script.sh SAVE_BACKUP stop
+    /mnt/data/homeserver/script.sh SAVE_BACKUP stop
     echo "Start der Sicherung $(date)."
 
     borg create --compression $kompression --exclude-caches --one-file-system -v --stats --progress \
                 $repopfad::'{hostname}-{now:%Y-%m-%d-%H%M%S}' $sicherung
 
     echo "Ende der Sicherung $(date). Dauer: $SECONDS Sekunden"
-    /mnt/ssd2/homeserver/script.sh SAVE_BACKUP start
+    /mnt/data/homeserver/script.sh SAVE_BACKUP start
 
     # prune archives
     borg prune -v --list $repopfad --prefix '{hostname}-' $pruning
