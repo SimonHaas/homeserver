@@ -11,8 +11,8 @@ services:
       - TZ=Europe/Berlin
       - SUDO_ACCESS=false #optional
       - PASSWORD_ACCESS=true #optional
-      - USER_PASSWORD=***REMOVED*** #optional
-      - USER_NAME=simon.haas #optional
+      - USER_PASSWORD=${USER_PASSWORD} #optional
+      - USER_NAME=${USER_NAME} #optional
     volumes:
       - ./data/config:/config
     ports:
