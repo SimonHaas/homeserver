@@ -1,0 +1,7 @@
+{
+    "search.exclude": {
+        "**/*.config": true,
+        "**/config": true,
+        "**/data": true
+    }
+}
