@@ -5,7 +5,7 @@ https://github.com/wger-project/docker
 
 because of file-permissions run:
 docker compose up -d
-sudo chown -R simon data/
+sudo chown -R <USER> data/
 docker compose down
 docker compose up -d
 
