@@ -35,6 +35,10 @@ docker network create zone1
 ``` 
 wait till all images are pulled, build and a certificate retrieved. Then you can access nextcloud and gogs via your browser. If your browser warns you about an unknown certificate authority accept the risk because you know it is a staging certificate or maybe a self signed certificate from traefik. In the latter case you still need to wait a minute till your letsencrypt certificate is issued or you have an error somewhere. Check ```docker compose logs -f traefik``` to view the logs of traefik. If everything worked alright, just comment out the one line in traefik's docker-compose.yml and run the script again to get a valid certificate.
 
+## Dashboard
+
+The default dashboard is [homepage from benphelps](https://github.com/benphelps/homepage) (```./services/homepage```). Most services are already configured to appear on the dashboard when they are up and running. If you want to use another dashboard you can do so of course.
+
 ## Customization
 
 You have several options to customize the services without effecting the state of this git repository.
@@ -48,7 +52,14 @@ If you have you a own website or you want to host a service which is not listed 
 
 ## Backup
 
-Because all user data is mounted to the filesystem you can backup everything simply by backing up this folder. You can use your own solution or use the ```./backup.sh``` script. It assumes that this homeserver-folder lives under ```/mnt/data``` and you want to back it up to ```/mnt/backup```.
+Because all user data is mounted to the filesystem you can backup everything simply by backing up this folder. You can use your own solution or use the ```./backup.sh``` script. Specify your directories in the ```.env``` file accordingly. The ```.env.example``` assumes that your homeserver-folder lives under ```/mnt/data``` and you want to back it up to ```/mnt/backup```. Both ```/mnt/data``` and ```/mnt/backup``` are seperatly mounted harddrives. If you want to put your backup in a subfolder change the path accordingly at ```BACKUP_DESTINATION```.
+
+You can setup a cronjob to do a regular backup.
+
+```bash
+sudo crontab -e
+0 0 * * * (time /bin/bash /mnt/data/homeserver/backup.sh) >> /mnt/data/homeserver/backup-logs.txt 2>&1
+```
 
 ## Publish
 
@@ -76,5 +87,4 @@ services:
 networks:
   traefik:
     name: zone1
-
 ```
