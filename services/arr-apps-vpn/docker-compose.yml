@@ -111,6 +111,32 @@ services:
       traefik.http.routers.nzbget.service: nzbget
       traefik.http.services.nzbget.loadbalancer.server.port: 6789
 
+      traefik.http.routers.vpncheckerVpn.rule: Host(`vpnchecker-vpn.${SERVER_DOMAIN}`)
+      traefik.http.routers.vpncheckerVpn.entrypoints: websecure
+      traefik.http.routers.vpncheckerVpn.service: vpncheckerVpn
+      traefik.http.services.vpncheckerVpn.loadbalancer.server.port: 80
+
+  vpncheckerVpn:
+    image: ghcr.io/simonhaas/docker-vpn-checker:main
+    restart: always
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+
+  vpncheckerNonvpn:
+    image: ghcr.io/simonhaas/docker-vpn-checker:main
+    restart: always
+    networks:
+      - traefik
+    depends_on:
+      - vpncheckerVpn
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.vpncheckerNonvpn.rule: Host(`vpnchecker-nonvpn.${SERVER_DOMAIN}`)
+      traefik.http.routers.vpncheckerNonvpn.entrypoints: websecure
+      traefik.http.services.vpncheckerNonvpn.loadbalancer.server.port: 80
+
   # qbittorrent:
   #   image: ghcr.io/linuxserver/qbittorrent
   #   container_name: qbittorrent
