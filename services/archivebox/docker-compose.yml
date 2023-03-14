@@ -1,0 +1,28 @@
+version: "2.4"
+
+services:
+  archivebox:
+    image: archivebox/archivebox:master
+    command: server --quick-init 0.0.0.0:8000
+    environment:
+      - ALLOWED_HOSTS=* # add any config options you want as env vars
+      - MEDIA_MAX_SIZE=750m
+      # - SEARCH_BACKEND_ENGINE=sonic     # uncomment these if you enable sonic below
+      # - SEARCH_BACKEND_HOST_NAME=sonic
+      # - SEARCH_BACKEND_PASSWORD=SecretPassword
+    volumes:
+      - ./data:/data
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.archivebox.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.archivebox.entrypoints: websecure
+      traefik.http.services.archivebox.loadbalancer.server.port: 8000
+
+networks:
+  traefik:
+    name: zone1
