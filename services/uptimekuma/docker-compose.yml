@@ -2,7 +2,6 @@ version: "3.6"
 services:
   uptimekuma:
     image: louislam/uptime-kuma:latest
-    container_name: uptimekuma
     volumes:
       - ./data:/app/data
     restart: unless-stopped

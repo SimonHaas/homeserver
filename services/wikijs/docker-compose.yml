@@ -9,7 +9,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./data:/var/lib/postgresql/data
-    container_name: wikijsdb
     networks: 
         - traefik
 
@@ -25,7 +24,6 @@ services:
       DB_PASS: wikijsrocks
       DB_NAME: wiki
     restart: unless-stopped
-    container_name: wikijs
     security_opt:
         - no-new-privileges:true
     networks:

@@ -1,7 +1,7 @@
 version: "3.6"
 services:
   vpn:
-    # TEST: docker exec -it vpn curl ifconfig.me
+    # TEST: docker compose exec -it vpn curl ifconfig.me
     image: ghcr.io/bubuntux/nordlynx
     container_name: vpn
     cap_add:
@@ -66,11 +66,6 @@ services:
       traefik.http.routers.prowlarr.service: prowlarr
       traefik.http.services.prowlarr.loadbalancer.server.port: 9696
 
-      # traefik.http.routers.overseerr.rule: Host(`overseerr.${SERVER_DOMAIN}`)
-      # traefik.http.routers.overseerr.entrypoints: websecure
-      # traefik.http.routers.overseerr.service: overseerr
-      # traefik.http.services.overseerr.loadbalancer.server.port: 5055
-   
       traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.${SERVER_DOMAIN}`)
       traefik.http.routers.jellyseerr.entrypoints: websecure
       traefik.http.routers.jellyseerr.service: jellyseerr
@@ -91,10 +86,10 @@ services:
       traefik.http.routers.whisparr.service: whisparr
       traefik.http.services.whisparr.loadbalancer.server.port: 6969
 
-      traefik.http.routers.flood.rule: Host(`flood.${SERVER_DOMAIN}`)
-      traefik.http.routers.flood.entrypoints: websecure
-      traefik.http.routers.flood.service: flood
-      traefik.http.services.flood.loadbalancer.server.port: 3001
+      # traefik.http.routers.flood.rule: Host(`flood.${SERVER_DOMAIN}`)
+      # traefik.http.routers.flood.entrypoints: websecure
+      # traefik.http.routers.flood.service: flood
+      # traefik.http.services.flood.loadbalancer.server.port: 3001
 
       traefik.http.routers.mylar.rule: Host(`mylar.${SERVER_DOMAIN}`)
       traefik.http.routers.mylar.entrypoints: websecure
@@ -159,10 +154,12 @@ services:
     container_name: transmission
     image: lscr.io/linuxserver/transmission:latest
     environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=${TZ}
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ:
+      USER: ${TRANSMISSION_USER}
+      PASS: ${TRANSMISSION_PASS}
     volumes:
       - ./config/transmission:/config
       - ./data/transmission:/downloads
@@ -180,7 +177,6 @@ services:
       homepage.widget.url: https://${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}
 
   # flood: # alternative torrent-downloader UI
-  #   container_name: flood
   #   # hostname: flood
   #   image: jesec/flood
   #   user: 1000:1000
@@ -191,9 +187,18 @@ services:
   #   volumes:
   #     - ./config/flood:/config # has to exist befor first start
   #     - ./data:/data
-  #   network_mode: service:vpn
+  #   # network_mode: service:vpn
   #   depends_on:
-  #     - vpn
+  #     - transmission
+  #   networks:
+  #     - traefik
+  #   labels:
+  #     my.zone: zone1
+  #     traefik.enable: true
+  #     traefik.http.routers.flood.rule: Host(`flood.${SERVER_DOMAIN}`)
+  #     traefik.http.routers.flood.entrypoints: websecure
+  #     traefik.http.routers.flood.service: flood
+  #     traefik.http.services.flood.loadbalancer.server.port: 3001
 
   lazylibrarian: # books
     image: lscr.io/linuxserver/lazylibrarian:latest
@@ -523,7 +528,7 @@ services:
       homepage.group: Arr
       homepage.name: Jellyseerr
       homepage.icon: jellyseerr
-      homepage.href: https://jellyseerr.${SERVER_DOMAIN}
+      homepage.href: https://${SUB_DOMAIN_JELLYSEERR}.${SERVER_DOMAIN}
       homepage.description: Media discovery
       homepage.widget.type: jellyseerr
       homepage.widget.url: https://${SUB_DOMAIN_JELLYSEERR}.${SERVER_DOMAIN}
