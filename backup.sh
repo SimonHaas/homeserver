@@ -39,7 +39,7 @@ then
     echo "End of backup $(date). Duration: $SECONDS seconds"
     $source/script.sh SAVE_BACKUP start
 
-    borg prune -v --list $repopath --prefix '{hostname}-' $pruning
+    borg prune -v --list $repopath --glob-archives '{hostname}-*' $pruning
 
 else
     echo "!!! DIRECTORIES NOT MOUNTED !!!"

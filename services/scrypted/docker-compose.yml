@@ -1,0 +1,8 @@
+version: "3.5"
+services:
+    scrypted:
+        image: koush/scrypted
+        restart: unless-stopped
+        network_mode: host
+        volumes:
+            - ./data:/server/volume

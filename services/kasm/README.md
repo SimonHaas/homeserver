@@ -2,7 +2,8 @@
 
 ## installation
 
-curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz
+``` shell
+curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.1.421524.tar.gz
 tar -xf kasm_release*.tar.gz
 sudo bash kasm_release/install.sh -L 8443
 
@@ -13,17 +14,20 @@ update users set
     secret=NULL, set_two_factor=False, locked=False,
     disabled=False, failed_pw_attempts = 0 where username ='admin@kasm.local';
 \q
+```
 
 Login:
 admin@kasm.local
 password
 
 ## to make kasm work behind traefik
-go to ADMIN -> ZONES -> edit the default zone
-set "Upstream Auth Address" to kasm.example.com
-set "Proxy Port" to 443
+1. go to ADMIN -> ZONES -> edit the default zone
+2. set "Upstream Auth Address" to kasm.example.com
+3. set "Proxy Port" to 443
 
 ## usage with ./script.sh
 
+``` shell
 ./script.sh KASM start
 ./script.sh KASM stop
+```

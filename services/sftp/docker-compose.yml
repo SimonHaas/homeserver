@@ -1,0 +1,9 @@
+version: '3.6'
+services:
+  sftp:
+    image: atmoz/sftp
+    volumes:
+        - ./data:/home/admin/data
+    ports:
+        - ${PORT}:22
+    command: ${COMMAND}

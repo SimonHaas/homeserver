@@ -22,6 +22,7 @@ services:
     networks:
       - traefik
     labels:
+      com.centurylinklabs.watchtower.monitor-only: true
       my.zone: zone1
       traefik.enable: true
       traefik.passHostHeader: true
@@ -151,7 +152,6 @@ services:
   #     - no-new-privileges:true
 
   transmission:
-    container_name: transmission
     image: lscr.io/linuxserver/transmission:latest
     environment:
       PUID: 1000
@@ -202,7 +202,6 @@ services:
 
   lazylibrarian: # books
     image: lscr.io/linuxserver/lazylibrarian:latest
-    container_name: lazylibrarian
     environment:
       - PUID=1000
       - PGID=1000

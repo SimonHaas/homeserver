@@ -2,7 +2,6 @@ version: "3.6"
 services:
   kasm:
     image: nginx
-    container_name: kasm
     restart: always
     security_opt:
       - no-new-privileges:true
