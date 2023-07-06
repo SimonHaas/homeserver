@@ -7,7 +7,6 @@ services:
       TRAGGO_DEFAULT_USER_PASS: ${TRAGGO_DEFAULT_USER_PASS}
     volumes:
       - ./data:/opt/traggo/data
-    container_name: traggo
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

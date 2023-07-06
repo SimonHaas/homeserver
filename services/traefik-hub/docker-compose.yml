@@ -4,7 +4,6 @@ services:
   hub-agent:
     image: ghcr.io/traefik/hub-agent-traefik:v1.0.0
     pull_policy: always
-    container_name: hub-agent
     restart: "on-failure"
     command:
       - run
@@ -21,7 +20,6 @@ services:
 
   traefik:
     image: traefik:v2.8
-    container_name: traefik-hub
     command:
       # Enable Hub communication (open the port 9900 and 9901 by default)
       - --experimental.hub=true

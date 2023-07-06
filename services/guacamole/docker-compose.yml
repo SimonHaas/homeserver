@@ -4,7 +4,6 @@ services:
     image: oznu/guacamole
     volumes:
       - ./data/config:/config
-    container_name: guacamole
     restart: always
     security_opt:
       - no-new-privileges:true

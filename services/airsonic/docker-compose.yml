@@ -12,7 +12,6 @@ services:
       - ./data/music:/music
       - ./data/playlists:/playlists
       - ./data/podcasts:/podcasts
-    container_name: airsonic
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

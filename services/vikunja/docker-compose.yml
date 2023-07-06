@@ -2,7 +2,6 @@ version: '3'
 
 services:
   db:
-    container_name: vikunja_db
     image: mariadb:10
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
@@ -19,7 +18,6 @@ services:
       - traefik
 
   api:
-    container_name: vikunja_api
     image: vikunja/api
     environment:
       VIKUNJA_DATABASE_HOST: db
@@ -46,7 +44,6 @@ services:
       traefik.http.services.vikunja-api.loadbalancer.server.port: 3456
 
   frontend:
-    container_name: vikunja_frontend
     image: vikunja/frontend
     environment:
       VIKUNJA_API_URL: https://${SUB_DOMAIN_API}.${SERVER_DOMAIN}/api/v1

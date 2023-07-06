@@ -2,7 +2,6 @@ version: "3.6"
 services:
   fireflyiii-mariadb:
     image: mariadb
-    container_name: fireflyiii-mariadb
     hostname: fireflyiii-mariadb
     security_opt:
       - no-new-privileges:true
@@ -25,7 +24,6 @@ services:
       - ./data/firefly/upload:/var/www/firefly-iii/storage/upload
       - ./data/firefly/logs:/var/www/firefly-iii/storage/logs
     env_file: .env
-    container_name: fireflyiii
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

@@ -2,7 +2,6 @@ version: "2.1"
 services:
   duplicati:
     image: lscr.io/linuxserver/duplicati:latest
-    container_name: duplicati
     environment:
       - PUID=1000
       - PGID=1000

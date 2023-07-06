@@ -4,7 +4,6 @@ services:
   coolify:
     image: coollabsio/coolify:${TAG:-latest}
     restart: always
-    container_name: coolify
     ports:
       - target: 3000
         published: 3000
@@ -36,7 +35,6 @@ services:
 
   fluent-bit:
     image: coollabsio/coolify-fluent-bit:1.0.0
-    container_name: coolify-fluentbit
     volumes:
       - ./data/logs:/app/logs
     networks:

@@ -2,7 +2,6 @@ version: "3.6"
 services:
   calibre:
     image: lscr.io/linuxserver/calibre:latest
-    container_name: calibre
     environment:
       - PUID=1000
       - PGID=1000
@@ -40,7 +39,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
-    container_name: calibre-web
     restart: unless-stopped
     security_opt:
         - no-new-privileges:true

@@ -2,7 +2,6 @@ version: "3.6"
 services:
   minetest:
     image: linuxserver/minetest
-    container_name: minetest
     environment:
       - PUID=1000
       - PGID=1000

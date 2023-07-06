@@ -3,7 +3,6 @@ version: '2'
 services:
   roundcubemail:
     image: roundcube/roundcubemail:latest
-    container_name: roundcubemail
     restart: unless-stopped
     volumes:
       - ./data/www:/var/www/html

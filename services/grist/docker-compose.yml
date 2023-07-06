@@ -6,7 +6,6 @@ services:
       - ./data:/persist
     environment:
       APP_HOME_URL: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
-    container_name: grist
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

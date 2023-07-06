@@ -2,7 +2,6 @@ version: "3"
 services:
   kavita:
     image: kizaing/kavita:latest
-    container_name: kavita
     volumes:
       - ./data/manga:/manga
       - ./data/config:/kavita/config

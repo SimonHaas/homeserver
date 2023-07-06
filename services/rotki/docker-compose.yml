@@ -7,7 +7,6 @@ services:
     volumes:
       - ./data/data:/data
       - ./data/logs:/logs
-    container_name: rotki
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

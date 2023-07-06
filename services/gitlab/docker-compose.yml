@@ -4,7 +4,6 @@ services:
   gitlab:
     restart: always
     image: gitlab/gitlab-ce
-    container_name: gitlab
     hostname: ${SUB_DOMAIN}.${SERVER_DOMAIN}
     environment:
       GITLAB_OMNIBUS_CONFIG: |

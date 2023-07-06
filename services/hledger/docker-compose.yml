@@ -10,7 +10,6 @@ services:
       - HLEDGER_BASE_URL=https://hledger.${SERVER_DOMAIN}/
     volumes:
       - ./data:/data
-    container_name: hledger
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

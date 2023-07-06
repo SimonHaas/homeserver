@@ -24,7 +24,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
       - postgres
-    container_name: planka
     security_opt:
       - no-new-privileges:true
     networks:
@@ -37,7 +36,6 @@ services:
       traefik.http.services.planka.loadbalancer.server.port: 1337
 
   postgres:
-    container_name: planka_db
     image: postgres:alpine
     restart: unless-stopped
     security_opt:

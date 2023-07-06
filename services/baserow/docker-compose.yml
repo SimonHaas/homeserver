@@ -15,7 +15,6 @@ services:
       - BASEROW_PUBLIC_URL=https://${SUB_DOMAIN}.${SERVER_DOMAIN}
     volumes:
       - ./data:/baserow/data
-    container_name: baserow
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

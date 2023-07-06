@@ -4,7 +4,6 @@ version: '3'
 services:
   web-app:
     image: where_the
-    container_name: where_the
     restart: unless-stopped
     ports:
       - 5055:5000 # the second needs to match the port in config.yml

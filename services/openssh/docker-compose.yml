@@ -3,7 +3,6 @@ version: "2.1"
 services:
   openssh-server:
     image: lscr.io/linuxserver/openssh-server:latest
-    container_name: openssh-server
     hostname: openssh-server #optional
     environment:
       - PUID=1000

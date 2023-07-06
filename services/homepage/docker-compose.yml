@@ -2,7 +2,6 @@ version: "3.3"
 services:
   homepage:
     image: ghcr.io/benphelps/homepage:latest
-    container_name: homepage
     user: 1000:1000 # Optional, change to your user and group IDs for permissions
     volumes:
       - ./config:/app/config # Make sure your local config directory exists before first start
@@ -24,7 +23,6 @@ services:
 
   dockerproxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
-    container_name: dockerproxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:

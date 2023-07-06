@@ -2,7 +2,6 @@ version: "3.6"
 services:
   bookstack_db:
     image: linuxserver/mariadb
-    container_name: bookstack_db
     environment:
       - PUID=1000
       - PGID=1000
@@ -33,7 +32,6 @@ services:
       - ./data/app:/config
     depends_on:
       - bookstack_db
-    container_name: bookstack
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

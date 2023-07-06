@@ -1,7 +1,6 @@
 version: "3"
 services:
   fireshare:
-    container_name: fireshare
     image: shaneisrael/fireshare:latest
     volumes:
       - ./data/data:/data

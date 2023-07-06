@@ -2,7 +2,6 @@ version: "3.6"
 services:
   qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
-    container_name: qbittorrent
     environment:
       - PUID=1000
       - PGID=1000

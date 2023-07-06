@@ -2,7 +2,6 @@ version: "3.6"
 services:
   drone-runner:
     image: drone/drone-runner-docker
-    container_name: runner
     restart: always
     ports:
       - "3003:3000"
@@ -25,7 +24,6 @@ services:
       - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
       - DRONE_SERVER_HOST=${SUB_DOMAIN}.${SERVER_DOMAIN}
       - DRONE_SERVER_PROTO=https
-    container_name: drone
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

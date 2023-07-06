@@ -2,7 +2,6 @@ version: "2.1"
 services:
   emulatorjs:
     image: lscr.io/linuxserver/emulatorjs:latest
-    container_name: emulatorjs
     environment:
       - PUID=1000
       - PGID=1000

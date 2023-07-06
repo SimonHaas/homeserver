@@ -1,7 +1,6 @@
 version: "3"
 services:
   pialert:
-    container_name: pialert
     image: "jokobsk/pi.alert:latest"      
     network_mode: "host"        
     restart: unless-stopped

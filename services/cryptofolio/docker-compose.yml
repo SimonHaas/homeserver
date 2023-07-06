@@ -6,7 +6,6 @@ services:
       - "8084:80"
     volumes:
       - ./data:/var/www/html/api/data
-    container_name: cryptofolio
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

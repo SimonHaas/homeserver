@@ -5,7 +5,6 @@ services:
     volumes:
       - ./data:/var/lib/grafana
     user: "1000"
-    container_name: grafana
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

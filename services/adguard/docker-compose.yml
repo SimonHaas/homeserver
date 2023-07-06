@@ -2,7 +2,6 @@ version: "2"
 services:
   adguard:
     image: adguard/adguardhome
-    container_name: adguard
     ports:
       - 53:53/tcp
       - 53:53/udp

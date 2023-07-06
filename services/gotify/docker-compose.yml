@@ -6,7 +6,6 @@ services:
       - ./data:/app/data
     environment:
       - GOTIFY_SERVER_SSL_LETSENCRYPT_HOSTS=- ${SUB_DOMAIN}.${SERVER_DOMAIN}
-    container_name: gotify
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

@@ -33,7 +33,6 @@ version: '3.5'
 services:
   photoprism:
     image: photoprism/photoprism:latest
-    container_name: photoprism
     depends_on:
       - mariadb
     ## Don't enable automatic restarts until PhotoPrism has been properly configured and tested!
@@ -123,7 +122,6 @@ services:
     ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
     restart: unless-stopped
     image: mariadb:10.8
-    container_name: photoprism-db
     security_opt: # see https://github.com/MariaDB/mariadb-docker/issues/434#issuecomment-1136151239
       - seccomp:unconfined
       - apparmor:unconfined

@@ -5,7 +5,6 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./data:/prometheus
-    container_name: prometheus
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -25,7 +24,6 @@ services:
 
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
-    container_name: node_exporter
     command:
       - '--path.rootfs=/host'
     pid: host

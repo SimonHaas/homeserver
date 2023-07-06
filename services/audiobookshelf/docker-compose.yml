@@ -8,7 +8,6 @@ services:
       - ./data/metadata:/metadata
       - ./data/config:/config
     restart: unless-stopped
-    container_name: audiobookshelf
     security_opt:
       - no-new-privileges:true
     networks:

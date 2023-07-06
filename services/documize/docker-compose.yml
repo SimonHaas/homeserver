@@ -2,7 +2,6 @@ version: "3.6"
 
 services:
   documize_db:
-    container_name: documize_db
     image: postgres:12
     restart: always
     environment:
@@ -20,7 +19,6 @@ services:
        - traefik
 
   documize:
-    container_name: documize
     build: src/
     depends_on:
       documize_db:

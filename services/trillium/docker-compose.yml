@@ -9,7 +9,6 @@ services:
       - "8080:8080"
     volumes:
       - ./data:/home/node/trilium-data
-    container_name: trilium
     security_opt:
       - no-new-privileges:true
     networks:

@@ -2,7 +2,6 @@ version: "3.6"
 services:
   webnut:
     image: teknologist/webnut
-    container_name: webnut
     environment:
       - UPS_HOST=${UPS_HOST}
       - UPS_PORT=${UPS_PORT}

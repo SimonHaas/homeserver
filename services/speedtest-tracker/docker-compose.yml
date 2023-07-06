@@ -1,7 +1,6 @@
 version: "3.3"
 services:
   speedtest:
-    container_name: speedtest-tracker
     image: henrywhitaker3/speedtest-tracker
     ports:
       - 8765:80

@@ -3,7 +3,6 @@ services:
   vpn:
     # TEST: docker compose exec -it vpn curl ifconfig.me
     image: ghcr.io/bubuntux/nordlynx
-    container_name: vpn
     cap_add:
       - NET_ADMIN
     environment:
@@ -135,7 +134,6 @@ services:
 
   # qbittorrent:
   #   image: ghcr.io/linuxserver/qbittorrent
-  #   container_name: qbittorrent
   #   environment:
   #     - PUID=1000
   #     - PGID=1000
@@ -175,6 +173,8 @@ services:
       homepage.description: Torrent downloader
       homepage.widget.type: transmission
       homepage.widget.url: https://${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}
+      homepage.widget.username: ${TRANSMISSION_USER}
+      homepage.widget.password: ${TRANSMISSION_PASS}
 
   # flood: # alternative torrent-downloader UI
   #   # hostname: flood
@@ -224,7 +224,6 @@ services:
 
   mylar3: # comics
     image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar3
     environment:
       - PUID=1000
       - PGID=1000
@@ -245,7 +244,6 @@ services:
 
   lidarr: # music
     image: lscr.io/linuxserver/lidarr
-    container_name: lidarr
     environment:
       - PUID=1000
       - PGID=1000
@@ -272,7 +270,6 @@ services:
 
   radarr: # movies
     image: lscr.io/linuxserver/radarr
-    container_name: radarr
     environment:
       - PUID=1000
       - PGID=1000
@@ -299,7 +296,6 @@ services:
 
   sonarr: # series
     image: lscr.io/linuxserver/sonarr
-    container_name: sonarr
     environment:
       - PUID=1000
       - PGID=1000
@@ -327,7 +323,6 @@ services:
   # TODO https://youtu.be/5rtGBwBuzQE?t=827
   jackett: # indexer (API Support for your favorite torrent trackers) 
     image: lscr.io/linuxserver/jackett
-    container_name: jackett
     environment:
       - PUID=1000
       - PGID=1000
@@ -351,7 +346,6 @@ services:
 
   flaresolverr: # Proxy server to bypass Cloudflare protection 
     image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
@@ -366,7 +360,6 @@ services:
 # curl -L -X POST 'http://192.168.1.2:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'
 
   readarr: # books
-    container_name: readarr
     image: lscr.io/linuxserver/readarr:develop
     environment:
       - PUID=1000
@@ -392,7 +385,6 @@ services:
       homepage.widget.key: ${API_KEY_READARR}
 
   prowlarr: # indexer
-    container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:develop
     environment:
       - PUID=1000
@@ -414,7 +406,6 @@ services:
       homepage.description: Indexer
 
   bazarr: # subtitles
-    container_name: bazarr
     image: cr.hotio.dev/hotio/bazarr
     environment:
       - PUID=1000
@@ -440,7 +431,6 @@ services:
       homepage.widget.key: ${API_KEY_BAZARR}
 
   whisparr: # porn
-    container_name: whisparr
     image: cr.hotio.dev/hotio/whisparr
     environment:
       - PUID=1000
@@ -463,7 +453,6 @@ services:
       homepage.description: Porn
 
   # bevy: # torrent movie streaming
-  #   container_name: bevy
   #   image: zolland/bevy:latest
   #   user: 1000:1000
   #   restart: always
@@ -484,7 +473,6 @@ services:
   #     homepage.description: Torrent movie streaming
 
   nzbget:
-    container_name: nzbget
     image: cr.hotio.dev/hotio/nzbget
     environment:
       - PUID=1000
@@ -510,7 +498,6 @@ services:
 
   jellyseerr: # media discovery
     image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
     environment:
       - LOG_LEVEL=debug
       - TZ=${TZ}

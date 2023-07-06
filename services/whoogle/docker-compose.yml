@@ -30,7 +30,6 @@ services:
     #- WHOOGLE_ALT_RD=farside.link/libreddit
     #- WHOOGLE_ALT_MD=farside.link/scribe
     #- WHOOGLE_ALT_TL=lingva.ml
-    container_name: whoogle
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

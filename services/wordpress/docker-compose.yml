@@ -2,7 +2,6 @@ version: "3.6"
 services:
   wordpress:
     image: wordpress
-    container_name: wordpress
     restart: always
     environment:
       WORDPRESS_DB_HOST: db
@@ -24,7 +23,6 @@ services:
 
   db:
     image: mysql:5.7
-    container_name: wordpressDB
     environment:
       MYSQL_DATABASE: ${WORDPRESS_DB_PASSWORD}
       MYSQL_USER: ${WORDPRESS_DB_USER}

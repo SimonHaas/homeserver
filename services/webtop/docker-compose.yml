@@ -2,7 +2,6 @@ version: "3.6"
 services:
   webtop:
     image: ghcr.io/linuxserver/webtop:ubuntu-mate #choose your flavor
-    container_name: webtop
     #privileged: true #optional but not needed unless you are running kde or i3 or other tools
     environment:
       - PUID=1000

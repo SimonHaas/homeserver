@@ -4,7 +4,6 @@ services:
     image: "dabondi/go-rest-wol"
     volumes:
       - ./config.csv:/app/computer.csv
-    container_name: wol
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

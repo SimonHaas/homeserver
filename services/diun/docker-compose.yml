@@ -3,7 +3,6 @@ version: "3.6"
 services:
   diun:
     image: crazymax/diun:latest
-    container_name: diun
     command: serve
     volumes:
       - "./data:/data"

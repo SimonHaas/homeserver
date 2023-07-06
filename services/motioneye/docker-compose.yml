@@ -7,7 +7,6 @@ services:
     image: ccrisan/motioneye:master-amd64
     volumes:
       - ./data/var_lib_motioneye:/var/lib/motioneye
-    container_name: motioneye
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

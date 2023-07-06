@@ -2,7 +2,6 @@ version: "3.6"
 services:
   dolibarr-mariadb:
     image: mariadb
-    container_name: "dolibarr-mariadb"
     hostname: dolibarr-mariadb
     networks:
       - traefik
@@ -22,7 +21,6 @@ services:
       - ./data/docs:/var/www/documents
     environment:
       - DOLI_AUTO_CONFIGURE=''
-    container_name: dolibarr
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

@@ -4,7 +4,6 @@ services:
   memcached:
     image: memcached:1-alpine
     entrypoint: memcached -m 128M -I 4M # Limit to 128 MB Ram, 4M per entry, customize at free will.
-    container_name: cryptgeon_mem
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -16,7 +15,6 @@ services:
       - memcached
     environment:
       SIZE_LIMIT: 4M
-    container_name: cryptgeon
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

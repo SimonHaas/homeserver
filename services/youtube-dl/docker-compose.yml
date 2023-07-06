@@ -10,7 +10,6 @@ services:
       - ./data/subscriptions:/app/subscriptions
       - ./data/users:/app/users
     image: tzahi12345/youtubedl-material:latest
-    container_name: youtubedl
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

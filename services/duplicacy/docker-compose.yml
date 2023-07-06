@@ -2,7 +2,6 @@ version: "3.7"
 
 services:
   duplicacy:
-    container_name: duplicacy
     hostname: duplicacy
     image: cr.hotio.dev/hotio/duplicacy
     environment:

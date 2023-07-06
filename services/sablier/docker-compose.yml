@@ -8,7 +8,6 @@ version: "3"
 services:
   sablier:
     image: ghcr.io/acouvreur/sablier:latest
-    container_name: sablier
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -19,6 +18,5 @@ services:
 
   nginx:
     image: nginx
-    container_name: sablier-nginx
     ports:
       - 8088:80

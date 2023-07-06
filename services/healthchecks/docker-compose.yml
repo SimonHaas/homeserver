@@ -2,7 +2,6 @@ version: "2.1"
 services:
   healthchecks:
     image: lscr.io/linuxserver/healthchecks:latest
-    container_name: healthchecks
     environment:
       - PUID=1000
       - PGID=1000

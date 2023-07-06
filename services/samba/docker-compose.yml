@@ -2,7 +2,6 @@ version: "3.6"
 
 services:
   samba:
-    container_name: samba
     command: '-s "media;/media/media;yes;no;no" -p'
     environment:
       - "NMBD=True"

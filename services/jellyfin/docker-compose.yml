@@ -15,7 +15,6 @@ services:
       # - 8920:8920 # optional https
       - 7359:7359/udp #optional Allows clients to discover Jellyfin on the local network.
       - 1900:1900/udp #optional Service discovery used by DNLA and clients.
-    container_name: jellyfin
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

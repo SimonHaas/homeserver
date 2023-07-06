@@ -1,7 +1,6 @@
 version: "3.6"
 services:
   db:
-    container_name: ghost_db
     image: mysql:8.0
     restart: always
     environment:
@@ -22,7 +21,6 @@ services:
       database__connection__password: example
       database__connection__database: ghost
       url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
-    container_name: ghost
     security_opt:
       - no-new-privileges:true
     networks:

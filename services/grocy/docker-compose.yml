@@ -8,7 +8,6 @@ services:
       - TZ=${TZ}
     volumes:
       - ./data/config:/config
-    container_name: grocy
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

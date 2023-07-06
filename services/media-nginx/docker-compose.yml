@@ -1,7 +1,6 @@
 version: "3.6"
 services:
   web:
-    container_name: media-nginx
     image: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/templates/nginx.conf.template:ro

@@ -8,7 +8,6 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: 'true'
     volumes:
       - ./data:/data
-    container_name: registry
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -23,7 +22,6 @@ services:
       - NGINX_PROXY_PASS_URL=http://registry:5000
       - SINGLE_REGISTRY=true
     depends_on: ["registry"]
-    container_name: registry-ui
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
