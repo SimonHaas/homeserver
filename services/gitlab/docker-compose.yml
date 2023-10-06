@@ -8,6 +8,20 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'https://${SUB_DOMAIN}.${SERVER_DOMAIN}'
+        registry_external_url 'http://${REGISTRY_SUB_DOMAIN}.${SERVER_DOMAIN}'
+        registry['enable'] = true
+        gitlab_rails['registry_enabled'] = true
+        registry_nginx['enable'] = true
+        registry_nginx['listen_port'] = 5050
+        registry_nginx['listen_https'] = false
+        registry_nginx['proxy_set_headers'] = {
+            "Host" => "$$http_host",
+            "X-Real-IP" => "$$remote_addr",
+            "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+            "X-Forwarded-Proto" => "https",
+            "X-Forwarded-Ssl" => "on"
+        }
+        gitlab_rails['lfs_enabled'] = true
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
         nginx['http2_enabled'] = false
@@ -20,14 +34,10 @@ services:
             "X-Forwarded-Ssl" => "on"
         }
     ports:
-      - "2222:22"
+      - 2222:22
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.gitlab.frontend.rule: Host:${SUB_DOMAIN}.${SERVER_DOMAIN}
-      traefik.gitlab.port: 80
-      traefik.frontend.entryPoints: websecure
-      traefik.port: 80
       traefik.http.middlewares.gitlab-https-redirect.redirectscheme.scheme: https
       traefik.http.routers.gitlab.middlewares: gitlab-https-redirect
       traefik.http.services.gitlab.loadbalancer.server.port: 80
@@ -35,7 +45,14 @@ services:
       traefik.http.routers.gitlab.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.gitlab.tls.certresolver: myresolver
       traefik.http.routers.gitlab.entrypoints: websecure
-      traefik.docker.network: traefik
+      traefik.http.routers.gitlab.service: gitlab
+
+      # traefik.http.routers.rgitlab.tls: true
+      traefik.http.routers.rgitlab.rule: Host(`${REGISTRY_SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.rgitlab.entrypoints: websecure
+      traefik.http.routers.rgitlab.service: rgitlab
+      traefik.http.services.rgitlab.loadbalancer.server.port: 5050
+
       homepage.group: Media
       homepage.name: Gitlab
       homepage.icon: gitlab

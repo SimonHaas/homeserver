@@ -49,6 +49,7 @@ services:
       traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
       traefik.http.routers.traefik.tls.certresolver: myresolver
       traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.dashboard.middlewares: authelia@docker
       traefik.http.routers.dashboard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.dashboard.service: api@internal
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
@@ -56,7 +57,7 @@ services:
       traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
       traefik.http.routers.redirs.entrypoints: web
       traefik.http.routers.redirs.middlewares: redirect-to-https
-      traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://login.${SERVER_DOMAIN}/
+      traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://${AUTHELIA_SUB_DOMAIN}.${SERVER_DOMAIN}/
       traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
       traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
       traefik.http.middlewares.my-cloudflarewarp.plugin.cloudflarewarp.disableDefault: false
@@ -93,11 +94,14 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true 
-      traefik.http.routers.authelia.rule: Host(`login.${SERVER_DOMAIN}`)
+      traefik.http.routers.authelia.rule: Host(`${AUTHELIA_SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.authelia.entrypoints: websecure
       traefik.http.services.authelia.loadbalancer.server.port: 9091
-    expose:
-      - 9091
+      homepage.group: Infrastructure
+      homepage.name: Authelia
+      homepage.icon: authelia
+      homepage.href: https://${AUTHELIA_SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: The Single Sign-On Multi-Factor portal for web apps 
     restart: unless-stopped
     environment:
       - TZ=${TZ}
@@ -112,8 +116,13 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.whoami.rule: Host(`whoami.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoami.rule: Host(`${WHOAMI_SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.whoami.entrypoints: websecure
+      homepage.group: Infrastructure
+      homepage.name: whoami
+      homepage.icon: whoami
+      homepage.href: https://${WHOAMI_SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: whoami http header info
 
   whoami-auth:
     image: containous/whoami
@@ -125,9 +134,14 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.whoami-auth.rule: Host(`whoami-auth.${SERVER_DOMAIN}`)
+      traefik.http.routers.whoami-auth.rule: Host(`${WHOAMI_AUTH_SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.whoami-auth.entrypoints: websecure
       traefik.http.routers.whoami-auth.middlewares: authelia@docker
+      homepage.group: Infrastructure
+      homepage.name: whoami
+      homepage.icon: whoami
+      homepage.href: https://${WHOAMI_AUTH_SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: whoami protected by authelia
 
 networks:
   traefik:

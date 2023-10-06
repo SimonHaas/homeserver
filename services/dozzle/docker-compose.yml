@@ -15,6 +15,7 @@ services:
       traefik.http.routers.dozzle.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.dozzle.entrypoints: websecure
       traefik.http.services.dozzle.loadbalancer.server.port: 8080
+      traefik.http.routers.dozzle.middlewares: authelia@docker
       homepage.group: Infrastructure
       homepage.name: Dozzle
       homepage.icon: dozzle

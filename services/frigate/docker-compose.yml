@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  frigate:
+    # privileged: true # this may not be necessary for all setups
+    restart: unless-stopped
+    image: ghcr.io/blakeblackshear/frigate:stable
+    #devices:
+      #- /dev/bus/usb:/dev/bus/usb
+      #- /dev/apex_0:/dev/apex_0
+      #- /dev/apex_1:/dev/apex_1
+      #- /dev/dri/renderD128:/dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config.yml:/config/config.yml:ro
+      - ./data/clips:/media/frigate/clips
+      - ./data/recordings:/media/frigate/recordings
+      - ./data/database:/media/frigate
+      - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
+        target: /tmp/cache
+        tmpfs:
+          size: 2000000000
+    ports:
+      #- "5000:5000"
+      - "1935:1935" # RTMP feeds (deprecated)
+      - "8554:8554" # RTSP feeds
+    environment:
+      FRIGATE_RTSP_PASSWORD: "password"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.frigate.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.frigate.entrypoints: websecure
+      traefik.http.services.frigate.loadbalancer.server.port: 5000
+      homepage.group: Media
+      homepage.name: frigate
+      homepage.icon: frigate
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: NVR network video recorder
+
+networks:
+  traefik:
+    name: zone1

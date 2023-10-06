@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  jupyterhub:
+    build: .
+    restart: always
+    networks:
+      - traefik
+    volumes:
+      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+      - "./data:/data"
+    environment:
+      JUPYTERHUB_ADMIN: root
+      # All containers will join this network
+      DOCKER_NETWORK_NAME: zone1
+      # JupyterHub will spawn this Notebook image for users
+      DOCKER_NOTEBOOK_IMAGE: jupyter/base-notebook:latest
+      # Notebook directory inside user image
+      DOCKER_NOTEBOOK_DIR: /home/jovyan/work
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.jupyterhub.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.jupyterhub.entrypoints: websecure
+      traefik.http.services.jupyterhub.loadbalancer.server.port: 8000
+      homepage.group: Media
+      homepage.name: jupyterhub
+      homepage.icon: jupyterhub
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: interactive notebooks
+
+networks:
+  traefik:
+    name: zone1

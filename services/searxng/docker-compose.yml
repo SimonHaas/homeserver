@@ -1,0 +1,52 @@
+version: '3.7'
+
+services:
+  redis:
+    image: "redis:alpine"
+    command: redis-server --save "" --appendonly "no"
+    networks:
+        - traefik
+    tmpfs:
+      - /var/lib/redis
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+
+  searxng:
+    image: searxng/searxng:latest
+    volumes:
+      - ./settings.yml:/etc/searxng/settings.yml:rw
+    environment:
+      SEARXNG_BASE_URL: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+      SEARXNG_SECRET:
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+        - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.searxng.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.searxng.entrypoints: websecure
+      traefik.http.services.searxng.loadbalancer.server.port: 8080
+      homepage.group: Infrastructure
+      homepage.name: searxng
+      homepage.icon: searxng
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: private meta search engine
+
+networks:
+  traefik:
+    name: zone1

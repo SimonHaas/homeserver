@@ -55,11 +55,13 @@ services:
       traefik.http.routers.jackett.entrypoints: websecure
       traefik.http.routers.jackett.service: jackett
       traefik.http.services.jackett.loadbalancer.server.port: 9117
+      traefik.http.routers.jackett.middlewares: authelia@docker
 
       traefik.http.routers.readarr.rule: Host(`readarr.${SERVER_DOMAIN}`)
       traefik.http.routers.readarr.entrypoints: websecure
       traefik.http.routers.readarr.service: readarr
       traefik.http.services.readarr.loadbalancer.server.port: 8787
+      traefik.http.routers.readarr.middlewares: authelia@docker
 
       traefik.http.routers.prowlarr.rule: Host(`prowlarr.${SERVER_DOMAIN}`)
       traefik.http.routers.prowlarr.entrypoints: websecure
@@ -80,6 +82,7 @@ services:
       traefik.http.routers.bazarr.entrypoints: websecure
       traefik.http.routers.bazarr.service: bazarr
       traefik.http.services.bazarr.loadbalancer.server.port: 6767
+      traefik.http.routers.bazarr.middlewares: authelia@docker
 
       traefik.http.routers.whisparr.rule: Host(`whisparr.${SERVER_DOMAIN}`)
       traefik.http.routers.whisparr.entrypoints: websecure
@@ -96,10 +99,10 @@ services:
       traefik.http.routers.mylar.service: mylar
       traefik.http.services.mylar.loadbalancer.server.port: 8090
 
-      traefik.http.routers.lazylibrarian.rule: Host(`lazylibrarian.${SERVER_DOMAIN}`)
-      traefik.http.routers.lazylibrarian.entrypoints: websecure
-      traefik.http.routers.lazylibrarian.service: lazylibrarian
-      traefik.http.services.lazylibrarian.loadbalancer.server.port: 5299
+      # traefik.http.routers.lazylibrarian.rule: Host(`lazylibrarian.${SERVER_DOMAIN}`)
+      # traefik.http.routers.lazylibrarian.entrypoints: websecure
+      # traefik.http.routers.lazylibrarian.service: lazylibrarian
+      # traefik.http.services.lazylibrarian.loadbalancer.server.port: 5299
 
       traefik.http.routers.nzbget.rule: Host(`nzbget.${SERVER_DOMAIN}`)
       traefik.http.routers.nzbget.entrypoints: websecure
@@ -110,6 +113,11 @@ services:
       traefik.http.routers.vpncheckerVpn.entrypoints: websecure
       traefik.http.routers.vpncheckerVpn.service: vpncheckerVpn
       traefik.http.services.vpncheckerVpn.loadbalancer.server.port: 80
+
+      # traefik.http.routers.headphones.rule: Host(`${SUB_DOMAIN_HEADPHONES}.${SERVER_DOMAIN}`)
+      # traefik.http.routers.headphones.entrypoints: websecure
+      # traefik.http.routers.headphones.service: headphones
+      # traefik.http.services.headphones.loadbalancer.server.port: 8181
 
   vpncheckerVpn:
     image: ghcr.io/simonhaas/docker-vpn-checker:main
@@ -200,27 +208,27 @@ services:
   #     traefik.http.routers.flood.service: flood
   #     traefik.http.services.flood.loadbalancer.server.port: 3001
 
-  lazylibrarian: # books
-    image: lscr.io/linuxserver/lazylibrarian:latest
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
-    volumes:
-      - ./config/lazylibrarian:/config
-      - ./data:/data
-    restart: always
-    network_mode: service:vpn
-    depends_on:
-      - vpn
-      - transmission
-    labels:
-      homepage.group: Arr
-      homepage.name: Lazylibrarian
-      homepage.icon: lazylibrarian
-      homepage.href: https://lazylibrarian.${SERVER_DOMAIN}
-      homepage.description: Books
+  # lazylibrarian: # books
+  #   image: lscr.io/linuxserver/lazylibrarian:latest
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=${TZ}
+  #     - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+  #   volumes:
+  #     - ./config/lazylibrarian:/config
+  #     - ./data:/data
+  #   restart: always
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #     - transmission
+  #   labels:
+  #     homepage.group: Arr
+  #     homepage.name: Lazylibrarian
+  #     homepage.icon: lazylibrarian
+  #     homepage.href: https://lazylibrarian.${SERVER_DOMAIN}
+  #     homepage.description: Books
 
   mylar3: # comics
     image: lscr.io/linuxserver/mylar3:latest
@@ -321,28 +329,28 @@ services:
       homepage.widget.key: ${API_KEY_SONARR}
 
   # TODO https://youtu.be/5rtGBwBuzQE?t=827
-  jackett: # indexer (API Support for your favorite torrent trackers) 
-    image: lscr.io/linuxserver/jackett
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - AUTO_UPDATE=true
-    volumes:
-      - ./config/jackett:/config
-      - ./data:/data
-    restart: always
-    network_mode: service:vpn
-    depends_on:
-      - vpn
-    security_opt:
-      - no-new-privileges:true
-    labels:
-      homepage.group: Arr
-      homepage.name: Jackett
-      homepage.icon: jackett
-      homepage.href: https://jackett.${SERVER_DOMAIN}
-      homepage.description: Indexer
+  # jackett: # indexer (API Support for your favorite torrent trackers) 
+  #   image: lscr.io/linuxserver/jackett
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=${TZ}
+  #     - AUTO_UPDATE=true
+  #   volumes:
+  #     - ./config/jackett:/config
+  #     - ./data:/data
+  #   restart: always
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   labels:
+  #     homepage.group: Arr
+  #     homepage.name: Jackett
+  #     homepage.icon: jackett
+  #     homepage.href: https://jackett.${SERVER_DOMAIN}
+  #     homepage.description: Indexer
 
   flaresolverr: # Proxy server to bypass Cloudflare protection 
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -436,7 +444,7 @@ services:
       - PUID=1000
       - PGID=1000
       - UMASK=002
-      - TZ=${TZ}
+      - TZ
     volumes:
       - ./config/whisparr:/config
       - ./data:/data
@@ -519,6 +527,26 @@ services:
       homepage.widget.type: jellyseerr
       homepage.widget.url: https://${SUB_DOMAIN_JELLYSEERR}.${SERVER_DOMAIN}
       homepage.widget.key: ${API_KEY_JELLYSEERR}
+
+  # headphones:
+  #   image: lscr.io/linuxserver/headphones:latest
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ
+  #   volumes:
+  #     - ./config/headphones:/config
+  #     - ./data:/data
+  #   restart: always
+  #   network_mode: service:vpn
+  #   depends_on:
+  #     - vpn
+  #     - transmission
+  #   labels:
+  #     homepage.group: Arr
+  #     homepage.name: Headphones
+  #     homepage.icon: headphones
+  #     homepage.href: https://${SUB_DOMAIN_HEADPHONES}.${SERVER_DOMAIN}
 
 networks:
   traefik:

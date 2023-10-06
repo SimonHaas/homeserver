@@ -5,8 +5,6 @@ services:
     user: 1000:1000 # Optional, change to your user and group IDs for permissions
     volumes:
       - ./config:/app/config # Make sure your local config directory exists before first start
-      # - /mnt/data:/mnt/data:ro
-      # - /mnt/backup:/mnt/backup:ro
     environment:
       - DOCKER_HOST=dockerproxy
     restart: unless-stopped
@@ -20,6 +18,7 @@ services:
       traefik.http.routers.homepage.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.homepage.entrypoints: websecure
       traefik.http.services.homepage.loadbalancer.server.port: 3000
+      traefik.http.routers.homepage.middlewares: authelia@docker
 
   dockerproxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:latest

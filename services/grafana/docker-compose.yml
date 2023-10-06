@@ -4,6 +4,7 @@ services:
     image: grafana/grafana
     volumes:
       - ./data:/var/lib/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini
     user: "1000"
     restart: unless-stopped
     security_opt:

@@ -15,6 +15,7 @@ services:
       traefik.http.routers.metube.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.metube.entrypoints: websecure
       traefik.http.services.metube.loadbalancer.server.port: 8081
+      traefik.http.routers.metube.middlewares: authelia@docker
       homepage.group: Media
       homepage.name: Metube
       homepage.icon: metube

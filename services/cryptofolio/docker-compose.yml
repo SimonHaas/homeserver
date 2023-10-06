@@ -2,8 +2,6 @@ version: '3.7'
 services:
   cryptofolio:
     image: xtrendence/cryptofolio:latest
-    ports:
-      - "8084:80"
     volumes:
       - ./data:/var/www/html/api/data
     restart: unless-stopped
@@ -17,6 +15,11 @@ services:
       traefik.http.routers.cryptofolio.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.cryptofolio.entrypoints: websecure
       traefik.http.services.cryptofolio.loadbalancer.server.port: 80
+      homepage.group: Media
+      homepage.name: cryptofolio
+      homepage.icon: cryptofolio
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Crypto Currency Tracker
 
 networks:
   traefik:

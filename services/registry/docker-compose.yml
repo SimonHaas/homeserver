@@ -32,7 +32,9 @@ services:
       traefik.enable: true
       traefik.http.routers.registry.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.registry.entrypoints: websecure
-      traefik.http.services.registry.loadbalancer.server.port: 80 # TODO secure both ui and registry with authentication https://docs.docker.com/registry/configuration/#htpasswd
+      traefik.http.services.registry.loadbalancer.server.port: 80 
+      traefik.http.routers.registry.middlewares: authelia@docker
+      # TODO secure both ui and registry with authentication https://docs.docker.com/registry/configuration/#htpasswd
       homepage.group: Infrastructure
       homepage.name: Docker registry
       homepage.icon: docker
