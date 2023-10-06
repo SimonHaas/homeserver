@@ -1,0 +1,37 @@
+version: "3"
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    # line above must be uncommented to allow external containers to connect.
+    # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+    volumes:
+      - ./data:/gluetun
+    env_file: .env
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      com.centurylinklabs.watchtower.monitor-only: true
+      my.zone: zone1
+      traefik.enable: true
+      traefik.passHostHeader: true
+
+      traefik.http.routers.qbittorrent.rule: Host(`${QBITTORRENT_SUBDOMAIN}.${SERVER_DOMAIN}`) # admin/adminadmin
+      traefik.http.routers.qbittorrent.entrypoints: websecure
+      traefik.http.routers.qbittorrent.service: qbittorrent
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+networks:
+  traefik:
+    name: zone1
+    external: true
