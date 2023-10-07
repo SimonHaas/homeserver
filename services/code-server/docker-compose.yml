@@ -1,0 +1,36 @@
+---
+version: "3"
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ:
+      PASSWORD:
+      SUDO_PASSWORD:
+      PROXY_DOMAIN: ${SUB_DOMAIN}.${SERVER_DOMAIN}
+      DEFAULT_WORKSPACE: /config/workspace
+    volumes:
+      - ./data/config:/config
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.code-server.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.code-server.entrypoints: websecure
+      traefik.http.services.code-server.loadbalancer.server.port: 8443
+      homepage.group: Infrastructure
+      homepage.name: code-server
+      homepage.icon: code-server
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: vs code in the browser
+
+networks:
+  traefik:
+    name: zone1
+    external: true
