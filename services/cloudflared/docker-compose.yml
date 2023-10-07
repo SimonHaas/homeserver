@@ -14,3 +14,18 @@ networks:
   traefik:
     name: zone1
     external: true
+version: "3.6"
+
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: 'unless-stopped'
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks: 
+      - traefik
+    command: tunnel --no-autoupdate run
+
+networks:
+  traefik:
+    name: zone1

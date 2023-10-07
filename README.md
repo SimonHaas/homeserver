@@ -66,6 +66,10 @@ sudo crontab -e
 
 If you want to publish some services to the internet take a look at [services/cloudflared](./services/cloudflared).
 
+## Publish
+
+If you want to publish some services to the internet take a look at [services/cloudflared](./services/cloudflared).
+
 ## docker-compose.yml template
 
 ```
