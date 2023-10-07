@@ -13,6 +13,9 @@ services:
       - 8888:8888/tcp # HTTP proxy
       - 8388:8388/tcp # Shadowsocks
       - 8388:8388/udp # Shadowsocks
+
+      - 51413:51413 # transmission
+      - 51413:51413/udp # transmission
     volumes:
       - ./data:/gluetun
     env_file: .env
@@ -26,10 +29,93 @@ services:
       traefik.enable: true
       traefik.passHostHeader: true
 
-      traefik.http.routers.qbittorrent.rule: Host(`${QBITTORRENT_SUBDOMAIN}.${SERVER_DOMAIN}`) # admin/adminadmin
+      traefik.http.routers.gluetun-healthchecker.rule: Host(`${SUB_DOMAIN_HEALTHCHECKER}.${SERVER_DOMAIN}`)
+      traefik.http.routers.gluetun-healthchecker.entrypoints: websecure
+      traefik.http.routers.gluetun-healthchecker.service: gluetun-healthchecker
+      traefik.http.services.gluetun-healthchecker.loadbalancer.server.port: 9999
+
+      traefik.http.routers.vpncheckerVpn.rule: Host(`${SUB_DOMAIN_VPNCHECKER}.${SERVER_DOMAIN}`)
+      traefik.http.routers.vpncheckerVpn.entrypoints: websecure
+      traefik.http.routers.vpncheckerVpn.service: vpncheckerVpn
+      traefik.http.services.vpncheckerVpn.loadbalancer.server.port: 80
+
+      traefik.http.routers.qbittorrent.rule: Host(`${SUB_DOMAIN_QBITTORRENT}.${SERVER_DOMAIN}`) # admin/adminadmin
       traefik.http.routers.qbittorrent.entrypoints: websecure
       traefik.http.routers.qbittorrent.service: qbittorrent
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+      traefik.http.routers.lidarr.rule: Host(`${SUB_DOMAIN_LIDARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.lidarr.entrypoints: websecure
+      traefik.http.routers.lidarr.service: lidarr
+      traefik.http.services.lidarr.loadbalancer.server.port: 8686
+
+      traefik.http.routers.sonarr.rule: Host(`${SUB_DOMAIN_SONARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.sonarr.entrypoints: websecure
+      traefik.http.routers.sonarr.service: sonarr
+      traefik.http.services.sonarr.loadbalancer.server.port: 8989
+
+      traefik.http.routers.radarr.rule: Host(`${SUB_DOMAIN_RADARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.radarr.entrypoints: websecure
+      traefik.http.routers.radarr.service: radarr
+      traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+      traefik.http.routers.transmission.rule: Host(`${SUB_DOMAIN_TRANSMISSION}.${SERVER_DOMAIN}`)
+      traefik.http.routers.transmission.entrypoints: websecure
+      traefik.http.routers.transmission.service: transmission
+      traefik.http.services.transmission.loadbalancer.server.port: 9091
+
+      traefik.http.routers.jellyseerr.rule: Host(`${SUB_DOMAIN_JELLYSEERR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.jellyseerr.entrypoints: websecure
+      traefik.http.routers.jellyseerr.service: jellyseerr
+      traefik.http.services.jellyseerr.loadbalancer.server.port: 5055
+
+      traefik.http.routers.headphones.rule: Host(`${SUB_DOMAIN_HEADPHONES}.${SERVER_DOMAIN}`)
+      traefik.http.routers.headphones.entrypoints: websecure
+      traefik.http.routers.headphones.service: headphones
+      traefik.http.services.headphones.loadbalancer.server.port: 8181
+
+      traefik.http.routers.whisparr.rule: Host(`${SUB_DOMAIN_WHISPARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.whisparr.entrypoints: websecure
+      traefik.http.routers.whisparr.service: whisparr
+      traefik.http.services.whisparr.loadbalancer.server.port: 6969
+
+      traefik.http.routers.mylar.rule: Host(`${SUB_DOMAIN_MYLAR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.mylar.entrypoints: websecure
+      traefik.http.routers.mylar.service: mylar
+      traefik.http.services.mylar.loadbalancer.server.port: 8090
+
+      traefik.http.routers.lazylibrarian.rule: Host(`${SUB_DOMAIN_LAZYLIBRARIAN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.lazylibrarian.entrypoints: websecure
+      traefik.http.routers.lazylibrarian.service: lazylibrarian
+      traefik.http.services.lazylibrarian.loadbalancer.server.port: 5299
+
+      traefik.http.routers.bevy.rule: Host(`${SUB_DOMAIN_BEVY}.${SERVER_DOMAIN}`)
+      traefik.http.routers.bevy.entrypoints: websecure
+      traefik.http.routers.bevy.service: bevy
+      traefik.http.services.bevy.loadbalancer.server.port: 8080
+
+      traefik.http.routers.jackett.rule: Host(`${SUB_DOMAIN_JACKETT}.${SERVER_DOMAIN}`)
+      traefik.http.routers.jackett.entrypoints: websecure
+      traefik.http.routers.jackett.service: jackett
+      traefik.http.services.jackett.loadbalancer.server.port: 9117
+      traefik.http.routers.jackett.middlewares: authelia@docker
+
+      traefik.http.routers.readarr.rule: Host(`${SUB_DOMAIN_READARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.readarr.entrypoints: websecure
+      traefik.http.routers.readarr.service: readarr
+      traefik.http.services.readarr.loadbalancer.server.port: 8787
+      traefik.http.routers.readarr.middlewares: authelia@docker
+
+      traefik.http.routers.prowlarr.rule: Host(`${SUB_DOMAIN_PROWLARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.service: prowlarr
+      traefik.http.services.prowlarr.loadbalancer.server.port: 9696
+
+      traefik.http.routers.bazarr.rule: Host(`${SUB_DOMAIN_BAZARR}.${SERVER_DOMAIN}`)
+      traefik.http.routers.bazarr.entrypoints: websecure
+      traefik.http.routers.bazarr.service: bazarr
+      traefik.http.services.bazarr.loadbalancer.server.port: 6767
+      traefik.http.routers.bazarr.middlewares: authelia@docker
 
 networks:
   traefik:

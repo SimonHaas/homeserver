@@ -1,32 +1,33 @@
-version: "2.1"
+version: "2"
+
 services:
   transmission:
-    image: ghcr.io/linuxserver/transmission
+    image: lscr.io/linuxserver/transmission:latest
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - TRANSMISSION_WEB_HOME=/combustion-release/
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ:
+      USER:
+      PASS:
     volumes:
       - ./data/config:/config
       - ./data/downloads:/downloads
-      - ./data/watch:/watch
-    ports:
-      - 9091:9091
-      - 51413:51413
-      - 51413:51413/udp
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    networks:
-      - traefik
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
     labels:
-      my.zone: zone1
-      traefik.enable: true
-      traefik.http.routers.transmission.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.transmission.entrypoints: websecure
-      traefik.http.services.transmission.loadbalancer.server.port: 9091
-
-networks:
-  traefik:
-    name: zone1
+      homepage.group: Arr
+      homepage.name: Transmission
+      homepage.icon: transmission
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Torrent downloader
+      homepage.widget.type: transmission
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.username: ${USER}
+      homepage.widget.password: ${PASS}
+    healthcheck: # https://github.com/qdm12/gluetun/issues/641#issuecomment-933856220
+      test: "curl -sf https://example.com  || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 1
+      

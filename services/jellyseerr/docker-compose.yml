@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    environment:
+      TZ:
+    volumes:
+      - ./data/config:/app/config
+    restart: always   
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    labels:
+      homepage.group: Arr
+      homepage.name: Jellyseerr
+      homepage.icon: jellyseerr
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Media discovery
+      homepage.widget.type: jellyseerr
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}

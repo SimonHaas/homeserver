@@ -1,0 +1,23 @@
+version: "3"
+services:
+  # TODO https://youtu.be/5rtGBwBuzQE?t=827
+  jackett: 
+    image: lscr.io/linuxserver/jackett
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ:
+      AUTO_UPDATE: true
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      homepage.group: Arr
+      homepage.name: Jackett
+      homepage.icon: jackett
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Indexer

@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  lazylibrarian:
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ:
+      DOCKER_MODS: linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    restart: always
+    labels:
+      homepage.group: Arr
+      homepage.name: Lazylibrarian
+      homepage.icon: lazylibrarian
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Books

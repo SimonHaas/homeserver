@@ -47,3 +47,4 @@ services:
 networks:
   traefik:
     name: zone1
+    external: true

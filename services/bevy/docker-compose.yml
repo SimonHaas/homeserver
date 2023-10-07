@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  bevy:
+    image: zolland/bevy:latest
+    user: 1000:1000
+    restart: always
+    environment:
+      - CONFIG_FILE=/etc/bevy/config.toml
+    volumes:
+      - ./data/config/config.toml:/etc/bevy/config.toml
+      - ./data/downloads:/downloads
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    labels:
+      homepage.group: Arr
+      homepage.name: Bevy
+      homepage.icon: bevy
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Torrent movie streaming

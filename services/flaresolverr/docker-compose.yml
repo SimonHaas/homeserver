@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  flaresolverr: 
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_HTML: ${LOG_HTML:-false}
+      CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
+      TZ:
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    security_opt:
+      - no-new-privileges:true
+# curl -L -X POST 'http://192.168.1.2:8191/v1' -H 'Content-Type: application/json' --data-raw '{"cmd": "request.get","url":"http://www.google.com/","maxTimeout": 60000}'

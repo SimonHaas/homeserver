@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  bazarr:
+    image: cr.hotio.dev/hotio/bazarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK: 002
+      TZ:
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    labels:
+      homepage.group: Arr
+      homepage.name: Bazarr
+      homepage.icon: bazarr
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Subtitles
+      homepage.widget.type: bazarr
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}

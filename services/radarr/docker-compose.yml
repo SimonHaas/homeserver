@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ:
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      homepage.group: Arr
+      homepage.name: Radarr
+      homepage.icon: radarr
+      homepage.href: https://radarr.${SERVER_DOMAIN}
+      homepage.description: Movies
+      homepage.widget.type: radarr
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}
+    healthcheck: # https://github.com/qdm12/gluetun/issues/641#issuecomment-933856220
+      test: "curl -sf https://example.com  || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 1

@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ:
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    labels:
+      homepage.group: Arr
+      homepage.name: Readarr
+      homepage.icon: readarr
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Books
+      homepage.widget.type: readarr
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}

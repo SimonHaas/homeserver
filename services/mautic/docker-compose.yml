@@ -50,6 +50,8 @@ services:
 networks:
   traefik:
     name: zone1
+    external: true
+
 volumes:
   mysql_data:
     driver: local

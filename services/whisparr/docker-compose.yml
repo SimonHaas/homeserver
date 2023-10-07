@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  whisparr:
+    image: cr.hotio.dev/hotio/whisparr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK: 002
+      TZ:
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    labels:
+      homepage.group: Arr
+      homepage.name: Whisparr
+      homepage.icon: whisparr
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Porn

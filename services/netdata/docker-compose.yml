@@ -32,6 +32,7 @@ services:
 networks:
   traefik:
     name: zone1
+    external: true
 
 volumes:
   netdataconfig:

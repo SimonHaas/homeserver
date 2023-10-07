@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  headphones:
+    image: lscr.io/linuxserver/headphones:latest
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ:
+    volumes:
+      - ./data/config/headphones:/config
+      - ./data/config:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    labels:
+      homepage.group: Arr
+      homepage.name: Headphones
+      homepage.icon: headphones
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}

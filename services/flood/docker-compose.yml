@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  flood:
+    image: ghcr.io/hotio/rflood
+    restart: always
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK: 002
+      TZ:
+      FLOOD_AUTH: true
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.flood.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.flood.entrypoints: websecure
+      traefik.http.routers.flood.service: flood
+      traefik.http.services.flood.loadbalancer.server.port: 3000
+
+networks:
+  traefik:
+    name: zone1
+    external: true

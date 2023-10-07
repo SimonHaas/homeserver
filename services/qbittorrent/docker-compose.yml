@@ -3,10 +3,10 @@ services:
   qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - WEBUI_PORT=8080 # admin/adminadmin
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+      WEBUI_PORT: 8080 # admin/adminadmin
     volumes:
       - ./data/qbittorrent/config:/config
       - ./data/qbittorrent/downloads:/downloads

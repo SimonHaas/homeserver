@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ:
+    volumes:
+      - ./data/config:/config
+      - ./data/data:/data
+    restart: always
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      homepage.group: Arr
+      homepage.name: Sonarr
+      homepage.icon: sonarr
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: Series
+      homepage.widget.type: sonarr
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}
+    healthcheck: # https://github.com/qdm12/gluetun/issues/641#issuecomment-933856220
+      test: "curl -sf https://example.com  || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 1

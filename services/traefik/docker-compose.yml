@@ -104,7 +104,7 @@ services:
       homepage.description: The Single Sign-On Multi-Factor portal for web apps 
     restart: unless-stopped
     environment:
-      - TZ=${TZ}
+      TZ:
 
   whoami:
     image: containous/whoami
