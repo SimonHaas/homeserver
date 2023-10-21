@@ -1,3 +1,4 @@
 # Homepage
 
-https://github.com/benphelps/homepage
+https://github.com/gethomepage/homepage
+https://gethomepage.dev

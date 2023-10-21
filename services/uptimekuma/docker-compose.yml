@@ -23,6 +23,9 @@ services:
       homepage.icon: uptime-kuma
       homepage.href: https://uptimekuma.${SERVER_DOMAIN}
       homepage.description: Monitoring tool
+      homepage.widget.type: uptimekuma
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.slug: zeugs
 
 networks:
   traefik:

@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/miniflux?sslmode=disable
+      RUN_MIGRATIONS: 1
+      CREATE_ADMIN: 1
+      ADMIN_USERNAME:
+      ADMIN_PASSWORD:
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.miniflux.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.miniflux.entrypoints: websecure
+      traefik.http.services.miniflux.loadbalancer.server.port: 8080
+      homepage.group: Media
+      homepage.name: miniflux
+      homepage.icon: miniflux
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: RSS reader
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 30s
+
+networks:
+  default:
+    name: zone1
+    external: true

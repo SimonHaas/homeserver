@@ -34,6 +34,18 @@ services:
       traefik.http.routers.gluetun-healthchecker.service: gluetun-healthchecker
       traefik.http.services.gluetun-healthchecker.loadbalancer.server.port: 9999
 
+      traefik.http.routers.gluetun-control-server.rule: Host(`${SUB_DOMAIN_CONTROL_SERVER}.${SERVER_DOMAIN}`)
+      traefik.http.routers.gluetun-control-server.entrypoints: websecure
+      traefik.http.routers.gluetun-control-server.service: gluetun-control-server
+      traefik.http.services.gluetun-control-server.loadbalancer.server.port: 8000
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN_CONTROL_SERVER}.${SERVER_DOMAIN}/v1/publicip/ip
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+      homepage.widget.type: gluetun
+      homepage.widget.url: https://${SUB_DOMAIN_CONTROL_SERVER}.${SERVER_DOMAIN}
+
       traefik.http.routers.vpncheckerVpn.rule: Host(`${SUB_DOMAIN_VPNCHECKER}.${SERVER_DOMAIN}`)
       traefik.http.routers.vpncheckerVpn.entrypoints: websecure
       traefik.http.routers.vpncheckerVpn.service: vpncheckerVpn

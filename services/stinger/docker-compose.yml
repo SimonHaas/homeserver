@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:9.5-alpine
+    restart: always
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD:
+      POSTGRES_USER: stinger
+      POSTGRES_DB: stringer
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+
+  web:
+    image: stringerrss/stringer:latest
+    depends_on:
+      - postgres
+    restart: always
+    environment:
+      SECRET_KEY_BASE:
+      ENCRYPTION_PRIMARY_KEY:
+      ENCRYPTION_DETERMINISTIC_KEY:
+      ENCRYPTION_KEY_DERIVATION_SALT:
+      PORT: 8080
+      DATABASE_URL: postgres://stinger:${POSTGRES_PASSWORD}@postgres:5432/stringer
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.stringer.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.stringer.entrypoints: websecure
+      traefik.http.services.stringer.loadbalancer.server.port: 8080
+      homepage.group: Media
+      homepage.name: stringer
+      homepage.icon: stringer
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: RSS Reader
+      
+networks:
+  traefik:
+    name: zone1
+    external: true

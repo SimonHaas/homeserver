@@ -50,6 +50,7 @@ services:
       traefik.http.routers.traefik.tls.certresolver: myresolver
       traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.dashboard.middlewares: authelia@docker
+      #traefik.http.routers.dashboard.middlewares: basic-auth
       traefik.http.routers.dashboard.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.dashboard.service: api@internal
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
@@ -57,6 +58,7 @@ services:
       traefik.http.routers.redirs.rule: hostregexp(`{host:.+}`)
       traefik.http.routers.redirs.entrypoints: web
       traefik.http.routers.redirs.middlewares: redirect-to-https
+      traefik.http.middlewares.basic-auth.basicauth.users: ${BASIC_AUTH}
       traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/verify?rd=https://${AUTHELIA_SUB_DOMAIN}.${SERVER_DOMAIN}/
       traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
       traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User, Remote-Groups, Remote-Name, Remote-Email
@@ -66,8 +68,10 @@ services:
       homepage.icon: traefik
       homepage.href: https://traefik.${SERVER_DOMAIN}
       homepage.description: Reverse Proxy
-      homepage.widget.type: traefik
-      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+      # homepage.widget.type: traefik
+      # homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}/
+      # homepage.widget.username: ${HOMEPAGE_USERNAME}
+      # homepage.widget.password: ${HOMEPAGE_PASSWORD}
 
   traefik-certs-dumper:
     image: ldez/traefik-certs-dumper:v2.8.1

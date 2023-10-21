@@ -6,13 +6,11 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${TZ}
-      - JELLYFIN_PublishedServerUrl=jellyfin.${SERVER_DOMAIN}
+      - JELLYFIN_PublishedServerUrl=${SUB_DOMAIN}.${SERVER_DOMAIN}
     volumes:
       - ./data/config:/config
       - ../arr-apps-vpn/data:/data
     ports:
-      - 8096:8096 # http
-      # - 8920:8920 # optional https
       - 7359:7359/udp #optional Allows clients to discover Jellyfin on the local network.
       - 1900:1900/udp #optional Service discovery used by DNLA and clients.
     restart: unless-stopped
@@ -23,16 +21,16 @@ services:
     labels:
       my.zone: zone1
       traefik.enable: true
-      traefik.http.routers.jellyfin.rule: Host(`jellyfin.${SERVER_DOMAIN}`)
+      traefik.http.routers.jellyfin.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
       traefik.http.routers.jellyfin.entrypoints: websecure
-      traefik.http.services.jellyfin.loadbalancer.server.port: 8096
-      homepage.group: Media
-      homepage.name: Jellyfin
-      homepage.icon: jellyfin
-      homepage.href: https://jellyfin.${SERVER_DOMAIN}
-      homepage.description: Media streaming
+      traefik.http.services.jellyfin.loadbalancer.server.port: ${SERVICE_PORT}
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
       homepage.widget.type: jellyfin
-      homepage.widget.url: https://jellyfin.${SERVER_DOMAIN}
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.widget.key: ${API_KEY}
 
 networks:

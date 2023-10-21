@@ -29,6 +29,7 @@ services:
       homepage.icon: syncthing
       homepage.href: https://syncthing.${SERVER_DOMAIN}
       homepage.description: File syncing
+      
 networks:
   traefik:
     name: zone1

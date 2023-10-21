@@ -18,7 +18,7 @@ services:
       traefik.http.services.portainer.loadbalancer.server.port: 9000
       homepage.group: Infrastructure
       homepage.name: Portainer
-      homepage.icon: portaner
+      homepage.icon: portainer
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Container management
       homepage.widget.type: portainer

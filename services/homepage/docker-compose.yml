@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   homepage:
-    image: ghcr.io/benphelps/homepage:latest
+    image: ghcr.io/gethomepage/homepage:latest
     user: 1000:1000 # Optional, change to your user and group IDs for permissions
     volumes:
       - ./config:/app/config # Make sure your local config directory exists before first start

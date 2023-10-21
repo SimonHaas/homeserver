@@ -5,6 +5,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      WATCHTOWER_SCHEDULE:
+      WATCHTOWER_HTTP_API_TOKEN: ${API_KEY}
+      WATCHTOWER_HTTP_API_METRICS:
       WATCHTOWER_NOTIFICATIONS:
       WATCHTOWER_NOTIFICATION_EMAIL_FROM:
       WATCHTOWER_NOTIFICATION_EMAIL_TO:
@@ -13,3 +16,30 @@ services:
       WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER:
       WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD:
       WATCHTOWER_NOTIFICATION_EMAIL_DELAY:
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+      homepage.widget.type: watchtower
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.watchtower.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.watchtower.entrypoints: websecure
+      traefik.http.services.watchtower.loadbalancer.server.port: 8080
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+
+networks:
+  default:
+    name: zone1
+    external: true

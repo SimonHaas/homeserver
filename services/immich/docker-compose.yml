@@ -124,6 +124,9 @@ services:
       homepage.icon: immich
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Photo galery
+      homepage.widget.type: immich
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}
 
 networks:
   traefik:

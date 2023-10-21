@@ -1,0 +1,66 @@
+version: '3.7'
+
+services:
+  ghostfolio:
+    image: ghostfolio/ghostfolio:latest
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?connect_timeout=300&sslmode=prefer
+      NODE_ENV: production
+      REDIS_HOST: 'redis'
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.funnyservice.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.funnyservice.entrypoints: websecure
+      traefik.http.services.funnyservice.loadbalancer.server.port: ${SERVICE_PORT}
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+      homepage.widget.type: ghostfolio
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15
+    env_file:
+      - .env
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli ping | grep PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  default:
+    name: zone1
+    external: true

@@ -103,13 +103,13 @@ services:
       REDIS_HOST: 127.0.0.1
       REDIS_PASSWORD: null
       REDIS_PORT: 6379
-      PUSHER_APP_ID: 
-      # PUSHER_APP_KEY: 
-      # PUSHER_APP_SECRET: 
-      PUSHER_APP_CLUSTER: mt1
-      MIX_PUSHER_APP_KEY: "${PUSHER_APP_KEY}"
-      MIX_PUSHER_APP_CLUSTER: "${PUSHER_APP_CLUSTER}"
-      MIX_ENV: local
+      #PUSHER_APP_ID: 
+      #PUSHER_APP_KEY: 
+      #PUSHER_APP_SECRET: 
+      #PUSHER_APP_CLUSTER: mt1
+      #MIX_PUSHER_APP_KEY: "${PUSHER_APP_KEY}"
+      #MIX_PUSHER_APP_CLUSTER: "${PUSHER_APP_CLUSTER}"
+      #MIX_ENV: local
     security_opt:
       - no-new-privileges:true
     networks:

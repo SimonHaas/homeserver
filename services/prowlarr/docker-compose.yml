@@ -19,3 +19,6 @@ services:
       homepage.icon: prowlarr
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Indexer
+      homepage.widget.type: prowlarr
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.key: ${API_KEY}

@@ -1,7 +1,10 @@
 # !/bin/bash
 
+echo "$PWD"
+
 if [ -f .env ]
 then
+  echo ".env exists"
   export $(cat .env | sed 's/#.*//g' | xargs)
 fi
 
@@ -13,11 +16,13 @@ sourceMount=${BACKUP_SOURCE_MOUNT}
 encryption="none"
 compression="lz4"
 rootuser="yes"
-pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
+pruning="--keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=6"
+
+webhook=${WEBHOOK}
 
 repopath="$destination"/"$repository"
 
-if grep -qs $destinationMount /proc/mounts && grep -qs $sourceMount /proc/mounts
+if grep $destinationMount /proc/mounts && grep $sourceMount /proc/mounts
 then
 
     if [ $(id -u) -ne 0 ] && [ "$rootuser" == "yes" ]; then
@@ -40,7 +45,9 @@ then
     $source/script.sh SAVE_BACKUP start
 
     borg prune -v --list $repopath --glob-archives '{hostname}-*' $pruning
+    borg compact $repopath
 
+    curl $webhook
 else
-    echo "!!! DIRECTORIES NOT MOUNTED !!!"
+    echo "!!! DIRECTORIES NOT MOUNTED !!! $(date)"
 fi

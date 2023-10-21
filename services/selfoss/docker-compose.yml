@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  selfoss:
+    image: rsprta/selfoss
+    restart: unless-stopped
+    volumes:
+      - ./data:/selfoss/data
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.selfoss.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.selfoss.entrypoints: websecure
+      traefik.http.services.selfoss.loadbalancer.server.port: 8888
+      traefik.http.routers.selfoss.middlewares: authelia@docker
+      homepage.group: Media
+      homepage.name: selfoss
+      homepage.icon: selfoss
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: RSS reader
+
+networks:
+  default:
+    name: zone1
+    external: true

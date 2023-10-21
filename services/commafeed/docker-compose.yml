@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  commafeed:
+    image: athou/commafeed:latest
+    restart: unless-stopped
+    environment:
+      CF_DATABASE_DRIVERCLASS: org.postgresql.Driver
+      CF_DATABASE_URL: jdbc:postgresql://postgresql:5432/commafeed
+      CF_DATABASE_USER: commafeed
+      CF_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/commafeed:/commafeed/data
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.commafeed.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.commafeed.entrypoints: websecure
+      traefik.http.services.commafeed.loadbalancer.server.port: 8082
+      homepage.group: Media
+      homepage.name: commafeed
+      homepage.icon: commafeed
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: RSS Reader
+      
+  postgresql:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: commafeed
+      POSTGRES_PASSWORD:
+      POSTGRES_DB: commafeed
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    name: zone1
+    external: true

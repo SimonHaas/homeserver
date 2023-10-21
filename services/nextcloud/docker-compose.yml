@@ -50,6 +50,10 @@ services:
       homepage.icon: nextcloud
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: Nextcloud
+      homepage.widget.type: nextcloud
+      homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.widget.username: ${HOMEPAGE_USERNAME}
+      homepage.widget.password: ${HOMEPAGE_PASSWORD}
 
   nextcloud-mariadb:
     image: mariadb:10.5
