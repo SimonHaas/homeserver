@@ -4,3 +4,6 @@
 [submodule "services/fittrackee/docker-fittrackee"]
 	path = services/fittrackee/docker-fittrackee
 	url = https://github.com/SamR1/docker-fittrackee.git
+[submodule "services/feedbin/feedbin-docker"]
+	path = services/feedbin/feedbin-docker
+	url = https://github.com/angristan/feedbin-docker.git
