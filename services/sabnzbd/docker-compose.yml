@@ -1,0 +1,28 @@
+---
+version: "2.1"
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    environment:
+      PUID: 
+      PGID: 
+      TZ:
+    volumes:
+      - ./data/config:/config
+      - ./data/downloads:/downloads #optional
+      - ./data/downloads:/incomplete-downloads #optional
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+    network_mode: container:gluetun # see ../gluetun/docker-compose.yml
+    healthcheck: # https://github.com/qdm12/gluetun/issues/641#issuecomment-933856220
+      test: "curl -sf https://example.com  || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 1

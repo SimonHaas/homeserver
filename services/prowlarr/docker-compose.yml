@@ -22,3 +22,8 @@ services:
       homepage.widget.type: prowlarr
       homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.widget.key: ${API_KEY}
+    healthcheck: # https://github.com/qdm12/gluetun/issues/641#issuecomment-933856220
+      test: "curl -sf https://example.com  || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 1

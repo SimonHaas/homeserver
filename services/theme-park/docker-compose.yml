@@ -1,0 +1,22 @@
+version: "2.1"
+services:
+  theme-park:
+    image: ghcr.io/themepark-dev/theme.park
+    environment:
+      PUID: 
+      PGID: 
+      TZ:
+    volumes:
+      - ./data:/config
+    restart: unless-stopped
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.theme-park.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.theme-park.entrypoints: websecure
+      traefik.http.services.theme-park.loadbalancer.server.port: 80
+      
+networks:
+  default:
+    name: zone1
+    external: true

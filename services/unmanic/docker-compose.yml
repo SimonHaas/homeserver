@@ -1,0 +1,31 @@
+---
+version: '3'
+services:
+  unmanic:
+    image: josh5/unmanic:latest
+    environment:
+      PUID:
+      PGID:
+    volumes:
+      - ./data/config:/config
+      - ./data/library:/library
+      - ./data/tmp:/tmp/unmanic
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.unmanic.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.unmanic.entrypoints: websecure
+      traefik.http.services.unmanic.loadbalancer.server.port: 8888
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+
+networks:
+  default:
+    name: zone1
+    external: true

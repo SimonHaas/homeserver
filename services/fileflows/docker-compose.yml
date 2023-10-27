@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  fileflows:
+    image: revenz/fileflows
+    environment:
+      TZ:
+      TempPathHost:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/data:/app/Data
+      - ./data/logs:/app/Logs
+      - ./data/temp:/temp
+      - ./data/media:/media
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.fileflows.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.fileflows.entrypoints: websecure
+      traefik.http.services.fileflows.loadbalancer.server.port: 5000
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+
+networks:
+  default:
+    name: zone1
+    external: true

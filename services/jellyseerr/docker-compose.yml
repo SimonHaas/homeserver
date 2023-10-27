@@ -7,6 +7,7 @@ services:
       TZ:
     volumes:
       - ./data/config:/app/config
+      - ./healthcheck.js:/healthcheck.js
     restart: always   
     network_mode: container:gluetun # see ../gluetun/docker-compose.yml
     labels:
@@ -18,3 +19,8 @@ services:
       homepage.widget.type: jellyseerr
       homepage.widget.url: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.widget.key: ${API_KEY}
+    healthcheck:
+      test: "node /healthcheck.js"
+      interval: 1m
+      timeout: 10s
+      retries: 1

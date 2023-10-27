@@ -1,0 +1,27 @@
+---
+version: "3"
+
+services:
+  requestrr:
+    image: darkalfx/requestrr
+    volumes:
+      - ./data:/root/config
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      my.zone: zone1
+      traefik.enable: true
+      traefik.http.routers.requestrr.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.requestrr.entrypoints: websecure
+      traefik.http.services.requestrr.loadbalancer.server.port: 4545
+      homepage.group: ${HOMEPAGE_GROUP}
+      homepage.name: ${HOMEPAGE_NAME}
+      homepage.icon: ${HOMEPAGE_ICON}
+      homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
+      homepage.description: ${HOMEPAGE_DESCRIPTION}
+
+networks:
+  default:
+    name: zone1
+    external: true

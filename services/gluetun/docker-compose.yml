@@ -129,6 +129,11 @@ services:
       traefik.http.services.bazarr.loadbalancer.server.port: 6767
       traefik.http.routers.bazarr.middlewares: authelia@docker
 
+      traefik.http.routers.sabnzbd.rule: Host(`${SUB_SABNZBD_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.sabnzbd.entrypoints: websecure
+      traefik.http.routers.sabnzbd.service: sabnzbd
+      traefik.http.services.sabnzbd.loadbalancer.server.port: 8080
+
 networks:
   traefik:
     name: zone1
