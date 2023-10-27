@@ -2,12 +2,25 @@ version: "3.6"
 
 services:
   gitlab:
-    restart: always
+    restart: unless-stopped
     image: gitlab/gitlab-ce
-    hostname: ${SUB_DOMAIN}.${SERVER_DOMAIN}
+    hostname: ${SUB_DOMAIN} #.${SERVER_DOMAIN}
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'https://${SUB_DOMAIN}.${SERVER_DOMAIN}'
+        gitlab_rails['lfs_enabled'] = true
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['http2_enabled'] = false
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        nginx['proxy_set_headers'] = {
+            "Host" => "$$http_host",
+            "X-Real-IP" => "$$remote_addr",
+            "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+            "X-Forwarded-Proto" => "https",
+            "X-Forwarded-Ssl" => "on"
+        }
+
         registry_external_url 'http://${REGISTRY_SUB_DOMAIN}.${SERVER_DOMAIN}'
         registry['enable'] = true
         gitlab_rails['registry_enabled'] = true
@@ -21,18 +34,14 @@ services:
             "X-Forwarded-Proto" => "https",
             "X-Forwarded-Ssl" => "on"
         }
-        gitlab_rails['lfs_enabled'] = true
-        nginx['listen_port'] = 80
-        nginx['listen_https'] = false
-        nginx['http2_enabled'] = false
-        gitlab_rails['gitlab_shell_ssh_port'] = 2222
-        nginx['proxy_set_headers'] = {
-            "Host" => "$$http_host",
-            "X-Real-IP" => "$$remote_addr",
-            "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
-            "X-Forwarded-Proto" => "https",
-            "X-Forwarded-Ssl" => "on"
-        }
+
+        pages_external_url 'https://${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}'
+        pages_nginx['enable'] = false
+        gitlab_pages['external_http'] = ['0.0.0.0:8081']
+        gitlab_pages['inplace_chroot'] = true
+        gitlab_pages['enable'] = true
+        gitlab_pages['internal_gitlab_server'] = "https://${SUB_DOMAIN}.${SERVER_DOMAIN}"
+      # gitlab_pages['access_control'] = false # https://birkhoff.me/articles/deploying-gitlab-community-edition
     ports:
       - 2222:22
     labels:
@@ -47,11 +56,17 @@ services:
       traefik.http.routers.gitlab.entrypoints: websecure
       traefik.http.routers.gitlab.service: gitlab
 
-      # traefik.http.routers.rgitlab.tls: true
-      traefik.http.routers.rgitlab.rule: Host(`${REGISTRY_SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.rgitlab.entrypoints: websecure
-      traefik.http.routers.rgitlab.service: rgitlab
-      traefik.http.services.rgitlab.loadbalancer.server.port: 5050
+      traefik.http.routers.gitlab-registry.rule: Host(`${REGISTRY_SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.gitlab-registry.entrypoints: websecure
+      traefik.http.routers.gitlab-registry.service: gitlab-registry
+      traefik.http.services.gitlab-registry.loadbalancer.server.port: 5050
+
+      traefik.http.services.gitlab-pages.loadbalancer.server.port: 8081
+      traefik.http.routers.gitlab-pages.service: gitlab-pages
+      traefik.http.routers.gitlab-pages.entrypoints: websecure
+      #traefik.http.routers.gitlab-pages.rule: Host(`${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.gitlab-pages.rule: Host(`${SERVER_DOMAIN}`) || Host(`${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`) || HostRegexp(`{subdomain:[a-z]+}.${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`)
+      traefik.http.routers.gitlab-pages.tls.certResolver: myresolver
 
       homepage.group: Media
       homepage.name: Gitlab
@@ -63,12 +78,10 @@ services:
       - ./data/logs:/var/log/gitlab/
       - ./data/data:/var/opt/gitlab/
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - traefik
     security_opt:
       - no-new-privileges:true
 
 networks:
-  traefik:
+  default:
     name: zone1
     external: true

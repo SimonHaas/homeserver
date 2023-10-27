@@ -47,6 +47,8 @@ services:
       traefik.http.routers.traefik.tls: true
       traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
       traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
+      traefik.http.routers.traefik.tls.domains[1].main: ${GITLAB_PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}
+      traefik.http.routers.traefik.tls.domains[1].sans: "*.${GITLAB_PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}"
       traefik.http.routers.traefik.tls.certresolver: myresolver
       traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.dashboard.middlewares: authelia@docker
