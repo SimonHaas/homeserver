@@ -4,7 +4,7 @@ services:
   gitlab:
     restart: unless-stopped
     image: gitlab/gitlab-ce
-    hostname: ${SUB_DOMAIN} #.${SERVER_DOMAIN}
+    hostname: ${SUB_DOMAIN}
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'https://${SUB_DOMAIN}.${SERVER_DOMAIN}'
@@ -52,7 +52,6 @@ services:
       traefik.http.services.gitlab.loadbalancer.server.port: 80
       traefik.http.routers.gitlab.tls: true
       traefik.http.routers.gitlab.rule: Host(`${SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.gitlab.tls.certresolver: myresolver
       traefik.http.routers.gitlab.entrypoints: websecure
       traefik.http.routers.gitlab.service: gitlab
 
@@ -64,9 +63,7 @@ services:
       traefik.http.services.gitlab-pages.loadbalancer.server.port: 8081
       traefik.http.routers.gitlab-pages.service: gitlab-pages
       traefik.http.routers.gitlab-pages.entrypoints: websecure
-      #traefik.http.routers.gitlab-pages.rule: Host(`${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.gitlab-pages.rule: Host(`${SERVER_DOMAIN}`) || Host(`${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`) || HostRegexp(`{subdomain:[a-z]+}.${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`)
-      traefik.http.routers.gitlab-pages.tls.certResolver: myresolver
+      traefik.http.routers.gitlab-pages.rule: Host(`${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`) || HostRegexp(`{subdomain:[a-z]+}.${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}`)
 
       homepage.group: Media
       homepage.name: Gitlab
