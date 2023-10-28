@@ -5,43 +5,6 @@ services:
     restart: unless-stopped
     image: gitlab/gitlab-ce
     hostname: ${SUB_DOMAIN}
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://${SUB_DOMAIN}.${SERVER_DOMAIN}'
-        gitlab_rails['lfs_enabled'] = true
-        nginx['listen_port'] = 80
-        nginx['listen_https'] = false
-        nginx['http2_enabled'] = false
-        gitlab_rails['gitlab_shell_ssh_port'] = 2222
-        nginx['proxy_set_headers'] = {
-            "Host" => "$$http_host",
-            "X-Real-IP" => "$$remote_addr",
-            "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
-            "X-Forwarded-Proto" => "https",
-            "X-Forwarded-Ssl" => "on"
-        }
-
-        registry_external_url 'http://${REGISTRY_SUB_DOMAIN}.${SERVER_DOMAIN}'
-        registry['enable'] = true
-        gitlab_rails['registry_enabled'] = true
-        registry_nginx['enable'] = true
-        registry_nginx['listen_port'] = 5050
-        registry_nginx['listen_https'] = false
-        registry_nginx['proxy_set_headers'] = {
-            "Host" => "$$http_host",
-            "X-Real-IP" => "$$remote_addr",
-            "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
-            "X-Forwarded-Proto" => "https",
-            "X-Forwarded-Ssl" => "on"
-        }
-
-        pages_external_url 'https://${PAGES_SUB_DOMAIN}.${SERVER_DOMAIN}'
-        pages_nginx['enable'] = false
-        gitlab_pages['external_http'] = ['0.0.0.0:8081']
-        gitlab_pages['inplace_chroot'] = true
-        gitlab_pages['enable'] = true
-        gitlab_pages['internal_gitlab_server'] = "https://${SUB_DOMAIN}.${SERVER_DOMAIN}"
-      # gitlab_pages['access_control'] = false # https://birkhoff.me/articles/deploying-gitlab-community-edition
     ports:
       - 2222:22
     labels:
