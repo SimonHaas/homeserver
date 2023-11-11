@@ -29,8 +29,8 @@ services:
       - --experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp
       - --experimental.plugins.cloudflarewarp.version=v1.3.3
     ports:
-      - "80:80"
-      - "443:443"
+      - ${IP_RESTRICTION}80:80
+      - ${IP_RESTRICTION}443:443
     networks:
       - traefik
     security_opt:
@@ -92,7 +92,7 @@ services:
 
   authelia:
     image: ghcr.io/authelia/authelia
-    user: "1000:1000"
+    user: ${UID}:${GID}
     volumes:
       - ./authelia:/config
     networks:

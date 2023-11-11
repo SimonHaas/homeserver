@@ -6,16 +6,16 @@ services:
       - NET_ADMIN
       - SYS_MODULE
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ
-      - SERVERURL
-      - SERVERPORT
-      - PEERS
-      - PEERDNS
-      - INTERNAL_SUBNET
-      - ALLOWEDIPS
-      - LOG_CONFS
+      PUID:
+      PGID:
+      TZ:
+      SERVERURL:
+      SERVERPORT:
+      PEERS:
+      PEERDNS:
+      INTERNAL_SUBNET:
+      ALLOWEDIPS:
+      LOG_CONFS:
     volumes:
       - ./data/config:/config
       - /lib/modules:/lib/modules

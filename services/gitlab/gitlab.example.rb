@@ -48,3 +48,37 @@ gitlab_rails['smtp_tls'] = true
 gitlab_rails['smtp_openssl_verify_mode'] = 'none'
 gitlab_rails['gitlab_email_from'] = 'gitlab@example.com'
 gitlab_rails['gitlab_email_reply_to'] = 'gitlab@example.com'
+
+# https://docs.gitlab.com/omnibus/settings/memory_constrained_envs.html
+puma['worker_processes'] = 0
+sidekiq['max_concurrency'] = 5
+gitaly['configuration'] = {
+    concurrency: [
+      {
+        'rpc' => "/gitaly.SmartHTTPService/PostReceivePack",
+        'max_per_repo' => 3,
+      }, {
+        'rpc' => "/gitaly.SSHService/SSHUploadPack",
+        'max_per_repo' => 3,
+      },
+    ],
+    cgroups: {
+        repositories: {
+            count: 2,
+        },
+        mountpoint: '/sys/fs/cgroup',
+        hierarchy_root: 'gitaly',
+        memory_bytes: 500000,
+        cpu_shares: 512,
+    },
+}
+gitaly['env'] = {
+  'GITALY_COMMAND_SPAWN_MAX_PARALLEL' => '2'
+}
+prometheus_monitoring['enable'] = false
+gitlab_rails['env'] = {
+  'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000'
+}
+gitaly['env'] = {
+  'MALLOC_CONF' => 'dirty_decay_ms:1000,muzzy_decay_ms:1000'
+}

@@ -6,7 +6,7 @@ services:
     image: gitlab/gitlab-ce
     hostname: ${SUB_DOMAIN}
     ports:
-      - 2222:22
+      - ${IP_RESTRICTION}2222:22
     labels:
       my.zone: zone1
       traefik.enable: true

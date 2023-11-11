@@ -1,25 +1,14 @@
 ---
-###############################################################
-#                   Authelia configuration                    #
-###############################################################
-
 server:
   host: 0.0.0.0
   port: 9091
 log:
   level: debug
 theme: dark
-# This secret can also be set using the env variables AUTHELIA_JWT_SECRET_FILE
-jwt_secret: a_very_important_secret
-default_redirection_url: https://local.example.com
+jwt_secret: abc123
+default_redirection_url: https://authelia.example.com
 totp:
   issuer: authelia.com
-
-# duo_api:
-#  hostname: api-123456789.example.com
-#  integration_key: ABCDEF
-#  # This secret can also be set using the env variables AUTHELIA_DUO_API_SECRET_KEY_FILE
-#  secret_key: 1234567890abcdefghifjkl
 
 authentication_backend:
   file:
@@ -32,29 +21,14 @@ authentication_backend:
       memory: 64
       
 access_control:
-  default_policy: deny
-  rules:
-    # Rules applied to everyone
-    - domain: public.example.com
-      policy: bypass
-    - domain: heimdall.local.example.com
-      policy: one_factor
-    - domain: pve1.local.example.com
-      policy: two_factor
+  default_policy: one_factor
 
 session:
-  name: authelia_session
-  # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
-  secret: unsecure_session_secret
-  expiration: 3600  # 1 hour
-  inactivity: 300  # 5 minutes
-  domain: example.com  # Should match whatever your root protected domain is
-
-  # redis:
-  #   host: redis
-  #   port: 6379
-  #   # This secret can also be set using the env variables AUTHELIA_SESSION_REDIS_PASSWORD_FILE
-  #   # password: authelia
+  name: authelia_session # make this unique if you are running multiple authelia-instances on one domain
+  secret: abc123
+  expiration: 3600
+  inactivity: 300
+  domain: example.com # this has to be the root domain
 
 regulation:
   max_retries: 3
@@ -62,18 +36,11 @@ regulation:
   ban_time: 300
 
 storage:
-  encryption_key: a_very_important_secret # Now required
+  encryption_key: abc123
   local:
     path: /config/db.sqlite3
 
 notifier:
-  # smtp:
-  #   username: test
-  #   # This secret can also be set using the env variables AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
-  #   password: password
-  #   host: mail.example.com
-  #   port: 25
-  #   sender: admin@example.com
   filesystem:
     filename: /config/notification.txt
 ...
