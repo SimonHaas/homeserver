@@ -4,7 +4,8 @@ services:
   organizr:
     image: organizr/organizr
     volumes:
-      - ./data/config:/config
+      #- ./data/config:/config
+      - config:/config
     environment:
       PGID:
       PUID:
@@ -23,7 +24,18 @@ services:
       homepage.href: https://${SUB_DOMAIN}.${SERVER_DOMAIN}
       homepage.description: ${HOMEPAGE_DESCRIPTION}
 
+  db:
+    image: mariadb
+    restart: unless-stopped
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: example
+
 networks:
   default:
     name: zone1
     external: true
+
+volumes:
+  config:

@@ -27,6 +27,6 @@ services:
       homepage.description: ${HOMEPAGE_DESCRIPTION}
       
 networks:
-  traefik:
+  default:
     name: zone1
     external: true
