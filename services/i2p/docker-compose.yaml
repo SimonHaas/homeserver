@@ -1,0 +1,54 @@
+services:
+  i2p:
+    image: geti2p/i2p
+    container_name: i2p
+    restart: unless-stopped
+    ports:
+      - 54321:54321/tcp
+      - 54321:54321/udp
+      - 127.0.0.1:7657:7657
+      - 100.107.87.40:7657:7657
+      - 127.0.0.1:4444:4444
+      - 100.107.87.40:4444:4444
+    volumes:
+      - ./i2pconfig:/i2p/.i2p:rw # Mandatory configs
+      - ./i2ptorrents:/i2psnark:rw # Torrenting support
+    environment:
+      JVM_XMX: 256m
+      EXT_PORT: 54321
+
+  npm:
+    image: jc21/nginx-proxy-manager
+    container_name: i2p-npm
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:81:81
+      - 100.107.87.40:81:81
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  blog:
+    image: ghcr.io/simonhaas/blog:main
+    container_name: i2p-blog
+    restart: unless-stopped
+
+  nginx:
+    image: nginx
+    container_name: i2p-nginx
+    restart: unless-stopped
+    configs:
+      - source: nginx
+        target: /usr/share/nginx/html/index.html
+
+configs:
+  nginx:
+    content: |
+      <html>
+          <head>
+              <title>simonhaas</title>
+          </head>
+          <body>
+              <a href="blog">Blog</a>
+          </body>
+      </html>

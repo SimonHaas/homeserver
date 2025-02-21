@@ -1,0 +1,47 @@
+services:
+  tor:
+    image: goldy/tor-hidden-service
+    links:
+      - npm
+    container_name: tor
+    restart: unless-stopped
+    environment:
+        NPM_TOR_SERVICE_HOSTS: 80:npm:80
+        NPM_TOR_SERVICE_VERSION: '3'
+        NPM_TOR_SERVICE_KEY:
+
+  npm:
+    image: jc21/nginx-proxy-manager
+    container_name: npm
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:82:81
+      - 100.107.87.40:82:81
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  blog:
+    image: ghcr.io/simonhaas/blog:main
+    container_name: blog
+    restart: unless-stopped
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: unless-stopped
+    configs:
+      - source: nginx
+        target: /usr/share/nginx/html/index.html
+
+configs:
+  nginx:
+    content: |
+      <html>
+          <head>
+              <title>simonhaas</title>
+          </head>
+          <body>
+              <a href="blog">Blog</a>
+          </body>
+      </html>
